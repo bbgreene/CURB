@@ -73,16 +73,35 @@ void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float
     if (parameterID == "low mid freq")
     {
         lowMidFreq = newValue;
-        LP1.setCutoffFrequency(lowMidFreq);
-        HP1.setCutoffFrequency(lowMidFreq);
+        
+        //freq to note      m  =  12*log2(fm/440 Hz) + 69
+        freqToNoteOne = 12.f * std::log2(lowMidFreq / 440.f) + 69.f;
+
+        freqToNoteOne -= 12.f; // dropped one octave
+        // DBG(freqToNote);
+        
+        //note to freq      fm  =  2(m−69)/12(440 Hz)
+        noteToFreqOne = std::pow(2.f, (freqToNoteOne -69) / 12.f) * 440.f;
+//        DBG(noteToFreqOne);
+       
+        LP1.setCutoffFrequency(noteToFreqOne);
+        HP1.setCutoffFrequency(noteToFreqOne);
+        
+        noteToFreqOne *= 4.f;
+        DBG(noteToFreqOne);
+
+        AP2.setCutoffFrequency(noteToFreqOne);
+        LP2.setCutoffFrequency(noteToFreqOne);
+        HP2.setCutoffFrequency(noteToFreqOne);
+        
     }
-    if (parameterID == "mid high freq")
-    {
-        midHighFreq = newValue;
-        AP2.setCutoffFrequency(midHighFreq);
-        LP2.setCutoffFrequency(midHighFreq);
-        HP2.setCutoffFrequency(midHighFreq);
-    }
+//    if (parameterID == "mid high freq")
+//    {
+//        midHighFreq = newValue;
+//        AP2.setCutoffFrequency(midHighFreq);
+//        LP2.setCutoffFrequency(midHighFreq);
+//        HP2.setCutoffFrequency(midHighFreq);
+//    }
     if (parameterID == "type")
     {
         filterTypeSelection = newValue;

@@ -66,6 +66,10 @@ private:
                     HP2;
     
     float lowMidFreq { 0.0 };
+    float freqToNoteOne { 0.0 };
+    float noteToFreqOne { 0.0 };
+    float freqToNoteTwo { 0.0 };
+    float noteToFreqTwo { 0.0 };
     float midHighFreq { 0.0 };
     int filterTypeSelection { 0 };
 
