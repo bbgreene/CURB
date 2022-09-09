@@ -13,7 +13,7 @@
 //==============================================================================
 /**
 */
-class CURBAudioProcessor  : public juce::AudioProcessor
+class CURBAudioProcessor  : public juce::AudioProcessor, juce::AudioProcessorValueTreeState::Listener
 {
 public:
     //==============================================================================
@@ -52,8 +52,28 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
-
+    
+    juce::AudioProcessorValueTreeState treeState;
+    
 private:
+    
+    juce::dsp::Compressor<float> compressor;
+    
+    using Filter = juce::dsp::LinkwitzRileyFilter<float>;
+    
+    Filter  LP1,    AP2,
+            HP1,    LP2,
+                    HP2;
+    
+    float lowMidFreq { 0.0 };
+    float midHighFreq { 0.0 };
+    int filterTypeSelection { 0 };
+
+    std::array<juce::AudioBuffer<float>, 3> filterBuffers;
+    
+    //parameter layout and change functions
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+    void parameterChanged (const juce::String& parameterID, float newValue) override;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CURBAudioProcessor)
 };

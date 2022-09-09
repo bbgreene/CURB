@@ -19,13 +19,79 @@ CURBAudioProcessor::CURBAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
 #endif
 {
+    treeState.addParameterListener("low mid freq", this);
+    treeState.addParameterListener("mid high freq", this);
+    treeState.addParameterListener("type", this);
+    treeState.addParameterListener("threshold", this);
+    treeState.addParameterListener("ratio", this);
+    treeState.addParameterListener("attack", this);
+    treeState.addParameterListener("release", this);
 }
 
 CURBAudioProcessor::~CURBAudioProcessor()
 {
+    treeState.removeParameterListener("low mid freq", this);
+    treeState.removeParameterListener("type", this);
+    treeState.removeParameterListener("threshold", this);
+    treeState.removeParameterListener("ratio", this);
+    treeState.removeParameterListener("attack", this);
+    treeState.removeParameterListener("release", this);
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createParameterLayout()
+{
+    std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
+    
+    juce::StringArray typeSelector = {"low", "band", "high"};
+    
+    auto plowMidFreq = std::make_unique<juce::AudioParameterFloat>("low mid freq", "Low Mid Freq", juce::NormalisableRange<float> (20.0, 999.0, 1.0, 1.0), 400);
+    auto pmidHighFreq = std::make_unique<juce::AudioParameterFloat>("mid high freq", "Mid High Freq", juce::NormalisableRange<float> (1000.0, 20000.0, 1.0, 1.0), 2000.0);
+    
+    auto pFilterTypeSelection = std::make_unique<juce::AudioParameterChoice>("type", "Type", typeSelector, 0);
+
+    auto pThres = std::make_unique<juce::AudioParameterFloat>("threshold", "Threshold", -70.0, 0.0, 0.0);
+    auto pRatio = std::make_unique<juce::AudioParameterFloat>("ratio", "Ratio", 1.0, 10.0, 1.0);
+    auto pAtt = std::make_unique<juce::AudioParameterFloat>("attack", "Attack", 0.0, 200.0, 10.0);
+    auto pRel = std::make_unique<juce::AudioParameterFloat>("release", "Release", 0.0, 300.0, 100.0);
+
+    params.push_back(std::move(plowMidFreq));
+    params.push_back(std::move(pmidHighFreq));
+    params.push_back(std::move(pFilterTypeSelection));
+    params.push_back(std::move(pThres));
+    params.push_back(std::move(pRatio));
+    params.push_back(std::move(pAtt));
+    params.push_back(std::move(pRel));
+       
+    return { params.begin(), params.end() };
+}
+
+void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue)
+{
+    if (parameterID == "low mid freq")
+    {
+        lowMidFreq = newValue;
+        LP1.setCutoffFrequency(lowMidFreq);
+        HP1.setCutoffFrequency(lowMidFreq);
+    }
+    if (parameterID == "mid high freq")
+    {
+        midHighFreq = newValue;
+        AP2.setCutoffFrequency(midHighFreq);
+        LP2.setCutoffFrequency(midHighFreq);
+        HP2.setCutoffFrequency(midHighFreq);
+    }
+    if (parameterID == "type")
+    {
+        filterTypeSelection = newValue;
+    }
+    compressor.setThreshold(treeState.getRawParameterValue("threshold")->load());
+    compressor.setRatio(treeState.getRawParameterValue("ratio")->load());
+    compressor.setAttack(treeState.getRawParameterValue("attack")->load());
+    compressor.setRelease(treeState.getRawParameterValue("release")->load());
+    
 }
 
 //==============================================================================
@@ -93,8 +159,41 @@ void CURBAudioProcessor::changeProgramName (int index, const juce::String& newNa
 //==============================================================================
 void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    juce::dsp::ProcessSpec spec;
+    spec.sampleRate = sampleRate;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.numChannels = getTotalNumInputChannels();
+    
+    LP1.prepare(spec);
+    LP1.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
+    LP1.setCutoffFrequency(treeState.getRawParameterValue("low mid freq")->load());
+    
+    HP1.prepare(spec);
+    HP1.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
+    HP1.setCutoffFrequency(treeState.getRawParameterValue("low mid freq")->load());
+    
+    AP2.prepare(spec);
+    AP2.setType(juce::dsp::LinkwitzRileyFilterType::allpass);
+    AP2.setCutoffFrequency(treeState.getRawParameterValue("mid high freq")->load());
+    
+    LP2.prepare(spec);
+    LP2.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
+    LP2.setCutoffFrequency(treeState.getRawParameterValue("mid high freq")->load());
+    
+    HP2.prepare(spec);
+    HP2.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
+    HP2.setCutoffFrequency(treeState.getRawParameterValue("mid high freq")->load());
+    
+    for ( auto& buffer : filterBuffers )
+    {
+        buffer.setSize(spec.numChannels, samplesPerBlock);
+    }
+    
+    compressor.prepare(spec);
+    compressor.setThreshold(treeState.getRawParameterValue("threshold")->load());
+    compressor.setRatio(treeState.getRawParameterValue("ratio")->load());
+    compressor.setAttack(treeState.getRawParameterValue("attack")->load());
+    compressor.setRelease(treeState.getRawParameterValue("release")->load());
 }
 
 void CURBAudioProcessor::releaseResources()
@@ -135,27 +234,63 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
-
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    
+    for ( auto& fb : filterBuffers )
     {
-        auto* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
+        fb = buffer;
     }
+    
+    auto fb0Block = juce::dsp::AudioBlock<float> (filterBuffers[0]);
+    auto fb1Block = juce::dsp::AudioBlock<float> (filterBuffers[1]);
+    auto fb2Block = juce::dsp::AudioBlock<float> (filterBuffers[2]);
+    
+    auto fb0Ctx = juce::dsp::ProcessContextReplacing<float>(fb0Block);
+    auto fb1Ctx = juce::dsp::ProcessContextReplacing<float>(fb1Block);
+    auto fb2Ctx = juce::dsp::ProcessContextReplacing<float>(fb2Block);
+    
+    LP1.process(fb0Ctx);
+    AP2.process(fb0Ctx);
+    
+    HP1.process(fb1Ctx);
+    filterBuffers[2] = filterBuffers[1]; //copying filter buffer 1 (processed by HP1) to filter buffer 2 in order to use 2nd hp.
+    LP2.process(fb1Ctx);
+
+    HP2.process(fb2Ctx);
+
+    switch (filterTypeSelection)
+    {
+        case 0:
+            compressor.process(fb0Ctx);
+            break;
+        case 1:
+            compressor.process(fb1Ctx);
+            break;
+        case 2:
+            compressor.process(fb2Ctx);
+            break;
+        default:
+            compressor.process(fb0Ctx);
+            break;
+    }
+    
+    auto numSamples = buffer.getNumSamples();
+    auto numChannels = buffer.getNumChannels();
+    
+    buffer.clear();
+    
+    auto addFilterBand = [nc = numChannels, ns = numSamples](auto& inputBuffer, const auto& source)
+    {
+        for ( auto i = 0; i < nc; ++i )
+        {
+            inputBuffer.addFrom(i, 0, source, i, 0, ns);
+        }
+    };
+    
+    addFilterBand(buffer, filterBuffers[0]);
+    addFilterBand(buffer, filterBuffers[1]);
+    addFilterBand(buffer, filterBuffers[2]);
 }
 
 //==============================================================================
@@ -166,21 +301,27 @@ bool CURBAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* CURBAudioProcessor::createEditor()
 {
-    return new CURBAudioProcessorEditor (*this);
+//    return new CURBAudioProcessorEditor (*this);
+    return new juce::GenericAudioProcessorEditor (*this);
 }
 
 //==============================================================================
 void CURBAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    // Save params
+    juce::MemoryOutputStream stream(destData, false);
+    treeState.state.writeToStream(stream);
 }
 
 void CURBAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    // Recall params
+    auto tree = juce::ValueTree::readFromData(data, size_t(sizeInBytes));
+           
+    if(tree.isValid())
+    {
+        treeState.replaceState(tree);
+    }
 }
 
 //==============================================================================
