@@ -46,10 +46,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
     
     juce::StringArray typeSelector = {"low", "band", "high"};
-    
+
     auto plowMidFreq = std::make_unique<juce::AudioParameterFloat>("low mid freq", "Low Mid Freq", juce::NormalisableRange<float> (20.0, 999.0, 1.0, 1.0), 400);
     auto pmidHighFreq = std::make_unique<juce::AudioParameterFloat>("mid high freq", "Mid High Freq", juce::NormalisableRange<float> (1000.0, 20000.0, 1.0, 1.0), 2000.0);
-    
+
     auto pFilterTypeSelection = std::make_unique<juce::AudioParameterChoice>("type", "Type", typeSelector, 0);
 
     auto pThres = std::make_unique<juce::AudioParameterFloat>("threshold", "Threshold", -70.0, 0.0, 0.0);
@@ -64,7 +64,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     params.push_back(std::move(pRatio));
     params.push_back(std::move(pAtt));
     params.push_back(std::move(pRel));
-       
+
     return { params.begin(), params.end() };
 }
 
@@ -73,35 +73,16 @@ void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float
     if (parameterID == "low mid freq")
     {
         lowMidFreq = newValue;
-        
-        //freq to note      m  =  12*log2(fm/440 Hz) + 69
-        freqToNoteOne = 12.f * std::log2(lowMidFreq / 440.f) + 69.f;
-
-        freqToNoteOne -= 12.f; // dropped one octave
-        // DBG(freqToNote);
-        
-        //note to freq      fm  =  2(m−69)/12(440 Hz)
-        noteToFreqOne = std::pow(2.f, (freqToNoteOne -69) / 12.f) * 440.f;
-//        DBG(noteToFreqOne);
-       
-        LP1.setCutoffFrequency(noteToFreqOne);
-        HP1.setCutoffFrequency(noteToFreqOne);
-        
-        noteToFreqOne *= 4.f;
-        DBG(noteToFreqOne);
-
-        AP2.setCutoffFrequency(noteToFreqOne);
-        LP2.setCutoffFrequency(noteToFreqOne);
-        HP2.setCutoffFrequency(noteToFreqOne);
-        
+        LP1.setCutoffFrequency(lowMidFreq);
+        HP1.setCutoffFrequency(lowMidFreq);
     }
-//    if (parameterID == "mid high freq")
-//    {
-//        midHighFreq = newValue;
-//        AP2.setCutoffFrequency(midHighFreq);
-//        LP2.setCutoffFrequency(midHighFreq);
-//        HP2.setCutoffFrequency(midHighFreq);
-//    }
+    if (parameterID == "mid high freq")
+    {
+        midHighFreq = newValue;
+        AP2.setCutoffFrequency(midHighFreq);
+        LP2.setCutoffFrequency(midHighFreq);
+        HP2.setCutoffFrequency(midHighFreq);
+    }
     if (parameterID == "type")
     {
         filterTypeSelection = newValue;
@@ -186,23 +167,23 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     LP1.prepare(spec);
     LP1.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
     LP1.setCutoffFrequency(treeState.getRawParameterValue("low mid freq")->load());
-    
+
     HP1.prepare(spec);
     HP1.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
     HP1.setCutoffFrequency(treeState.getRawParameterValue("low mid freq")->load());
-    
+
     AP2.prepare(spec);
     AP2.setType(juce::dsp::LinkwitzRileyFilterType::allpass);
     AP2.setCutoffFrequency(treeState.getRawParameterValue("mid high freq")->load());
-    
+
     LP2.prepare(spec);
     LP2.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
     LP2.setCutoffFrequency(treeState.getRawParameterValue("mid high freq")->load());
-    
+
     HP2.prepare(spec);
     HP2.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
     HP2.setCutoffFrequency(treeState.getRawParameterValue("mid high freq")->load());
-    
+
     for ( auto& buffer : filterBuffers )
     {
         buffer.setSize(spec.numChannels, samplesPerBlock);
