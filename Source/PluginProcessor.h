@@ -73,10 +73,7 @@ private:
     float midBand { 0.0 };
     float highBand { 0.0 };
     
-    bool soloBand1 { false };
-    bool soloBand2 { false };
-    bool soloBand3 { false };
-    bool soloBand4 { false };
+    std::array<int, 4> soloBand;
     
     bool bypass1 { false };
     bool bypass2 { false };

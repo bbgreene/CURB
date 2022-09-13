@@ -196,19 +196,19 @@ void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float
     }
     if (parameterID == "solo 1")
     {
-        soloBand1 = newValue;
+        soloBand[0] = newValue;
     }
     if (parameterID == "solo 2")
     {
-        soloBand2 = newValue;
+        soloBand[1] = newValue;
     }
     if (parameterID == "solo 3")
     {
-        soloBand3 = newValue;
+        soloBand[2] = newValue;
     }
     if (parameterID == "solo 4")
     {
-        soloBand4 = newValue;
+        soloBand[3] = newValue;
     }
     if (parameterID == "bypass 1")
     {
@@ -364,10 +364,10 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
         buffer.setSize(spec.numChannels, samplesPerBlock);
     }
     
-    soloBand1 = treeState.getRawParameterValue("solo 1")->load();
-    soloBand2 = treeState.getRawParameterValue("solo 2")->load();
-    soloBand3 = treeState.getRawParameterValue("solo 3")->load();
-    soloBand4 = treeState.getRawParameterValue("solo 4")->load();
+    soloBand[0] = treeState.getRawParameterValue("solo 1")->load();
+    soloBand[1] = treeState.getRawParameterValue("solo 2")->load();
+    soloBand[2] = treeState.getRawParameterValue("solo 3")->load();
+    soloBand[3] = treeState.getRawParameterValue("solo 4")->load();
     
     bypass1 = treeState.getRawParameterValue("bypass 1")->load();
     bypass2 = treeState.getRawParameterValue("bypass 2")->load();
@@ -496,10 +496,34 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         }
     };
         
-    if(soloBand1) { addFilterBand(buffer, filterBuffers[0]); };
-    if(soloBand2) { addFilterBand(buffer, filterBuffers[1]); };
-    if(soloBand3) { addFilterBand(buffer, filterBuffers[2]); };
-    if(soloBand4) { addFilterBand(buffer, filterBuffers[3]); };
+    auto aBandIsSoloed = false;
+    for(size_t i = 0; i < soloBand.size(); ++i)
+    {
+        if(soloBand[i])
+        {
+            aBandIsSoloed = true;
+            break;
+        }
+    }
+    
+    if(aBandIsSoloed)
+    {
+        for(size_t i = 0; i < soloBand.size(); ++i)
+        {
+            if(soloBand[i])
+            {
+                addFilterBand(buffer, filterBuffers[i]);
+            }
+        }
+    }
+    else
+    {
+        for(size_t i = 0; i < soloBand.size(); ++i)
+        {
+            addFilterBand(buffer, filterBuffers[i]);
+        }
+    }
+    
 }
 
 //==============================================================================
