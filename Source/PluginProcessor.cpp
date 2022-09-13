@@ -38,21 +38,25 @@ CURBAudioProcessor::CURBAudioProcessor()
     treeState.addParameterListener("mid", this);
     treeState.addParameterListener("high", this);
     
+    treeState.addParameterListener("gain1", this);
     treeState.addParameterListener("thres 1", this);
     treeState.addParameterListener("ratio 1", this);
     treeState.addParameterListener("attack 1", this);
     treeState.addParameterListener("release 1", this);
     
+    treeState.addParameterListener("gain2", this);
     treeState.addParameterListener("thres 2", this);
     treeState.addParameterListener("ratio 2", this);
     treeState.addParameterListener("attack 2", this);
     treeState.addParameterListener("release 2", this);
     
+    treeState.addParameterListener("gain3", this);
     treeState.addParameterListener("thres 3", this);
     treeState.addParameterListener("ratio 3", this);
     treeState.addParameterListener("attack 3", this);
     treeState.addParameterListener("release 3", this);
     
+    treeState.addParameterListener("gain4", this);
     treeState.addParameterListener("thres 4", this);
     treeState.addParameterListener("ratio 4", this);
     treeState.addParameterListener("attack 4", this);
@@ -79,21 +83,25 @@ CURBAudioProcessor::~CURBAudioProcessor()
     treeState.removeParameterListener("mid", this);
     treeState.removeParameterListener("high", this);
     
+    treeState.removeParameterListener("gain1", this);
     treeState.removeParameterListener("thres 1", this);
     treeState.removeParameterListener("ratio 1", this);
     treeState.removeParameterListener("attack 1", this);
     treeState.removeParameterListener("release 1", this);
     
+    treeState.removeParameterListener("gain2", this);
     treeState.removeParameterListener("thres 2", this);
     treeState.removeParameterListener("ratio 2", this);
     treeState.removeParameterListener("attack 2", this);
     treeState.removeParameterListener("release 2", this);
     
+    treeState.removeParameterListener("gain3", this);
     treeState.removeParameterListener("thres 3", this);
     treeState.removeParameterListener("ratio 3", this);
     treeState.removeParameterListener("attack 3", this);
     treeState.removeParameterListener("release 3", this);
     
+    treeState.removeParameterListener("gain4", this);
     treeState.removeParameterListener("thres 4", this);
     treeState.removeParameterListener("ratio 4", this);
     treeState.removeParameterListener("attack 4", this);
@@ -120,27 +128,31 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     auto pBypass3 = std::make_unique<juce::AudioParameterBool>("bypass 3", "Bypass 3", 0);
     auto pBypass4 = std::make_unique<juce::AudioParameterBool>("bypass 4", "Bypass 4", 0);
     
+    auto pGain1 = std::make_unique<juce::AudioParameterFloat>("gain1", "Gain1", gainRange, 0.0f);
     auto p1Thres = std::make_unique<juce::AudioParameterFloat>("thres 1", "Threshold 1", -70.0, 0.0, 0.0);
     auto p1Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 1", "Ratio 1", 1.0, 10.0, 1.0);
     auto p1Att = std::make_unique<juce::AudioParameterFloat>("attack 1", "Attack 1", 0.0, 200.0, 10.0);
     auto p1Rel = std::make_unique<juce::AudioParameterFloat>("release 1", "Release 1", 0.0, 300.0, 100.0);
     
-    auto pLowBand = std::make_unique<juce::AudioParameterFloat>("low", "Low", juce::NormalisableRange<float> (20.0, 500.0, 1.0, 1.0), 250);
+    auto pLowBand = std::make_unique<juce::AudioParameterFloat>("low", "Low", juce::NormalisableRange<float> (40.0, 250.0, 1.0, 1.0), 100);
     
+    auto pGain2 = std::make_unique<juce::AudioParameterFloat>("gain2", "Gain2", gainRange, 0.0f);
     auto p2Thres = std::make_unique<juce::AudioParameterFloat>("thres 2", "Threshold 2", -70.0, 0.0, 0.0);
     auto p2Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 2", "Ratio 2", 1.0, 10.0, 1.0);
     auto p2Att = std::make_unique<juce::AudioParameterFloat>("attack 2", "Attack 2", 0.0, 200.0, 10.0);
     auto p2Rel = std::make_unique<juce::AudioParameterFloat>("release 2", "Release 2", 0.0, 300.0, 100.0);
     
-    auto pMidBand = std::make_unique<juce::AudioParameterFloat>("mid", "Mid", juce::NormalisableRange<float> (501.0, 10000.0, 1.0, 1.0), 6000.0);
+    auto pMidBand = std::make_unique<juce::AudioParameterFloat>("mid", "Mid", juce::NormalisableRange<float> (251.0, 6000.0, 1.0, 1.0), 1000.0);
     
+    auto pGain3 = std::make_unique<juce::AudioParameterFloat>("gain3", "Gain3", gainRange, 0.0f);
     auto p3Thres = std::make_unique<juce::AudioParameterFloat>("thres 3", "Threshold 3", -70.0, 0.0, 0.0);
     auto p3Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 3", "Ratio 3", 1.0, 10.0, 1.0);
     auto p3Att = std::make_unique<juce::AudioParameterFloat>("attack 3", "Attack 3", 0.0, 200.0, 10.0);
     auto p3Rel = std::make_unique<juce::AudioParameterFloat>("release 3", "Release 3", 0.0, 300.0, 100.0);
     
-    auto pHighBand = std::make_unique<juce::AudioParameterFloat>("high", "High", juce::NormalisableRange<float> (10001.0, 20000.0, 1.0, 1.0), 15000.0);
+    auto pHighBand = std::make_unique<juce::AudioParameterFloat>("high", "High", juce::NormalisableRange<float> (6001.0, 16000.0, 1.0, 1.0), 12000.0);
     
+    auto pGain4 = std::make_unique<juce::AudioParameterFloat>("gain4", "Gain4", gainRange, 0.0f);
     auto p4Thres = std::make_unique<juce::AudioParameterFloat>("thres 4", "Threshold 4", -70.0, 0.0, 0.0);
     auto p4Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 4", "Ratio 4", 1.0, 10.0, 1.0);
     auto p4Att = std::make_unique<juce::AudioParameterFloat>("attack 4", "Attack 4", 0.0, 200.0, 10.0);
@@ -152,6 +164,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     params.push_back(std::move(pSolo1));
     params.push_back(std::move(pBypass1));
+    params.push_back(std::move(pGain1));
     params.push_back(std::move(p1Thres));
     params.push_back(std::move(p1Ratio));
     params.push_back(std::move(p1Att));
@@ -161,6 +174,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     params.push_back(std::move(pSolo2));
     params.push_back(std::move(pBypass2));
+    params.push_back(std::move(pGain2));
     params.push_back(std::move(p2Thres));
     params.push_back(std::move(p2Ratio));
     params.push_back(std::move(p2Att));
@@ -170,6 +184,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     params.push_back(std::move(pSolo3));
     params.push_back(std::move(pBypass3));
+    params.push_back(std::move(pGain3));
     params.push_back(std::move(p3Thres));
     params.push_back(std::move(p3Ratio));
     params.push_back(std::move(p3Att));
@@ -179,6 +194,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     params.push_back(std::move(pSolo4));
     params.push_back(std::move(pBypass4));
+    params.push_back(std::move(pGain4));
     params.push_back(std::move(p4Thres));
     params.push_back(std::move(p4Ratio));
     params.push_back(std::move(p4Att));
@@ -247,6 +263,22 @@ void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float
     if (parameterID == "bypass 4")
     {
         bypass4 = newValue;
+    }
+    if(parameterID == "gain1")
+    {
+        gain1.setGainDecibels(treeState.getRawParameterValue("gain1")->load());
+    }
+    if(parameterID == "gain2")
+    {
+        gain2.setGainDecibels(treeState.getRawParameterValue("gain2")->load());
+    }
+    if(parameterID == "gain3")
+    {
+        gain3.setGainDecibels(treeState.getRawParameterValue("gain3")->load());
+    }
+    if(parameterID == "gain4")
+    {
+        gain4.setGainDecibels(treeState.getRawParameterValue("gain4")->load());
     }
     
     compressor1.setThreshold(treeState.getRawParameterValue("thres 1")->load());
@@ -405,24 +437,36 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     bypass4 = treeState.getRawParameterValue("bypass 4")->load();
     
     compressor1.prepare(spec);
+    gain1.prepare(spec);
+    gain1.setRampDurationSeconds(0.05);
+    gain1.setGainDecibels(treeState.getRawParameterValue("gain1")->load());
     compressor1.setThreshold(treeState.getRawParameterValue("thres 1")->load());
     compressor1.setRatio(treeState.getRawParameterValue("ratio 1")->load());
     compressor1.setAttack(treeState.getRawParameterValue("attack 1")->load());
     compressor1.setRelease(treeState.getRawParameterValue("release 1")->load());
     
     compressor2.prepare(spec);
+    gain2.prepare(spec);
+    gain2.setRampDurationSeconds(0.05);
+    gain2.setGainDecibels(treeState.getRawParameterValue("gain2")->load());
     compressor2.setThreshold(treeState.getRawParameterValue("thres 2")->load());
     compressor2.setRatio(treeState.getRawParameterValue("ratio 2")->load());
     compressor2.setAttack(treeState.getRawParameterValue("attack 2")->load());
     compressor2.setRelease(treeState.getRawParameterValue("release 2")->load());
     
     compressor3.prepare(spec);
+    gain3.prepare(spec);
+    gain3.setRampDurationSeconds(0.05);
+    gain3.setGainDecibels(treeState.getRawParameterValue("gain3")->load());
     compressor3.setThreshold(treeState.getRawParameterValue("thres 3")->load());
     compressor3.setRatio(treeState.getRawParameterValue("ratio 3")->load());
     compressor3.setAttack(treeState.getRawParameterValue("attack 3")->load());
     compressor3.setRelease(treeState.getRawParameterValue("release 3")->load());
     
     compressor4.prepare(spec);
+    gain4.prepare(spec);
+    gain4.setRampDurationSeconds(0.05);
+    gain4.setGainDecibels(treeState.getRawParameterValue("gain4")->load());
     compressor4.setThreshold(treeState.getRawParameterValue("thres 4")->load());
     compressor4.setRatio(treeState.getRawParameterValue("ratio 4")->load());
     compressor4.setAttack(treeState.getRawParameterValue("attack 4")->load());
@@ -512,15 +556,19 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     
     if(bypass1) { fb0Ctx.isBypassed = true; };
     compressor1.process(fb0Ctx);
+    gain1.process(fb0Ctx);
     
     if(bypass2) { fb1Ctx.isBypassed = true; };
     compressor2.process(fb1Ctx);
+    gain2.process(fb1Ctx);
     
     if(bypass3) { fb2Ctx.isBypassed = true; };
     compressor3.process(fb2Ctx);
+    gain3.process(fb2Ctx);
     
     if(bypass4) { fb3Ctx.isBypassed = true; };
     compressor4.process(fb3Ctx);
+    gain4.process(fb3Ctx);
     
     auto numSamples = buffer.getNumSamples();
     auto numChannels = buffer.getNumChannels();

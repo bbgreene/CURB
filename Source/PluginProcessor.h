@@ -57,7 +57,7 @@ public:
     
 private:
     
-    juce::dsp::Gain<float> input, output;
+    juce::dsp::Gain<float> input, output, gain1, gain2, gain3, gain4;
     
     using Filter = juce::dsp::LinkwitzRileyFilter<float>;
     
