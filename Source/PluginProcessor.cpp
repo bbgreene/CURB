@@ -27,6 +27,11 @@ CURBAudioProcessor::CURBAudioProcessor()
     treeState.addParameterListener("solo 3", this);
     treeState.addParameterListener("solo 4", this);
     
+    treeState.addParameterListener("bypass 1", this);
+    treeState.addParameterListener("bypass 2", this);
+    treeState.addParameterListener("bypass 3", this);
+    treeState.addParameterListener("bypass 4", this);
+    
     treeState.addParameterListener("low", this);
     treeState.addParameterListener("mid", this);
     treeState.addParameterListener("high", this);
@@ -58,6 +63,11 @@ CURBAudioProcessor::~CURBAudioProcessor()
     treeState.removeParameterListener("solo 2", this);
     treeState.removeParameterListener("solo 3", this);
     treeState.removeParameterListener("solo 4", this);
+    
+    treeState.removeParameterListener("bypass 1", this);
+    treeState.removeParameterListener("bypass 2", this);
+    treeState.removeParameterListener("bypass 3", this);
+    treeState.removeParameterListener("bypass 4", this);
     
     treeState.removeParameterListener("low", this);
     treeState.removeParameterListener("mid", this);
@@ -93,6 +103,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     auto pSolo3 = std::make_unique<juce::AudioParameterBool>("solo 3", "Solo 3", 0);
     auto pSolo4 = std::make_unique<juce::AudioParameterBool>("solo 4", "Solo 4", 0);
     
+    auto pBypass1 = std::make_unique<juce::AudioParameterBool>("bypass 1", "Bypass 1", 0);
+    auto pBypass2 = std::make_unique<juce::AudioParameterBool>("bypass 2", "Bypass 2", 0);
+    auto pBypass3 = std::make_unique<juce::AudioParameterBool>("bypass 3", "Bypass 3", 0);
+    auto pBypass4 = std::make_unique<juce::AudioParameterBool>("bypass 4", "Bypass 4", 0);
+    
     auto p1Thres = std::make_unique<juce::AudioParameterFloat>("thres 1", "Threshold 1", -70.0, 0.0, 0.0);
     auto p1Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 1", "Ratio 1", 1.0, 10.0, 1.0);
     auto p1Att = std::make_unique<juce::AudioParameterFloat>("attack 1", "Attack 1", 0.0, 200.0, 10.0);
@@ -120,10 +135,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     auto p4Rel = std::make_unique<juce::AudioParameterFloat>("release 4", "Release 4", 0.0, 300.0, 100.0);
     
     params.push_back(std::move(pSolo1));
-    params.push_back(std::move(pSolo2));
-    params.push_back(std::move(pSolo3));
-    params.push_back(std::move(pSolo4));
-    
+    params.push_back(std::move(pBypass1));
     params.push_back(std::move(p1Thres));
     params.push_back(std::move(p1Ratio));
     params.push_back(std::move(p1Att));
@@ -131,6 +143,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     params.push_back(std::move(pLowBand));
     
+    params.push_back(std::move(pSolo2));
+    params.push_back(std::move(pBypass2));
     params.push_back(std::move(p2Thres));
     params.push_back(std::move(p2Ratio));
     params.push_back(std::move(p2Att));
@@ -138,6 +152,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     params.push_back(std::move(pMidBand));
     
+    params.push_back(std::move(pSolo3));
+    params.push_back(std::move(pBypass3));
     params.push_back(std::move(p3Thres));
     params.push_back(std::move(p3Ratio));
     params.push_back(std::move(p3Att));
@@ -145,6 +161,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     params.push_back(std::move(pHighBand));
     
+    params.push_back(std::move(pSolo4));
+    params.push_back(std::move(pBypass4));
     params.push_back(std::move(p4Thres));
     params.push_back(std::move(p4Ratio));
     params.push_back(std::move(p4Att));
@@ -192,6 +210,23 @@ void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float
     {
         soloBand4 = newValue;
     }
+    if (parameterID == "bypass 1")
+    {
+        bypass1 = newValue;
+    }
+    if (parameterID == "bypass 2")
+    {
+        bypass2 = newValue;
+    }
+    if (parameterID == "bypass 3")
+    {
+        bypass3 = newValue;
+    }
+    if (parameterID == "bypass 4")
+    {
+        bypass4 = newValue;
+    }
+    
     compressor1.setThreshold(treeState.getRawParameterValue("thres 1")->load());
     compressor1.setRatio(treeState.getRawParameterValue("ratio 1")->load());
     compressor1.setAttack(treeState.getRawParameterValue("attack 1")->load());
@@ -334,6 +369,11 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     soloBand3 = treeState.getRawParameterValue("solo 3")->load();
     soloBand4 = treeState.getRawParameterValue("solo 4")->load();
     
+    bypass1 = treeState.getRawParameterValue("bypass 1")->load();
+    bypass2 = treeState.getRawParameterValue("bypass 2")->load();
+    bypass3 = treeState.getRawParameterValue("bypass 3")->load();
+    bypass4 = treeState.getRawParameterValue("bypass 4")->load();
+    
     compressor1.prepare(spec);
     compressor1.setThreshold(treeState.getRawParameterValue("thres 1")->load());
     compressor1.setRatio(treeState.getRawParameterValue("ratio 1")->load());
@@ -431,9 +471,16 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     AP1b.process(fb3Ctx);
     HP2.process(fb3Ctx);
     
+    if(bypass1) { fb0Ctx.isBypassed = true; };
     compressor1.process(fb0Ctx);
+    
+    if(bypass2) { fb1Ctx.isBypassed = true; };
     compressor2.process(fb1Ctx);
+    
+    if(bypass3) { fb2Ctx.isBypassed = true; };
     compressor3.process(fb2Ctx);
+    
+    if(bypass4) { fb3Ctx.isBypassed = true; };
     compressor4.process(fb3Ctx);
     
     auto numSamples = buffer.getNumSamples();

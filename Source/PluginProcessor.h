@@ -78,6 +78,11 @@ private:
     bool soloBand3 { false };
     bool soloBand4 { false };
     
+    bool bypass1 { false };
+    bool bypass2 { false };
+    bool bypass3 { false };
+    bool bypass4 { false };
+    
     std::array<juce::AudioBuffer<float>, 4> filterBuffers;
     
     //parameter layout and change functions
