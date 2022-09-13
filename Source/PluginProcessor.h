@@ -57,19 +57,28 @@ public:
     
 private:
     
-    juce::dsp::Compressor<float> compressor;
+    juce::dsp::Compressor<float> compressor1;
+    juce::dsp::Compressor<float> compressor2;
+    juce::dsp::Compressor<float> compressor3;
+    juce::dsp::Compressor<float> compressor4;
     
     using Filter = juce::dsp::LinkwitzRileyFilter<float>;
     
-    Filter  LP1,    AP2,
-            HP1,    LP2,
-                    HP2;
+    Filter  LP0,    AP1a,   AP2a,
+            HP0,    LP1,    AP2b,
+                    HP1,    LP2,
+                    AP1b,   HP2;
     
-    float lowMidFreq { 0.0 };
-    float midHighFreq { 0.0 };
-    int filterTypeSelection { 0 };
-
-    std::array<juce::AudioBuffer<float>, 3> filterBuffers;
+    float lowBand { 0.0 };
+    float midBand { 0.0 };
+    float highBand { 0.0 };
+    
+    bool soloBand1 { false };
+    bool soloBand2 { false };
+    bool soloBand3 { false };
+    bool soloBand4 { false };
+    
+    std::array<juce::AudioBuffer<float>, 4> filterBuffers;
     
     //parameter layout and change functions
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
@@ -77,3 +86,14 @@ private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CURBAudioProcessor)
 };
+/*Filter layout/flow
+ 
+              low x     mid x            high x
+ buffer0       LP0------>AP1a------------>AP2a--->Comp1---+
+         
+ buffer1       HP0------>LP1------------->AP2b--->Comp2---+
+                      |
+ buffer2              |->HP1------------->LP2---->Comp3---+
+                      |
+ buffer3              |->AP1b------------>HP2---->Comp4---+
+ */

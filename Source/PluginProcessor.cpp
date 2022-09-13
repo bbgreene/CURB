@@ -22,75 +22,195 @@ CURBAudioProcessor::CURBAudioProcessor()
                        ),treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
 #endif
 {
-    treeState.addParameterListener("low mid freq", this);
-    treeState.addParameterListener("mid high freq", this);
-    treeState.addParameterListener("type", this);
-    treeState.addParameterListener("threshold", this);
-    treeState.addParameterListener("ratio", this);
-    treeState.addParameterListener("attack", this);
-    treeState.addParameterListener("release", this);
+    treeState.addParameterListener("solo 1", this);
+    treeState.addParameterListener("solo 2", this);
+    treeState.addParameterListener("solo 3", this);
+    treeState.addParameterListener("solo 4", this);
+    
+    treeState.addParameterListener("low", this);
+    treeState.addParameterListener("mid", this);
+    treeState.addParameterListener("high", this);
+    
+    treeState.addParameterListener("thres 1", this);
+    treeState.addParameterListener("ratio 1", this);
+    treeState.addParameterListener("attack 1", this);
+    treeState.addParameterListener("release 1", this);
+    
+    treeState.addParameterListener("thres 2", this);
+    treeState.addParameterListener("ratio 2", this);
+    treeState.addParameterListener("attack 2", this);
+    treeState.addParameterListener("release 2", this);
+    
+    treeState.addParameterListener("thres 3", this);
+    treeState.addParameterListener("ratio 3", this);
+    treeState.addParameterListener("attack 3", this);
+    treeState.addParameterListener("release 3", this);
+    
+    treeState.addParameterListener("thres 4", this);
+    treeState.addParameterListener("ratio 4", this);
+    treeState.addParameterListener("attack 4", this);
+    treeState.addParameterListener("release 4", this);
 }
 
 CURBAudioProcessor::~CURBAudioProcessor()
 {
-    treeState.removeParameterListener("low mid freq", this);
-    treeState.removeParameterListener("type", this);
-    treeState.removeParameterListener("threshold", this);
-    treeState.removeParameterListener("ratio", this);
-    treeState.removeParameterListener("attack", this);
-    treeState.removeParameterListener("release", this);
+    treeState.removeParameterListener("solo 1", this);
+    treeState.removeParameterListener("solo 2", this);
+    treeState.removeParameterListener("solo 3", this);
+    treeState.removeParameterListener("solo 4", this);
+    
+    treeState.removeParameterListener("low", this);
+    treeState.removeParameterListener("mid", this);
+    treeState.removeParameterListener("high", this);
+    
+    treeState.removeParameterListener("thres 1", this);
+    treeState.removeParameterListener("ratio 1", this);
+    treeState.removeParameterListener("attack 1", this);
+    treeState.removeParameterListener("release 1", this);
+    
+    treeState.removeParameterListener("thres 2", this);
+    treeState.removeParameterListener("ratio 2", this);
+    treeState.removeParameterListener("attack 2", this);
+    treeState.removeParameterListener("release 2", this);
+    
+    treeState.removeParameterListener("thres 3", this);
+    treeState.removeParameterListener("ratio 3", this);
+    treeState.removeParameterListener("attack 3", this);
+    treeState.removeParameterListener("release 3", this);
+    
+    treeState.removeParameterListener("thres 4", this);
+    treeState.removeParameterListener("ratio 4", this);
+    treeState.removeParameterListener("attack 4", this);
+    treeState.removeParameterListener("release 4", this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createParameterLayout()
 {
     std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
     
-    juce::StringArray typeSelector = {"low", "band", "high"};
-
-    auto plowMidFreq = std::make_unique<juce::AudioParameterFloat>("low mid freq", "Low Mid Freq", juce::NormalisableRange<float> (20.0, 999.0, 1.0, 1.0), 400);
-    auto pmidHighFreq = std::make_unique<juce::AudioParameterFloat>("mid high freq", "Mid High Freq", juce::NormalisableRange<float> (1000.0, 20000.0, 1.0, 1.0), 2000.0);
-
-    auto pFilterTypeSelection = std::make_unique<juce::AudioParameterChoice>("type", "Type", typeSelector, 0);
-
-    auto pThres = std::make_unique<juce::AudioParameterFloat>("threshold", "Threshold", -70.0, 0.0, 0.0);
-    auto pRatio = std::make_unique<juce::AudioParameterFloat>("ratio", "Ratio", 1.0, 10.0, 1.0);
-    auto pAtt = std::make_unique<juce::AudioParameterFloat>("attack", "Attack", 0.0, 200.0, 10.0);
-    auto pRel = std::make_unique<juce::AudioParameterFloat>("release", "Release", 0.0, 300.0, 100.0);
-
-    params.push_back(std::move(plowMidFreq));
-    params.push_back(std::move(pmidHighFreq));
-    params.push_back(std::move(pFilterTypeSelection));
-    params.push_back(std::move(pThres));
-    params.push_back(std::move(pRatio));
-    params.push_back(std::move(pAtt));
-    params.push_back(std::move(pRel));
+    auto pSolo1 = std::make_unique<juce::AudioParameterBool>("solo 1", "Solo 1", 0);
+    auto pSolo2 = std::make_unique<juce::AudioParameterBool>("solo 2", "Solo 2", 0);
+    auto pSolo3 = std::make_unique<juce::AudioParameterBool>("solo 3", "Solo 3", 0);
+    auto pSolo4 = std::make_unique<juce::AudioParameterBool>("solo 4", "Solo 4", 0);
+    
+    auto p1Thres = std::make_unique<juce::AudioParameterFloat>("thres 1", "Threshold 1", -70.0, 0.0, 0.0);
+    auto p1Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 1", "Ratio 1", 1.0, 10.0, 1.0);
+    auto p1Att = std::make_unique<juce::AudioParameterFloat>("attack 1", "Attack 1", 0.0, 200.0, 10.0);
+    auto p1Rel = std::make_unique<juce::AudioParameterFloat>("release 1", "Release 1", 0.0, 300.0, 100.0);
+    
+    auto pLowBand = std::make_unique<juce::AudioParameterFloat>("low", "Low", juce::NormalisableRange<float> (20.0, 500.0, 1.0, 1.0), 250);
+    
+    auto p2Thres = std::make_unique<juce::AudioParameterFloat>("thres 2", "Threshold 2", -70.0, 0.0, 0.0);
+    auto p2Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 2", "Ratio 2", 1.0, 10.0, 1.0);
+    auto p2Att = std::make_unique<juce::AudioParameterFloat>("attack 2", "Attack 2", 0.0, 200.0, 10.0);
+    auto p2Rel = std::make_unique<juce::AudioParameterFloat>("release 2", "Release 2", 0.0, 300.0, 100.0);
+    
+    auto pMidBand = std::make_unique<juce::AudioParameterFloat>("mid", "Mid", juce::NormalisableRange<float> (501.0, 10000.0, 1.0, 1.0), 6000.0);
+    
+    auto p3Thres = std::make_unique<juce::AudioParameterFloat>("thres 3", "Threshold 3", -70.0, 0.0, 0.0);
+    auto p3Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 3", "Ratio 3", 1.0, 10.0, 1.0);
+    auto p3Att = std::make_unique<juce::AudioParameterFloat>("attack 3", "Attack 3", 0.0, 200.0, 10.0);
+    auto p3Rel = std::make_unique<juce::AudioParameterFloat>("release 3", "Release 3", 0.0, 300.0, 100.0);
+    
+    auto pHighBand = std::make_unique<juce::AudioParameterFloat>("high", "High", juce::NormalisableRange<float> (10001.0, 20000.0, 1.0, 1.0), 15000.0);
+    
+    auto p4Thres = std::make_unique<juce::AudioParameterFloat>("thres 4", "Threshold 4", -70.0, 0.0, 0.0);
+    auto p4Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 4", "Ratio 4", 1.0, 10.0, 1.0);
+    auto p4Att = std::make_unique<juce::AudioParameterFloat>("attack 4", "Attack 4", 0.0, 200.0, 10.0);
+    auto p4Rel = std::make_unique<juce::AudioParameterFloat>("release 4", "Release 4", 0.0, 300.0, 100.0);
+    
+    params.push_back(std::move(pSolo1));
+    params.push_back(std::move(pSolo2));
+    params.push_back(std::move(pSolo3));
+    params.push_back(std::move(pSolo4));
+    
+    params.push_back(std::move(p1Thres));
+    params.push_back(std::move(p1Ratio));
+    params.push_back(std::move(p1Att));
+    params.push_back(std::move(p1Rel));
+    
+    params.push_back(std::move(pLowBand));
+    
+    params.push_back(std::move(p2Thres));
+    params.push_back(std::move(p2Ratio));
+    params.push_back(std::move(p2Att));
+    params.push_back(std::move(p2Rel));
+    
+    params.push_back(std::move(pMidBand));
+    
+    params.push_back(std::move(p3Thres));
+    params.push_back(std::move(p3Ratio));
+    params.push_back(std::move(p3Att));
+    params.push_back(std::move(p3Rel));
+    
+    params.push_back(std::move(pHighBand));
+    
+    params.push_back(std::move(p4Thres));
+    params.push_back(std::move(p4Ratio));
+    params.push_back(std::move(p4Att));
+    params.push_back(std::move(p4Rel));
 
     return { params.begin(), params.end() };
 }
 
 void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue)
 {
-    if (parameterID == "low mid freq")
+    if(parameterID == "low")
     {
-        lowMidFreq = newValue;
-        LP1.setCutoffFrequency(lowMidFreq);
-        HP1.setCutoffFrequency(lowMidFreq);
+        lowBand = newValue;
+        LP0.setCutoffFrequency(lowBand);
+        HP0.setCutoffFrequency(lowBand);
     }
-    if (parameterID == "mid high freq")
+    if(parameterID == "mid")
     {
-        midHighFreq = newValue;
-        AP2.setCutoffFrequency(midHighFreq);
-        LP2.setCutoffFrequency(midHighFreq);
-        HP2.setCutoffFrequency(midHighFreq);
+        midBand = newValue;
+        LP1.setCutoffFrequency(midBand);
+        HP1.setCutoffFrequency(midBand);
+        AP1b.setCutoffFrequency(midBand);
     }
-    if (parameterID == "type")
+    if(parameterID == "high")
     {
-        filterTypeSelection = newValue;
+        highBand = newValue;
+        AP2a.setCutoffFrequency(highBand);
+        AP2b.setCutoffFrequency(highBand);
+        LP2.setCutoffFrequency(highBand);
+        HP2.setCutoffFrequency(highBand);
     }
-    compressor.setThreshold(treeState.getRawParameterValue("threshold")->load());
-    compressor.setRatio(treeState.getRawParameterValue("ratio")->load());
-    compressor.setAttack(treeState.getRawParameterValue("attack")->load());
-    compressor.setRelease(treeState.getRawParameterValue("release")->load());
+    if (parameterID == "solo 1")
+    {
+        soloBand1 = newValue;
+    }
+    if (parameterID == "solo 2")
+    {
+        soloBand2 = newValue;
+    }
+    if (parameterID == "solo 3")
+    {
+        soloBand3 = newValue;
+    }
+    if (parameterID == "solo 4")
+    {
+        soloBand4 = newValue;
+    }
+    compressor1.setThreshold(treeState.getRawParameterValue("thres 1")->load());
+    compressor1.setRatio(treeState.getRawParameterValue("ratio 1")->load());
+    compressor1.setAttack(treeState.getRawParameterValue("attack 1")->load());
+    compressor1.setRelease(treeState.getRawParameterValue("release 1")->load());
+    
+    compressor2.setThreshold(treeState.getRawParameterValue("thres 2")->load());
+    compressor2.setRatio(treeState.getRawParameterValue("ratio 2")->load());
+    compressor2.setAttack(treeState.getRawParameterValue("attack 2")->load());
+    compressor2.setRelease(treeState.getRawParameterValue("release 2")->load());
+    
+    compressor3.setThreshold(treeState.getRawParameterValue("thres 3")->load());
+    compressor3.setRatio(treeState.getRawParameterValue("ratio 3")->load());
+    compressor3.setAttack(treeState.getRawParameterValue("attack 3")->load());
+    compressor3.setRelease(treeState.getRawParameterValue("release 3")->load());
+    
+    compressor4.setThreshold(treeState.getRawParameterValue("thres 4")->load());
+    compressor4.setRatio(treeState.getRawParameterValue("ratio 4")->load());
+    compressor4.setAttack(treeState.getRawParameterValue("attack 4")->load());
+    compressor4.setRelease(treeState.getRawParameterValue("release 4")->load());
     
 }
 
@@ -164,36 +284,79 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = getTotalNumInputChannels();
     
+    LP0.prepare(spec);
+    LP0.setCutoffFrequency(treeState.getRawParameterValue("low")->load());
+    LP0.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
+
+    HP0.prepare(spec);
+    HP0.setCutoffFrequency(treeState.getRawParameterValue("low")->load());
+    HP0.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
+    
+    AP1a.prepare(spec);
+    AP1a.setCutoffFrequency(treeState.getRawParameterValue("mid")->load());
+    AP1a.setType(juce::dsp::LinkwitzRileyFilterType::allpass);
+    
     LP1.prepare(spec);
+    LP1.setCutoffFrequency(treeState.getRawParameterValue("mid")->load());
     LP1.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
-    LP1.setCutoffFrequency(treeState.getRawParameterValue("low mid freq")->load());
-
+    
     HP1.prepare(spec);
+    HP1.setCutoffFrequency(treeState.getRawParameterValue("mid")->load());
     HP1.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
-    HP1.setCutoffFrequency(treeState.getRawParameterValue("low mid freq")->load());
-
-    AP2.prepare(spec);
-    AP2.setType(juce::dsp::LinkwitzRileyFilterType::allpass);
-    AP2.setCutoffFrequency(treeState.getRawParameterValue("mid high freq")->load());
-
+    
+    AP1b.prepare(spec);
+    AP1b.setCutoffFrequency(treeState.getRawParameterValue("mid")->load());
+    AP1b.setType(juce::dsp::LinkwitzRileyFilterType::allpass);
+    
+    AP2a.prepare(spec);
+    AP2a.setCutoffFrequency(treeState.getRawParameterValue("high")->load());
+    AP2a.setType(juce::dsp::LinkwitzRileyFilterType::allpass);
+    
+    AP2b.prepare(spec);
+    AP2b.setCutoffFrequency(treeState.getRawParameterValue("high")->load());
+    AP2b.setType(juce::dsp::LinkwitzRileyFilterType::allpass);
+    
     LP2.prepare(spec);
+    LP2.setCutoffFrequency(treeState.getRawParameterValue("high")->load());
     LP2.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
-    LP2.setCutoffFrequency(treeState.getRawParameterValue("mid high freq")->load());
-
+    
     HP2.prepare(spec);
+    HP2.setCutoffFrequency(treeState.getRawParameterValue("high")->load());
     HP2.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
-    HP2.setCutoffFrequency(treeState.getRawParameterValue("mid high freq")->load());
-
+    
     for ( auto& buffer : filterBuffers )
     {
         buffer.setSize(spec.numChannels, samplesPerBlock);
     }
     
-    compressor.prepare(spec);
-    compressor.setThreshold(treeState.getRawParameterValue("threshold")->load());
-    compressor.setRatio(treeState.getRawParameterValue("ratio")->load());
-    compressor.setAttack(treeState.getRawParameterValue("attack")->load());
-    compressor.setRelease(treeState.getRawParameterValue("release")->load());
+    soloBand1 = treeState.getRawParameterValue("solo 1")->load();
+    soloBand2 = treeState.getRawParameterValue("solo 2")->load();
+    soloBand3 = treeState.getRawParameterValue("solo 3")->load();
+    soloBand4 = treeState.getRawParameterValue("solo 4")->load();
+    
+    compressor1.prepare(spec);
+    compressor1.setThreshold(treeState.getRawParameterValue("thres 1")->load());
+    compressor1.setRatio(treeState.getRawParameterValue("ratio 1")->load());
+    compressor1.setAttack(treeState.getRawParameterValue("attack 1")->load());
+    compressor1.setRelease(treeState.getRawParameterValue("release 1")->load());
+    
+    compressor2.prepare(spec);
+    compressor2.setThreshold(treeState.getRawParameterValue("thres 2")->load());
+    compressor2.setRatio(treeState.getRawParameterValue("ratio 2")->load());
+    compressor2.setAttack(treeState.getRawParameterValue("attack 2")->load());
+    compressor2.setRelease(treeState.getRawParameterValue("release 2")->load());
+    
+    compressor3.prepare(spec);
+    compressor3.setThreshold(treeState.getRawParameterValue("thres 3")->load());
+    compressor3.setRatio(treeState.getRawParameterValue("ratio 3")->load());
+    compressor3.setAttack(treeState.getRawParameterValue("attack 3")->load());
+    compressor3.setRelease(treeState.getRawParameterValue("release 3")->load());
+    
+    compressor4.prepare(spec);
+    compressor4.setThreshold(treeState.getRawParameterValue("thres 4")->load());
+    compressor4.setRatio(treeState.getRawParameterValue("ratio 4")->load());
+    compressor4.setAttack(treeState.getRawParameterValue("attack 4")->load());
+    compressor4.setRelease(treeState.getRawParameterValue("release 4")->load());
 }
 
 void CURBAudioProcessor::releaseResources()
@@ -245,41 +408,39 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     auto fb0Block = juce::dsp::AudioBlock<float> (filterBuffers[0]);
     auto fb1Block = juce::dsp::AudioBlock<float> (filterBuffers[1]);
     auto fb2Block = juce::dsp::AudioBlock<float> (filterBuffers[2]);
-    
+    auto fb3Block = juce::dsp::AudioBlock<float> (filterBuffers[3]);
+
     auto fb0Ctx = juce::dsp::ProcessContextReplacing<float>(fb0Block);
     auto fb1Ctx = juce::dsp::ProcessContextReplacing<float>(fb1Block);
     auto fb2Ctx = juce::dsp::ProcessContextReplacing<float>(fb2Block);
+    auto fb3Ctx = juce::dsp::ProcessContextReplacing<float>(fb3Block);
     
-    LP1.process(fb0Ctx);
-    AP2.process(fb0Ctx);
+    LP0.process(fb0Ctx);
+    AP1a.process(fb0Ctx);
+    AP2a.process(fb0Ctx);
     
-    HP1.process(fb1Ctx);
-    filterBuffers[2] = filterBuffers[1]; //copying filter buffer 1 (processed by HP1) to filter buffer 2 in order to use 2nd hp.
-    LP2.process(fb1Ctx);
-
-    HP2.process(fb2Ctx);
-
-    switch (filterTypeSelection)
-    {
-        case 0:
-            compressor.process(fb0Ctx);
-            break;
-        case 1:
-            compressor.process(fb1Ctx);
-            break;
-        case 2:
-            compressor.process(fb2Ctx);
-            break;
-        default:
-            compressor.process(fb0Ctx);
-            break;
-    }
+    HP0.process(fb1Ctx);
+    filterBuffers[2] = filterBuffers[1];
+    filterBuffers[3] = filterBuffers[1];
+    LP1.process(fb1Ctx);
+    AP2b.process(fb1Ctx);
+    
+    HP1.process(fb2Ctx);
+    LP2.process(fb2Ctx);
+    
+    AP1b.process(fb3Ctx);
+    HP2.process(fb3Ctx);
+    
+    compressor1.process(fb0Ctx);
+    compressor2.process(fb1Ctx);
+    compressor3.process(fb2Ctx);
+    compressor4.process(fb3Ctx);
     
     auto numSamples = buffer.getNumSamples();
     auto numChannels = buffer.getNumChannels();
-    
+        
     buffer.clear();
-    
+        
     auto addFilterBand = [nc = numChannels, ns = numSamples](auto& inputBuffer, const auto& source)
     {
         for ( auto i = 0; i < nc; ++i )
@@ -287,10 +448,11 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
             inputBuffer.addFrom(i, 0, source, i, 0, ns);
         }
     };
-    
-    addFilterBand(buffer, filterBuffers[0]);
-    addFilterBand(buffer, filterBuffers[1]);
-    addFilterBand(buffer, filterBuffers[2]);
+        
+    if(soloBand1) { addFilterBand(buffer, filterBuffers[0]); };
+    if(soloBand2) { addFilterBand(buffer, filterBuffers[1]); };
+    if(soloBand3) { addFilterBand(buffer, filterBuffers[2]); };
+    if(soloBand4) { addFilterBand(buffer, filterBuffers[3]); };
 }
 
 //==============================================================================
