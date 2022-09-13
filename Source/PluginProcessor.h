@@ -57,10 +57,7 @@ public:
     
 private:
     
-    juce::dsp::Compressor<float> compressor1;
-    juce::dsp::Compressor<float> compressor2;
-    juce::dsp::Compressor<float> compressor3;
-    juce::dsp::Compressor<float> compressor4;
+    juce::dsp::Gain<float> input, output;
     
     using Filter = juce::dsp::LinkwitzRileyFilter<float>;
     
@@ -72,6 +69,11 @@ private:
     float lowBand { 0.0 };
     float midBand { 0.0 };
     float highBand { 0.0 };
+    
+    juce::dsp::Compressor<float> compressor1;
+    juce::dsp::Compressor<float> compressor2;
+    juce::dsp::Compressor<float> compressor3;
+    juce::dsp::Compressor<float> compressor4;
     
     std::array<int, 4> soloBand;
     

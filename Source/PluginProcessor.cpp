@@ -22,6 +22,8 @@ CURBAudioProcessor::CURBAudioProcessor()
                        ),treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
 #endif
 {
+    treeState.addParameterListener("input", this);
+    
     treeState.addParameterListener("solo 1", this);
     treeState.addParameterListener("solo 2", this);
     treeState.addParameterListener("solo 3", this);
@@ -55,10 +57,14 @@ CURBAudioProcessor::CURBAudioProcessor()
     treeState.addParameterListener("ratio 4", this);
     treeState.addParameterListener("attack 4", this);
     treeState.addParameterListener("release 4", this);
+    
+    treeState.addParameterListener("output", this);
 }
 
 CURBAudioProcessor::~CURBAudioProcessor()
 {
+    treeState.removeParameterListener("input", this);
+    
     treeState.removeParameterListener("solo 1", this);
     treeState.removeParameterListener("solo 2", this);
     treeState.removeParameterListener("solo 3", this);
@@ -92,11 +98,17 @@ CURBAudioProcessor::~CURBAudioProcessor()
     treeState.removeParameterListener("ratio 4", this);
     treeState.removeParameterListener("attack 4", this);
     treeState.removeParameterListener("release 4", this);
+    
+    treeState.removeParameterListener("output", this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createParameterLayout()
 {
     std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
+    
+    auto gainRange = juce::NormalisableRange<float> (-24.0f, 24.0f, 0.5f, 1.0f);
+    
+    auto pInput = std::make_unique<juce::AudioParameterFloat>("input", "Input", gainRange, 0.0f);
     
     auto pSolo1 = std::make_unique<juce::AudioParameterBool>("solo 1", "Solo 1", 0);
     auto pSolo2 = std::make_unique<juce::AudioParameterBool>("solo 2", "Solo 2", 0);
@@ -134,6 +146,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     auto p4Att = std::make_unique<juce::AudioParameterFloat>("attack 4", "Attack 4", 0.0, 200.0, 10.0);
     auto p4Rel = std::make_unique<juce::AudioParameterFloat>("release 4", "Release 4", 0.0, 300.0, 100.0);
     
+    auto pOutput = std::make_unique<juce::AudioParameterFloat>("output", "Output", gainRange, 0.0f);
+    
+    params.push_back(std::move(pInput));
+    
     params.push_back(std::move(pSolo1));
     params.push_back(std::move(pBypass1));
     params.push_back(std::move(p1Thres));
@@ -167,12 +183,18 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     params.push_back(std::move(p4Ratio));
     params.push_back(std::move(p4Att));
     params.push_back(std::move(p4Rel));
+    
+    params.push_back(std::move(pOutput));
 
     return { params.begin(), params.end() };
 }
 
 void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue)
 {
+    if(parameterID == "input")
+    {
+        input.setGainDecibels(treeState.getRawParameterValue("input")->load());
+    }
     if(parameterID == "low")
     {
         lowBand = newValue;
@@ -247,6 +269,10 @@ void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float
     compressor4.setAttack(treeState.getRawParameterValue("attack 4")->load());
     compressor4.setRelease(treeState.getRawParameterValue("release 4")->load());
     
+    if(parameterID == "output")
+    {
+        output.setGainDecibels(treeState.getRawParameterValue("output")->load());
+    }
 }
 
 //==============================================================================
@@ -318,6 +344,10 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = getTotalNumInputChannels();
+    
+    input.prepare(spec);
+    input.setRampDurationSeconds(0.05);
+    input.setGainDecibels(treeState.getRawParameterValue("input")->load());
     
     LP0.prepare(spec);
     LP0.setCutoffFrequency(treeState.getRawParameterValue("low")->load());
@@ -397,6 +427,10 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     compressor4.setRatio(treeState.getRawParameterValue("ratio 4")->load());
     compressor4.setAttack(treeState.getRawParameterValue("attack 4")->load());
     compressor4.setRelease(treeState.getRawParameterValue("release 4")->load());
+    
+    output.prepare(spec);
+    output.setRampDurationSeconds(0.05);
+    output.setGainDecibels(treeState.getRawParameterValue("output")->load());
 }
 
 void CURBAudioProcessor::releaseResources()
@@ -439,6 +473,11 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
+    
+    auto blockIn = juce::dsp::AudioBlock<float> (buffer);
+    auto gainCtx = juce::dsp::ProcessContextReplacing<float>(blockIn);
+    
+    input.process(juce::dsp::ProcessContextReplacing<float>(gainCtx));
     
     for ( auto& fb : filterBuffers )
     {
@@ -524,6 +563,7 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         }
     }
     
+    output.process(juce::dsp::ProcessContextReplacing<float>(gainCtx));
 }
 
 //==============================================================================
