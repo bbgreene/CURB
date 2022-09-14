@@ -56,17 +56,16 @@ public:
     juce::AudioProcessorValueTreeState treeState;
     
 private:
-    float mainMixValue { 100.0 };
-    juce::dsp::DryWetMixer<float> mainMixModule;
+    //Individual mixers
+    std::array<juce::dsp::DryWetMixer<float>, 5> mixModule;
+    std::array<float, 5> mixValue;
     
-    float fb2MixValue { 100.0 };
-    juce::dsp::DryWetMixer<float> fb2Mix;
+    //Input, output and individual band gains
+    juce::dsp::Gain<float> input, output;//, gain1, gain2, gain3, gain4;
+    std::array<juce::dsp::Gain<float>, 4> gain;
+    std::array<float, 4> gainValue;
     
-    std::array<float, 4> fbMixValue;
-    std::array<juce::dsp::DryWetMixer<float>, 4> fbMixModule;
-    
-    juce::dsp::Gain<float> input, output, gain1, gain2, gain3, gain4;
-    
+    //Filters and variables
     using Filter = juce::dsp::LinkwitzRileyFilter<float>;
     
     Filter  LP0,    AP1a,   AP2a,
@@ -78,11 +77,13 @@ private:
     float midBand { 0.0 };
     float highBand { 0.0 };
     
+    //Compressors
     juce::dsp::Compressor<float> compressor1;
     juce::dsp::Compressor<float> compressor2;
     juce::dsp::Compressor<float> compressor3;
     juce::dsp::Compressor<float> compressor4;
     
+    //Solo and bypasses
     std::array<int, 4> soloBand;
     
     bool bypass1 { false };
@@ -90,6 +91,7 @@ private:
     bool bypass3 { false };
     bool bypass4 { false };
     
+    //Band buffers
     std::array<juce::AudioBuffer<float>, 4> filterBuffers;
     
     //parameter layout and change functions

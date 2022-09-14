@@ -297,21 +297,15 @@ void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float
     {
         bypass4 = newValue;
     }
-    if(parameterID == "gain1")
+
+    gainValue[0] = treeState.getRawParameterValue("gain1")->load();
+    gainValue[1] = treeState.getRawParameterValue("gain2")->load();
+    gainValue[2] = treeState.getRawParameterValue("gain3")->load();
+    gainValue[3] = treeState.getRawParameterValue("gain4")->load();
+    
+    for(size_t i = 0; i < gain.size(); ++i)
     {
-        gain1.setGainDecibels(treeState.getRawParameterValue("gain1")->load());
-    }
-    if(parameterID == "gain2")
-    {
-        gain2.setGainDecibels(treeState.getRawParameterValue("gain2")->load());
-    }
-    if(parameterID == "gain3")
-    {
-        gain3.setGainDecibels(treeState.getRawParameterValue("gain3")->load());
-    }
-    if(parameterID == "gain4")
-    {
-        gain4.setGainDecibels(treeState.getRawParameterValue("gain4")->load());
+        gain[i].setGainDecibels(gainValue[i]);
     }
     
     compressor1.setThreshold(treeState.getRawParameterValue("thres 1")->load());
@@ -338,30 +332,16 @@ void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float
     {
         output.setGainDecibels(treeState.getRawParameterValue("output")->load());
     }
-    if(parameterID == "main mix")
+    
+    mixValue[0] = treeState.getRawParameterValue("fb1mix")->load();
+    mixValue[1] = treeState.getRawParameterValue("fb2mix")->load();
+    mixValue[2] = treeState.getRawParameterValue("fb3mix")->load();
+    mixValue[3] = treeState.getRawParameterValue("fb4mix")->load();
+    mixValue[4] = treeState.getRawParameterValue("main mix")->load();
+    
+    for(size_t i = 0; i < mixModule.size(); ++i)
     {
-        mainMixValue = treeState.getRawParameterValue("main mix")->load();
-        mainMixModule.setWetMixProportion(juce::jmap(mainMixValue, 0.0f, 100.0f, 0.0f, 1.0f));
-    }
-    if(parameterID == "fb1mix")
-    {
-        fbMixValue[0] = treeState.getRawParameterValue("fb1mix")->load();
-        fbMixModule[0].setWetMixProportion(juce::jmap(fbMixValue[0], 0.0f, 100.0f, 0.0f, 1.0f));
-    }
-    if(parameterID == "fb2mix")
-    {
-        fbMixValue[1] = treeState.getRawParameterValue("fb2mix")->load();
-        fbMixModule[1].setWetMixProportion(juce::jmap(fbMixValue[1], 0.0f, 100.0f, 0.0f, 1.0f));
-    }
-    if(parameterID == "fb3mix")
-    {
-        fbMixValue[2] = treeState.getRawParameterValue("fb3mix")->load();
-        fbMixModule[2].setWetMixProportion(juce::jmap(fbMixValue[2], 0.0f, 100.0f, 0.0f, 1.0f));
-    }
-    if(parameterID == "fb4mix")
-    {
-        fbMixValue[3] = treeState.getRawParameterValue("fb4mix")->load();
-        fbMixModule[3].setWetMixProportion(juce::jmap(fbMixValue[3], 0.0f, 100.0f, 0.0f, 1.0f));
+        mixModule[i].setWetMixProportion(juce::jmap(mixValue[i], 0.0f, 100.0f, 0.0f, 1.0f));
     }
 }
 
@@ -494,37 +474,37 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     bypass3 = treeState.getRawParameterValue("bypass 3")->load();
     bypass4 = treeState.getRawParameterValue("bypass 4")->load();
     
+    gainValue[0] = treeState.getRawParameterValue("gain1")->load();
+    gainValue[1] = treeState.getRawParameterValue("gain2")->load();
+    gainValue[2] = treeState.getRawParameterValue("gain3")->load();
+    gainValue[3] = treeState.getRawParameterValue("gain4")->load();
+    
+    for(size_t i = 0; i < gain.size(); ++i)
+    {
+        gain[i].prepare(spec);
+        gain[i].setRampDurationSeconds(0.05);
+        gain[i].setGainDecibels(gainValue[i]);
+    }
+    
     compressor1.prepare(spec);
-    gain1.prepare(spec);
-    gain1.setRampDurationSeconds(0.05);
-    gain1.setGainDecibels(treeState.getRawParameterValue("gain1")->load());
     compressor1.setThreshold(treeState.getRawParameterValue("thres 1")->load());
     compressor1.setRatio(treeState.getRawParameterValue("ratio 1")->load());
     compressor1.setAttack(treeState.getRawParameterValue("attack 1")->load());
     compressor1.setRelease(treeState.getRawParameterValue("release 1")->load());
     
     compressor2.prepare(spec);
-    gain2.prepare(spec);
-    gain2.setRampDurationSeconds(0.05);
-    gain2.setGainDecibels(treeState.getRawParameterValue("gain2")->load());
     compressor2.setThreshold(treeState.getRawParameterValue("thres 2")->load());
     compressor2.setRatio(treeState.getRawParameterValue("ratio 2")->load());
     compressor2.setAttack(treeState.getRawParameterValue("attack 2")->load());
     compressor2.setRelease(treeState.getRawParameterValue("release 2")->load());
     
     compressor3.prepare(spec);
-    gain3.prepare(spec);
-    gain3.setRampDurationSeconds(0.05);
-    gain3.setGainDecibels(treeState.getRawParameterValue("gain3")->load());
     compressor3.setThreshold(treeState.getRawParameterValue("thres 3")->load());
     compressor3.setRatio(treeState.getRawParameterValue("ratio 3")->load());
     compressor3.setAttack(treeState.getRawParameterValue("attack 3")->load());
     compressor3.setRelease(treeState.getRawParameterValue("release 3")->load());
     
     compressor4.prepare(spec);
-    gain4.prepare(spec);
-    gain4.setRampDurationSeconds(0.05);
-    gain4.setGainDecibels(treeState.getRawParameterValue("gain4")->load());
     compressor4.setThreshold(treeState.getRawParameterValue("thres 4")->load());
     compressor4.setRatio(treeState.getRawParameterValue("ratio 4")->load());
     compressor4.setAttack(treeState.getRawParameterValue("attack 4")->load());
@@ -534,31 +514,22 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     output.setRampDurationSeconds(0.05);
     output.setGainDecibels(treeState.getRawParameterValue("output")->load());
     
-    fbMixModule[0].prepare(spec);
-    fbMixModule[1].prepare(spec);
-    fbMixModule[2].prepare(spec);
-    fbMixModule[3].prepare(spec);
-    fbMixModule[0].reset();
-    fbMixModule[1].reset();
-    fbMixModule[2].reset();
-    fbMixModule[3].reset();
+    for ( auto& mix : mixModule )
+    {
+        mix.prepare(spec);
+        mix.reset();
+    }
     
-    fbMixValue[0] = treeState.getRawParameterValue("fb1mix")->load();
-    fbMixModule[0].setWetMixProportion(juce::jmap(fbMixValue[0], 0.0f, 100.0f, 0.0f, 1.0f));
-
-    fbMixValue[1] = treeState.getRawParameterValue("fb2mix")->load();
-    fbMixModule[1].setWetMixProportion(juce::jmap(fbMixValue[1], 0.0f, 100.0f, 0.0f, 1.0f));
-
-    fbMixValue[2] = treeState.getRawParameterValue("fb3mix")->load();
-    fbMixModule[2].setWetMixProportion(juce::jmap(fbMixValue[2], 0.0f, 100.0f, 0.0f, 1.0f));
-
-    fbMixValue[3] = treeState.getRawParameterValue("fb4mix")->load();
-    fbMixModule[3].setWetMixProportion(juce::jmap(fbMixValue[3], 0.0f, 100.0f, 0.0f, 1.0f));
-   
-    mainMixModule.prepare(spec);
-    mainMixModule.reset();
-    mainMixValue = treeState.getRawParameterValue("main mix")->load();
-    mainMixModule.setWetMixProportion(juce::jmap(mainMixValue, 0.0f, 100.0f, 0.0f, 1.0f));
+    mixValue[0] = treeState.getRawParameterValue("fb1mix")->load();
+    mixValue[1] = treeState.getRawParameterValue("fb2mix")->load();
+    mixValue[2] = treeState.getRawParameterValue("fb3mix")->load();
+    mixValue[3] = treeState.getRawParameterValue("fb4mix")->load();
+    mixValue[4] = treeState.getRawParameterValue("main mix")->load();
+    
+    for(size_t i = 0; i < mixModule.size(); ++i)
+    {
+        mixModule[i].setWetMixProportion(juce::jmap(mixValue[i], 0.0f, 100.0f, 0.0f, 1.0f));
+    }
 }
 
 void CURBAudioProcessor::releaseResources()
@@ -607,7 +578,7 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     const auto& inputBlock = inCtx.getInputBlock();
     const auto& outputBlock = inCtx.getOutputBlock();
     
-    mainMixModule.pushDrySamples(inputBlock);
+    mixModule[4].pushDrySamples(inputBlock); //dry to main mix module
     
     input.process(juce::dsp::ProcessContextReplacing<float>(inCtx));
     
@@ -645,35 +616,35 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     
     const auto& fb0Dry = fb0Ctx.getInputBlock();
     const auto& fb0Wet = fb0Ctx.getOutputBlock();
-    fbMixModule[0].pushDrySamples(fb0Dry);
+    mixModule[0].pushDrySamples(fb0Dry);
     if(bypass1) { fb0Ctx.isBypassed = true; };
     compressor1.process(fb0Ctx);
-    gain1.process(fb0Ctx);
-    fbMixModule[0].mixWetSamples(fb0Wet);
+    gain[0].process(fb0Ctx);
+    mixModule[0].mixWetSamples(fb0Wet);
     
     const auto& fb1Dry = fb1Ctx.getInputBlock();
     const auto& fb1Wet = fb1Ctx.getOutputBlock();
-    fbMixModule[1].pushDrySamples(fb1Dry);
+    mixModule[1].pushDrySamples(fb1Dry);
     if(bypass2) { fb1Ctx.isBypassed = true; };
     compressor2.process(fb1Ctx);
-    gain2.process(fb1Ctx);
-    fbMixModule[1].mixWetSamples(fb1Wet);
+    gain[1].process(fb1Ctx);
+    mixModule[1].mixWetSamples(fb1Wet);
     
     const auto& fb2Dry = fb2Ctx.getInputBlock();
     const auto& fb2Wet = fb2Ctx.getOutputBlock();
-    fbMixModule[2].pushDrySamples(fb2Dry);
+    mixModule[2].pushDrySamples(fb2Dry);
     if(bypass3) { fb2Ctx.isBypassed = true; };
     compressor3.process(fb2Ctx);
-    gain3.process(fb2Ctx);
-    fbMixModule[2].mixWetSamples(fb2Wet);
+    gain[2].process(fb2Ctx);
+    mixModule[2].mixWetSamples(fb2Wet);
     
     const auto& fb3Dry = fb3Ctx.getInputBlock();
     const auto& fb3Wet = fb3Ctx.getOutputBlock();
-    fbMixModule[3].pushDrySamples(fb3Dry);
+    mixModule[3].pushDrySamples(fb3Dry);
     if(bypass4) { fb3Ctx.isBypassed = true; };
     compressor4.process(fb3Ctx);
-    gain4.process(fb3Ctx);
-    fbMixModule[3].mixWetSamples(fb3Wet);
+    gain[3].process(fb3Ctx);
+    mixModule[3].mixWetSamples(fb3Wet);
     
     auto numSamples = buffer.getNumSamples();
     auto numChannels = buffer.getNumChannels();
@@ -717,7 +688,7 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     }
     
     output.process(juce::dsp::ProcessContextReplacing<float>(inCtx));
-    mainMixModule.mixWetSamples(outputBlock);
+    mixModule[4].mixWetSamples(outputBlock); //wet to main mix module
 }
 
 //==============================================================================
