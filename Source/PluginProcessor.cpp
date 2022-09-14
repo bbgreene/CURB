@@ -34,6 +34,8 @@ CURBAudioProcessor::CURBAudioProcessor()
     treeState.addParameterListener("bypass 3", this);
     treeState.addParameterListener("bypass 4", this);
     
+    treeState.addParameterListener("type1", this);
+    
     treeState.addParameterListener("low", this);
     treeState.addParameterListener("mid", this);
     treeState.addParameterListener("high", this);
@@ -87,6 +89,8 @@ CURBAudioProcessor::~CURBAudioProcessor()
     treeState.removeParameterListener("bypass 2", this);
     treeState.removeParameterListener("bypass 3", this);
     treeState.removeParameterListener("bypass 4", this);
+    
+    treeState.removeParameterListener("type1", this);
     
     treeState.removeParameterListener("low", this);
     treeState.removeParameterListener("mid", this);
@@ -145,6 +149,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     auto pBypass2 = std::make_unique<juce::AudioParameterBool>("bypass 2", "Bypass 2", 0);
     auto pBypass3 = std::make_unique<juce::AudioParameterBool>("bypass 3", "Bypass 3", 0);
     auto pBypass4 = std::make_unique<juce::AudioParameterBool>("bypass 4", "Bypass 4", 0);
+    
+    auto pCompType1 = std::make_unique<juce::AudioParameterBool>("type1", "Type1", 0);
     
     auto pFb1Mix = std::make_unique<juce::AudioParameterFloat>("fb1mix", "Fb1mix", 0.0, 100.0, 100.0);
     
@@ -205,6 +211,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     params.push_back(std::move(pBypass2));
     params.push_back(std::move(pFb2Mix));
     params.push_back(std::move(pGain2));
+    params.push_back(std::move(pCompType1));
     params.push_back(std::move(p2Thres));
     params.push_back(std::move(p2Ratio));
     params.push_back(std::move(p2Att));
@@ -428,7 +435,7 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     const auto& fb0Wet = fb0Ctx.getOutputBlock();
     mixModule[0].pushDrySamples(fb0Dry);
     if(bypass[0]) { fb0Ctx.isBypassed = true; };
-    compressor[0].process(fb0Ctx);
+    compressor[0].process(fb0Ctx, compTypeValue);
     gain[0].process(fb0Ctx);
     mixModule[0].mixWetSamples(fb0Wet);
     
@@ -436,7 +443,7 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     const auto& fb1Wet = fb1Ctx.getOutputBlock();
     mixModule[1].pushDrySamples(fb1Dry);
     if(bypass[1]) { fb1Ctx.isBypassed = true; };
-    compressor[1].process(fb1Ctx);
+    compressor[1].process(fb1Ctx, compTypeValue);
     gain[1].process(fb1Ctx);
     mixModule[1].mixWetSamples(fb1Wet);
     
@@ -444,7 +451,7 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     const auto& fb2Wet = fb2Ctx.getOutputBlock();
     mixModule[2].pushDrySamples(fb2Dry);
     if(bypass[2]) { fb2Ctx.isBypassed = true; };
-    compressor[2].process(fb2Ctx);
+    compressor[2].process(fb2Ctx, compTypeValue);
     gain[2].process(fb2Ctx);
     mixModule[2].mixWetSamples(fb2Wet);
     
@@ -452,7 +459,7 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     const auto& fb3Wet = fb3Ctx.getOutputBlock();
     mixModule[3].pushDrySamples(fb3Dry);
     if(bypass[3]) { fb3Ctx.isBypassed = true; };
-    compressor[3].process(fb3Ctx);
+    compressor[3].process(fb3Ctx, compTypeValue);
     gain[3].process(fb3Ctx);
     mixModule[3].mixWetSamples(fb3Wet);
 }
@@ -568,7 +575,8 @@ void CURBAudioProcessor::updateParameters()
     compressor[1].setRatio(treeState.getRawParameterValue("ratio 2")->load());
     compressor[1].setAttack(treeState.getRawParameterValue("attack 2")->load());
     compressor[1].setRelease(treeState.getRawParameterValue("release 2")->load());
-    
+    compTypeValue = treeState.getRawParameterValue("type1")->load();
+
     compressor[2].setThreshold(treeState.getRawParameterValue("thres 3")->load());
     compressor[2].setRatio(treeState.getRawParameterValue("ratio 3")->load());
     compressor[2].setAttack(treeState.getRawParameterValue("attack 3")->load());

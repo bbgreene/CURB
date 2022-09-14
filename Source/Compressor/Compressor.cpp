@@ -31,7 +31,7 @@ void Compressor<SampleType>::setThreshold (SampleType newThreshold)
 template <typename SampleType>
 void Compressor<SampleType>::setRatio (SampleType newRatio)
 {
-    jassert (newRatio >= static_cast<SampleType> (1.0));
+//    jassert (newRatio >= static_cast<SampleType> (1.0));
 
     ratio = newRatio;
     update();
@@ -74,7 +74,7 @@ void Compressor<SampleType>::reset()
 
 //==============================================================================
 template <typename SampleType>
-SampleType Compressor<SampleType>::processSample (int channel, SampleType inputValue)
+SampleType Compressor<SampleType>::processSampleDownCompression (int channel, SampleType inputValue)
 {
     // Ballistics filter with peak rectifier
     auto env = envelopeFilter.processSample (channel, inputValue);
@@ -86,6 +86,21 @@ SampleType Compressor<SampleType>::processSample (int channel, SampleType inputV
     // Output
     return gain * inputValue;
 }
+
+template <typename SampleType>
+SampleType Compressor<SampleType>::processSampleUpCompression (int channel, SampleType inputValue)
+{
+    // Ballistics filter with peak rectifier
+    auto env = envelopeFilter.processSample (channel, inputValue);
+
+    // VCA
+    auto gain = (env > threshold) ? static_cast<SampleType> (1.0)
+                                  : std::pow (env * thresholdInverse, ratioInverse - static_cast<SampleType> (1.0));
+
+    // Output
+    return gain * inputValue;
+}
+
 
 template <typename SampleType>
 void Compressor<SampleType>::update()

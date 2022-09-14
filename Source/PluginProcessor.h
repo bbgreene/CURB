@@ -78,8 +78,9 @@ private:
     float highBand { 0.0 };
     
     //Compressors
-//    std::array<juce::dsp::Compressor<float>, 4> compressor;
     std::array<bbg_dsp::Compressor<float>, 4> compressor;
+    bool compTypeValue;
+    
     //Solo and bypasses
     std::array<int, 4> soloBand;
     std::array<int, 4> bypass;
