@@ -33,9 +33,7 @@ CURBAudioProcessor::CURBAudioProcessor()
     treeState.addParameterListener("bypass 2", this);
     treeState.addParameterListener("bypass 3", this);
     treeState.addParameterListener("bypass 4", this);
-    
-    treeState.addParameterListener("type1", this);
-    
+        
     treeState.addParameterListener("low", this);
     treeState.addParameterListener("mid", this);
     treeState.addParameterListener("high", this);
@@ -89,9 +87,7 @@ CURBAudioProcessor::~CURBAudioProcessor()
     treeState.removeParameterListener("bypass 2", this);
     treeState.removeParameterListener("bypass 3", this);
     treeState.removeParameterListener("bypass 4", this);
-    
-    treeState.removeParameterListener("type1", this);
-    
+        
     treeState.removeParameterListener("low", this);
     treeState.removeParameterListener("mid", this);
     treeState.removeParameterListener("high", this);
@@ -137,6 +133,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
     
     auto gainRange = juce::NormalisableRange<float> (-24.0f, 24.0f, 0.5f, 1.0f);
+    auto ratioRange = juce::NormalisableRange<float> (0.5f, 10.0f, 0.01f, 1.0f);
     
     auto pInput = std::make_unique<juce::AudioParameterFloat>("input", "Input", gainRange, 0.0f);
     
@@ -150,13 +147,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     auto pBypass3 = std::make_unique<juce::AudioParameterBool>("bypass 3", "Bypass 3", 0);
     auto pBypass4 = std::make_unique<juce::AudioParameterBool>("bypass 4", "Bypass 4", 0);
     
-    auto pCompType1 = std::make_unique<juce::AudioParameterBool>("type1", "Type1", 0);
-    
     auto pFb1Mix = std::make_unique<juce::AudioParameterFloat>("fb1mix", "Fb1mix", 0.0, 100.0, 100.0);
     
     auto pGain1 = std::make_unique<juce::AudioParameterFloat>("gain1", "Gain1", gainRange, 0.0f);
     auto p1Thres = std::make_unique<juce::AudioParameterFloat>("thres 1", "Threshold 1", -70.0, 0.0, 0.0);
-    auto p1Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 1", "Ratio 1", 1.0, 10.0, 1.0);
+    auto p1Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 1", "Ratio 1", ratioRange, 1.0f);
     auto p1Att = std::make_unique<juce::AudioParameterFloat>("attack 1", "Attack 1", 0.0, 200.0, 10.0);
     auto p1Rel = std::make_unique<juce::AudioParameterFloat>("release 1", "Release 1", 0.0, 300.0, 100.0);
     
@@ -166,7 +161,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     auto pGain2 = std::make_unique<juce::AudioParameterFloat>("gain2", "Gain2", gainRange, 0.0f);
     auto p2Thres = std::make_unique<juce::AudioParameterFloat>("thres 2", "Threshold 2", -70.0, 0.0, 0.0);
-    auto p2Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 2", "Ratio 2", 1.0, 10.0, 1.0);
+    auto p2Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 2", "Ratio 2", ratioRange, 1.0f);
     auto p2Att = std::make_unique<juce::AudioParameterFloat>("attack 2", "Attack 2", 0.0, 200.0, 10.0);
     auto p2Rel = std::make_unique<juce::AudioParameterFloat>("release 2", "Release 2", 0.0, 300.0, 100.0);
     
@@ -176,7 +171,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     auto pGain3 = std::make_unique<juce::AudioParameterFloat>("gain3", "Gain3", gainRange, 0.0f);
     auto p3Thres = std::make_unique<juce::AudioParameterFloat>("thres 3", "Threshold 3", -70.0, 0.0, 0.0);
-    auto p3Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 3", "Ratio 3", 1.0, 10.0, 1.0);
+    auto p3Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 3", "Ratio 3",ratioRange, 1.0f);
     auto p3Att = std::make_unique<juce::AudioParameterFloat>("attack 3", "Attack 3", 0.0, 200.0, 10.0);
     auto p3Rel = std::make_unique<juce::AudioParameterFloat>("release 3", "Release 3", 0.0, 300.0, 100.0);
     
@@ -186,7 +181,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     auto pGain4 = std::make_unique<juce::AudioParameterFloat>("gain4", "Gain4", gainRange, 0.0f);
     auto p4Thres = std::make_unique<juce::AudioParameterFloat>("thres 4", "Threshold 4", -70.0, 0.0, 0.0);
-    auto p4Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 4", "Ratio 4", 1.0, 10.0, 1.0);
+    auto p4Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 4", "Ratio 4", ratioRange, 1.0f);
     auto p4Att = std::make_unique<juce::AudioParameterFloat>("attack 4", "Attack 4", 0.0, 200.0, 10.0);
     auto p4Rel = std::make_unique<juce::AudioParameterFloat>("release 4", "Release 4", 0.0, 300.0, 100.0);
     
@@ -211,7 +206,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     params.push_back(std::move(pBypass2));
     params.push_back(std::move(pFb2Mix));
     params.push_back(std::move(pGain2));
-    params.push_back(std::move(pCompType1));
     params.push_back(std::move(p2Thres));
     params.push_back(std::move(p2Ratio));
     params.push_back(std::move(p2Att));
@@ -435,7 +429,7 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     const auto& fb0Wet = fb0Ctx.getOutputBlock();
     mixModule[0].pushDrySamples(fb0Dry);
     if(bypass[0]) { fb0Ctx.isBypassed = true; };
-    compressor[0].process(fb0Ctx, compTypeValue);
+    compressor[0].process(fb0Ctx);
     gain[0].process(fb0Ctx);
     mixModule[0].mixWetSamples(fb0Wet);
     
@@ -443,7 +437,7 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     const auto& fb1Wet = fb1Ctx.getOutputBlock();
     mixModule[1].pushDrySamples(fb1Dry);
     if(bypass[1]) { fb1Ctx.isBypassed = true; };
-    compressor[1].process(fb1Ctx, compTypeValue);
+    compressor[1].process(fb1Ctx);
     gain[1].process(fb1Ctx);
     mixModule[1].mixWetSamples(fb1Wet);
     
@@ -451,7 +445,7 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     const auto& fb2Wet = fb2Ctx.getOutputBlock();
     mixModule[2].pushDrySamples(fb2Dry);
     if(bypass[2]) { fb2Ctx.isBypassed = true; };
-    compressor[2].process(fb2Ctx, compTypeValue);
+    compressor[2].process(fb2Ctx);
     gain[2].process(fb2Ctx);
     mixModule[2].mixWetSamples(fb2Wet);
     
@@ -459,7 +453,7 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     const auto& fb3Wet = fb3Ctx.getOutputBlock();
     mixModule[3].pushDrySamples(fb3Dry);
     if(bypass[3]) { fb3Ctx.isBypassed = true; };
-    compressor[3].process(fb3Ctx, compTypeValue);
+    compressor[3].process(fb3Ctx);
     gain[3].process(fb3Ctx);
     mixModule[3].mixWetSamples(fb3Wet);
 }
@@ -575,7 +569,6 @@ void CURBAudioProcessor::updateParameters()
     compressor[1].setRatio(treeState.getRawParameterValue("ratio 2")->load());
     compressor[1].setAttack(treeState.getRawParameterValue("attack 2")->load());
     compressor[1].setRelease(treeState.getRawParameterValue("release 2")->load());
-    compTypeValue = treeState.getRawParameterValue("type1")->load();
 
     compressor[2].setThreshold(treeState.getRawParameterValue("thres 3")->load());
     compressor[2].setRatio(treeState.getRawParameterValue("ratio 3")->load());

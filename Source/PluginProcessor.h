@@ -79,7 +79,6 @@ private:
     
     //Compressors
     std::array<bbg_dsp::Compressor<float>, 4> compressor;
-    bool compTypeValue;
     
     //Solo and bypasses
     std::array<int, 4> soloBand;

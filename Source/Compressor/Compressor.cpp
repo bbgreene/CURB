@@ -78,29 +78,23 @@ SampleType Compressor<SampleType>::processSampleDownCompression (int channel, Sa
 {
     // Ballistics filter with peak rectifier
     auto env = envelopeFilter.processSample (channel, inputValue);
-
+    auto gain = 1.0;
     // VCA
-    auto gain = (env < threshold) ? static_cast<SampleType> (1.0)
-                                  : std::pow (env * thresholdInverse, ratioInverse - static_cast<SampleType> (1.0));
+    if(ratio < 1.0)
+    {
+        gain = (env > threshold) ? static_cast<SampleType> (1.0)
+                                      : std::pow (env * thresholdInverse, ratioInverseUpward - static_cast<SampleType> (1.0));
+    }
+    else
+    {
+        gain = (env < threshold) ? static_cast<SampleType> (1.0)
+                                      : std::pow (env * thresholdInverse, ratioInverse - static_cast<SampleType> (1.0));
+    }
+   
 
     // Output
     return gain * inputValue;
 }
-
-template <typename SampleType>
-SampleType Compressor<SampleType>::processSampleUpCompression (int channel, SampleType inputValue)
-{
-    // Ballistics filter with peak rectifier
-    auto env = envelopeFilter.processSample (channel, inputValue);
-
-    // VCA
-    auto gain = (env > threshold) ? static_cast<SampleType> (1.0)
-                                  : std::pow (env * thresholdInverse, ratioInverse - static_cast<SampleType> (1.0));
-
-    // Output
-    return gain * inputValue;
-}
-
 
 template <typename SampleType>
 void Compressor<SampleType>::update()
@@ -108,6 +102,11 @@ void Compressor<SampleType>::update()
     threshold = juce::Decibels::decibelsToGain (thresholddB, static_cast<SampleType> (-200.0));
     thresholdInverse = static_cast<SampleType> (1.0) / threshold;
     ratioInverse     = static_cast<SampleType> (1.0) / ratio;
+    ratioInverseUpward = static_cast<SampleType> (1.0) / (1.0 + ((2.0 - 1.0) * (ratio - 1.0)) / (0.5 - 1.0));
+                                                        //(targetRangeMin + ((targetRangeMax - targetRangeMin) * (sourceValue - sourceRangeMin)) / (sourceRangeMax - sourceRangeMin));
+    
+    
+    
 
     envelopeFilter.setAttackTime (attackTime);
     envelopeFilter.setReleaseTime (releaseTime);

@@ -51,7 +51,7 @@ public:
     //==============================================================================
     /** Processes the input and output samples supplied in the processing context. */
     template <typename ProcessContext>
-    void process (const ProcessContext& context, bool compType) noexcept
+    void process (const ProcessContext& context) noexcept
     {
         const auto& inputBlock = context.getInputBlock();
         auto& outputBlock      = context.getOutputBlock();
@@ -73,16 +73,12 @@ public:
             auto* outputSamples = outputBlock.getChannelPointer (channel);
 
             for (size_t i = 0; i < numSamples; ++i)
-            if(!compType)
                 outputSamples[i] = processSampleDownCompression ((int) channel, inputSamples[i]);
-            else
-                outputSamples[i] = processSampleUpCompression ((int) channel, inputSamples[i]);
         }
     }
 
     /** Performs the processing operation on a single sample at a time. */
     SampleType processSampleDownCompression (int channel, SampleType inputValue);
-    SampleType processSampleUpCompression (int channel, SampleType inputValue);
 
 private:
     //==============================================================================
