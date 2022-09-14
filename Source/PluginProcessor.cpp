@@ -63,6 +63,7 @@ CURBAudioProcessor::CURBAudioProcessor()
     treeState.addParameterListener("release 4", this);
     
     treeState.addParameterListener("output", this);
+    treeState.addParameterListener("main mix", this);
 }
 
 CURBAudioProcessor::~CURBAudioProcessor()
@@ -108,6 +109,7 @@ CURBAudioProcessor::~CURBAudioProcessor()
     treeState.removeParameterListener("release 4", this);
     
     treeState.removeParameterListener("output", this);
+    treeState.removeParameterListener("main mix", this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createParameterLayout()
@@ -160,6 +162,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     auto pOutput = std::make_unique<juce::AudioParameterFloat>("output", "Output", gainRange, 0.0f);
     
+    auto pMainMix = std::make_unique<juce::AudioParameterFloat>("main mix", "Main Mix", 0.0, 100.0, 100.0);
+    
     params.push_back(std::move(pInput));
     
     params.push_back(std::move(pSolo1));
@@ -201,6 +205,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     params.push_back(std::move(p4Rel));
     
     params.push_back(std::move(pOutput));
+    params.push_back(std::move(pMainMix));
 
     return { params.begin(), params.end() };
 }
@@ -304,6 +309,11 @@ void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float
     if(parameterID == "output")
     {
         output.setGainDecibels(treeState.getRawParameterValue("output")->load());
+    }
+    if(parameterID == "main mix")
+    {
+        mainMixValue = treeState.getRawParameterValue("main mix")->load();
+        mainMixModule.setWetMixProportion(juce::jmap(mainMixValue, 0.0f, 100.0f, 0.0f, 1.0f));
     }
 }
 
@@ -475,6 +485,11 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     output.prepare(spec);
     output.setRampDurationSeconds(0.05);
     output.setGainDecibels(treeState.getRawParameterValue("output")->load());
+    
+    mainMixModule.prepare(spec);
+    mainMixModule.reset();
+    mainMixValue = treeState.getRawParameterValue("main mix")->load();
+    mainMixModule.setWetMixProportion(juce::jmap(mainMixValue, 0.0f, 100.0f, 0.0f, 1.0f));
 }
 
 void CURBAudioProcessor::releaseResources()
@@ -519,9 +534,13 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         buffer.clear (i, 0, buffer.getNumSamples());
     
     auto blockIn = juce::dsp::AudioBlock<float> (buffer);
-    auto gainCtx = juce::dsp::ProcessContextReplacing<float>(blockIn);
+    auto inCtx = juce::dsp::ProcessContextReplacing<float>(blockIn);
+    const auto& inputBlock = inCtx.getInputBlock();
+    const auto& outputBlock = inCtx.getOutputBlock();
     
-    input.process(juce::dsp::ProcessContextReplacing<float>(gainCtx));
+    mainMixModule.pushDrySamples(inputBlock);
+    
+    input.process(juce::dsp::ProcessContextReplacing<float>(inCtx));
     
     for ( auto& fb : filterBuffers )
     {
@@ -611,7 +630,8 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         }
     }
     
-    output.process(juce::dsp::ProcessContextReplacing<float>(gainCtx));
+    output.process(juce::dsp::ProcessContextReplacing<float>(inCtx));
+    mainMixModule.mixWetSamples(outputBlock);
 }
 
 //==============================================================================

@@ -56,6 +56,8 @@ public:
     juce::AudioProcessorValueTreeState treeState;
     
 private:
+    float mainMixValue { 100.0 };
+    juce::dsp::DryWetMixer<float> mainMixModule;
     
     juce::dsp::Gain<float> input, output, gain1, gain2, gain3, gain4;
     
