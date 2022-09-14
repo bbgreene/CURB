@@ -91,7 +91,6 @@ SampleType Compressor<SampleType>::processSampleDownCompression (int channel, Sa
                                       : std::pow (env * thresholdInverse, ratioInverse - static_cast<SampleType> (1.0));
     }
    
-
     // Output
     return gain * inputValue;
 }
@@ -103,11 +102,8 @@ void Compressor<SampleType>::update()
     thresholdInverse = static_cast<SampleType> (1.0) / threshold;
     ratioInverse     = static_cast<SampleType> (1.0) / ratio;
     ratioInverseUpward = static_cast<SampleType> (1.0) / (1.0 + ((2.0 - 1.0) * (ratio - 1.0)) / (0.5 - 1.0));
-                                                        //(targetRangeMin + ((targetRangeMax - targetRangeMin) * (sourceValue - sourceRangeMin)) / (sourceRangeMax - sourceRangeMin));
-    
-    
-    
-
+                                    //basically a jmap //(targetRangeMin + ((targetRangeMax - targetRangeMin) * (sourceValue - sourceRangeMin)) / (sourceRangeMax - sourceRangeMin));
+ 
     envelopeFilter.setAttackTime (attackTime);
     envelopeFilter.setReleaseTime (releaseTime);
 }
