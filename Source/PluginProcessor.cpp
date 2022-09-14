@@ -240,109 +240,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
 
 void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue)
 {
-    if(parameterID == "input")
-    {
-        input.setGainDecibels(treeState.getRawParameterValue("input")->load());
-    }
-    if(parameterID == "low")
-    {
-        lowBand = newValue;
-        LP0.setCutoffFrequency(lowBand);
-        HP0.setCutoffFrequency(lowBand);
-    }
-    if(parameterID == "mid")
-    {
-        midBand = newValue;
-        LP1.setCutoffFrequency(midBand);
-        HP1.setCutoffFrequency(midBand);
-        AP1b.setCutoffFrequency(midBand);
-    }
-    if(parameterID == "high")
-    {
-        highBand = newValue;
-        AP2a.setCutoffFrequency(highBand);
-        AP2b.setCutoffFrequency(highBand);
-        LP2.setCutoffFrequency(highBand);
-        HP2.setCutoffFrequency(highBand);
-    }
-    if (parameterID == "solo 1")
-    {
-        soloBand[0] = newValue;
-    }
-    if (parameterID == "solo 2")
-    {
-        soloBand[1] = newValue;
-    }
-    if (parameterID == "solo 3")
-    {
-        soloBand[2] = newValue;
-    }
-    if (parameterID == "solo 4")
-    {
-        soloBand[3] = newValue;
-    }
-    if (parameterID == "bypass 1")
-    {
-        bypass1 = newValue;
-    }
-    if (parameterID == "bypass 2")
-    {
-        bypass2 = newValue;
-    }
-    if (parameterID == "bypass 3")
-    {
-        bypass3 = newValue;
-    }
-    if (parameterID == "bypass 4")
-    {
-        bypass4 = newValue;
-    }
-
-    gainValue[0] = treeState.getRawParameterValue("gain1")->load();
-    gainValue[1] = treeState.getRawParameterValue("gain2")->load();
-    gainValue[2] = treeState.getRawParameterValue("gain3")->load();
-    gainValue[3] = treeState.getRawParameterValue("gain4")->load();
-    
-    for(size_t i = 0; i < gain.size(); ++i)
-    {
-        gain[i].setGainDecibels(gainValue[i]);
-    }
-    
-    compressor1.setThreshold(treeState.getRawParameterValue("thres 1")->load());
-    compressor1.setRatio(treeState.getRawParameterValue("ratio 1")->load());
-    compressor1.setAttack(treeState.getRawParameterValue("attack 1")->load());
-    compressor1.setRelease(treeState.getRawParameterValue("release 1")->load());
-    
-    compressor2.setThreshold(treeState.getRawParameterValue("thres 2")->load());
-    compressor2.setRatio(treeState.getRawParameterValue("ratio 2")->load());
-    compressor2.setAttack(treeState.getRawParameterValue("attack 2")->load());
-    compressor2.setRelease(treeState.getRawParameterValue("release 2")->load());
-    
-    compressor3.setThreshold(treeState.getRawParameterValue("thres 3")->load());
-    compressor3.setRatio(treeState.getRawParameterValue("ratio 3")->load());
-    compressor3.setAttack(treeState.getRawParameterValue("attack 3")->load());
-    compressor3.setRelease(treeState.getRawParameterValue("release 3")->load());
-    
-    compressor4.setThreshold(treeState.getRawParameterValue("thres 4")->load());
-    compressor4.setRatio(treeState.getRawParameterValue("ratio 4")->load());
-    compressor4.setAttack(treeState.getRawParameterValue("attack 4")->load());
-    compressor4.setRelease(treeState.getRawParameterValue("release 4")->load());
-    
-    if(parameterID == "output")
-    {
-        output.setGainDecibels(treeState.getRawParameterValue("output")->load());
-    }
-    
-    mixValue[0] = treeState.getRawParameterValue("fb1mix")->load();
-    mixValue[1] = treeState.getRawParameterValue("fb2mix")->load();
-    mixValue[2] = treeState.getRawParameterValue("fb3mix")->load();
-    mixValue[3] = treeState.getRawParameterValue("fb4mix")->load();
-    mixValue[4] = treeState.getRawParameterValue("main mix")->load();
-    
-    for(size_t i = 0; i < mixModule.size(); ++i)
-    {
-        mixModule[i].setWetMixProportion(juce::jmap(mixValue[i], 0.0f, 100.0f, 0.0f, 1.0f));
-    }
+    updateParameters();
 }
 
 //==============================================================================
@@ -415,48 +313,25 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = getTotalNumInputChannels();
     
-    input.prepare(spec);
-    input.setRampDurationSeconds(0.05);
-    input.setGainDecibels(treeState.getRawParameterValue("input")->load());
-    
     LP0.prepare(spec);
-    LP0.setCutoffFrequency(treeState.getRawParameterValue("low")->load());
     LP0.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
-
     HP0.prepare(spec);
-    HP0.setCutoffFrequency(treeState.getRawParameterValue("low")->load());
     HP0.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
-    
     AP1a.prepare(spec);
-    AP1a.setCutoffFrequency(treeState.getRawParameterValue("mid")->load());
     AP1a.setType(juce::dsp::LinkwitzRileyFilterType::allpass);
-    
     LP1.prepare(spec);
-    LP1.setCutoffFrequency(treeState.getRawParameterValue("mid")->load());
     LP1.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
-    
     HP1.prepare(spec);
-    HP1.setCutoffFrequency(treeState.getRawParameterValue("mid")->load());
     HP1.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
-    
     AP1b.prepare(spec);
-    AP1b.setCutoffFrequency(treeState.getRawParameterValue("mid")->load());
     AP1b.setType(juce::dsp::LinkwitzRileyFilterType::allpass);
-    
     AP2a.prepare(spec);
-    AP2a.setCutoffFrequency(treeState.getRawParameterValue("high")->load());
     AP2a.setType(juce::dsp::LinkwitzRileyFilterType::allpass);
-    
     AP2b.prepare(spec);
-    AP2b.setCutoffFrequency(treeState.getRawParameterValue("high")->load());
     AP2b.setType(juce::dsp::LinkwitzRileyFilterType::allpass);
-    
     LP2.prepare(spec);
-    LP2.setCutoffFrequency(treeState.getRawParameterValue("high")->load());
     LP2.setType(juce::dsp::LinkwitzRileyFilterType::lowpass);
-    
     HP2.prepare(spec);
-    HP2.setCutoffFrequency(treeState.getRawParameterValue("high")->load());
     HP2.setType(juce::dsp::LinkwitzRileyFilterType::highpass);
     
     for ( auto& buffer : filterBuffers )
@@ -464,55 +339,16 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
         buffer.setSize(spec.numChannels, samplesPerBlock);
     }
     
-    soloBand[0] = treeState.getRawParameterValue("solo 1")->load();
-    soloBand[1] = treeState.getRawParameterValue("solo 2")->load();
-    soloBand[2] = treeState.getRawParameterValue("solo 3")->load();
-    soloBand[3] = treeState.getRawParameterValue("solo 4")->load();
-    
-    bypass1 = treeState.getRawParameterValue("bypass 1")->load();
-    bypass2 = treeState.getRawParameterValue("bypass 2")->load();
-    bypass3 = treeState.getRawParameterValue("bypass 3")->load();
-    bypass4 = treeState.getRawParameterValue("bypass 4")->load();
-    
-    gainValue[0] = treeState.getRawParameterValue("gain1")->load();
-    gainValue[1] = treeState.getRawParameterValue("gain2")->load();
-    gainValue[2] = treeState.getRawParameterValue("gain3")->load();
-    gainValue[3] = treeState.getRawParameterValue("gain4")->load();
-    
     for(size_t i = 0; i < gain.size(); ++i)
     {
         gain[i].prepare(spec);
-        gain[i].setRampDurationSeconds(0.05);
-        gain[i].setGainDecibels(gainValue[i]);
     }
     
-    compressor1.prepare(spec);
-    compressor1.setThreshold(treeState.getRawParameterValue("thres 1")->load());
-    compressor1.setRatio(treeState.getRawParameterValue("ratio 1")->load());
-    compressor1.setAttack(treeState.getRawParameterValue("attack 1")->load());
-    compressor1.setRelease(treeState.getRawParameterValue("release 1")->load());
-    
-    compressor2.prepare(spec);
-    compressor2.setThreshold(treeState.getRawParameterValue("thres 2")->load());
-    compressor2.setRatio(treeState.getRawParameterValue("ratio 2")->load());
-    compressor2.setAttack(treeState.getRawParameterValue("attack 2")->load());
-    compressor2.setRelease(treeState.getRawParameterValue("release 2")->load());
-    
-    compressor3.prepare(spec);
-    compressor3.setThreshold(treeState.getRawParameterValue("thres 3")->load());
-    compressor3.setRatio(treeState.getRawParameterValue("ratio 3")->load());
-    compressor3.setAttack(treeState.getRawParameterValue("attack 3")->load());
-    compressor3.setRelease(treeState.getRawParameterValue("release 3")->load());
-    
-    compressor4.prepare(spec);
-    compressor4.setThreshold(treeState.getRawParameterValue("thres 4")->load());
-    compressor4.setRatio(treeState.getRawParameterValue("ratio 4")->load());
-    compressor4.setAttack(treeState.getRawParameterValue("attack 4")->load());
-    compressor4.setRelease(treeState.getRawParameterValue("release 4")->load());
-    
-    output.prepare(spec);
-    output.setRampDurationSeconds(0.05);
-    output.setGainDecibels(treeState.getRawParameterValue("output")->load());
+    for(size_t i = 0; i < compressor.size(); ++i)
+    {
+        compressor[i].prepare(spec);
+        compressor[i].reset();
+    }
     
     for ( auto& mix : mixModule )
     {
@@ -520,16 +356,7 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
         mix.reset();
     }
     
-    mixValue[0] = treeState.getRawParameterValue("fb1mix")->load();
-    mixValue[1] = treeState.getRawParameterValue("fb2mix")->load();
-    mixValue[2] = treeState.getRawParameterValue("fb3mix")->load();
-    mixValue[3] = treeState.getRawParameterValue("fb4mix")->load();
-    mixValue[4] = treeState.getRawParameterValue("main mix")->load();
-    
-    for(size_t i = 0; i < mixModule.size(); ++i)
-    {
-        mixModule[i].setWetMixProportion(juce::jmap(mixValue[i], 0.0f, 100.0f, 0.0f, 1.0f));
-    }
+    updateParameters();
 }
 
 void CURBAudioProcessor::releaseResources()
@@ -564,27 +391,11 @@ bool CURBAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) con
 }
 #endif
 
-void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &inputBuffer)
 {
-    juce::ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
-
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
-    
-    auto blockIn = juce::dsp::AudioBlock<float> (buffer);
-    auto inCtx = juce::dsp::ProcessContextReplacing<float>(blockIn);
-    const auto& inputBlock = inCtx.getInputBlock();
-    const auto& outputBlock = inCtx.getOutputBlock();
-    
-    mixModule[4].pushDrySamples(inputBlock); //dry to main mix module
-    
-    input.process(juce::dsp::ProcessContextReplacing<float>(inCtx));
-    
     for ( auto& fb : filterBuffers )
     {
-        fb = buffer;
+        fb = inputBuffer;
     }
     
     auto fb0Block = juce::dsp::AudioBlock<float> (filterBuffers[0]);
@@ -613,38 +424,58 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     AP1b.process(fb3Ctx);
     HP2.process(fb3Ctx);
     
-    
     const auto& fb0Dry = fb0Ctx.getInputBlock();
     const auto& fb0Wet = fb0Ctx.getOutputBlock();
     mixModule[0].pushDrySamples(fb0Dry);
-    if(bypass1) { fb0Ctx.isBypassed = true; };
-    compressor1.process(fb0Ctx);
+    if(bypass[0]) { fb0Ctx.isBypassed = true; };
+    compressor[0].process(fb0Ctx);
     gain[0].process(fb0Ctx);
     mixModule[0].mixWetSamples(fb0Wet);
     
     const auto& fb1Dry = fb1Ctx.getInputBlock();
     const auto& fb1Wet = fb1Ctx.getOutputBlock();
     mixModule[1].pushDrySamples(fb1Dry);
-    if(bypass2) { fb1Ctx.isBypassed = true; };
-    compressor2.process(fb1Ctx);
+    if(bypass[1]) { fb1Ctx.isBypassed = true; };
+    compressor[1].process(fb1Ctx);
     gain[1].process(fb1Ctx);
     mixModule[1].mixWetSamples(fb1Wet);
     
     const auto& fb2Dry = fb2Ctx.getInputBlock();
     const auto& fb2Wet = fb2Ctx.getOutputBlock();
     mixModule[2].pushDrySamples(fb2Dry);
-    if(bypass3) { fb2Ctx.isBypassed = true; };
-    compressor3.process(fb2Ctx);
+    if(bypass[2]) { fb2Ctx.isBypassed = true; };
+    compressor[2].process(fb2Ctx);
     gain[2].process(fb2Ctx);
     mixModule[2].mixWetSamples(fb2Wet);
     
     const auto& fb3Dry = fb3Ctx.getInputBlock();
     const auto& fb3Wet = fb3Ctx.getOutputBlock();
     mixModule[3].pushDrySamples(fb3Dry);
-    if(bypass4) { fb3Ctx.isBypassed = true; };
-    compressor4.process(fb3Ctx);
+    if(bypass[3]) { fb3Ctx.isBypassed = true; };
+    compressor[3].process(fb3Ctx);
     gain[3].process(fb3Ctx);
     mixModule[3].mixWetSamples(fb3Wet);
+}
+
+void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+{
+    juce::ScopedNoDenormals noDenormals;
+    auto totalNumInputChannels  = getTotalNumInputChannels();
+    auto totalNumOutputChannels = getTotalNumOutputChannels();
+
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+        buffer.clear (i, 0, buffer.getNumSamples());
+    
+    auto blockIn = juce::dsp::AudioBlock<float> (buffer);
+    auto inCtx = juce::dsp::ProcessContextReplacing<float>(blockIn);
+    const auto& inputBlock = inCtx.getInputBlock();
+    const auto& outputBlock = inCtx.getOutputBlock();
+    
+    mixModule[4].pushDrySamples(inputBlock); //dry to main mix module
+    
+    gain[4].process(juce::dsp::ProcessContextReplacing<float>(inCtx)); // input gain
+    
+    splitBandsAndComp(buffer);
     
     auto numSamples = buffer.getNumSamples();
     auto numChannels = buffer.getNumChannels();
@@ -687,8 +518,77 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         }
     }
     
-    output.process(juce::dsp::ProcessContextReplacing<float>(inCtx));
+    gain[5].process(juce::dsp::ProcessContextReplacing<float>(inCtx)); //output gain
     mixModule[4].mixWetSamples(outputBlock); //wet to main mix module
+}
+
+void CURBAudioProcessor::updateParameters()
+{
+    LP0.setCutoffFrequency(treeState.getRawParameterValue("low")->load());
+    HP0.setCutoffFrequency(treeState.getRawParameterValue("low")->load());
+    
+    AP1a.setCutoffFrequency(treeState.getRawParameterValue("mid")->load());
+    LP1.setCutoffFrequency(treeState.getRawParameterValue("mid")->load());
+    HP1.setCutoffFrequency(treeState.getRawParameterValue("mid")->load());
+    AP1b.setCutoffFrequency(treeState.getRawParameterValue("mid")->load());
+
+    AP2a.setCutoffFrequency(treeState.getRawParameterValue("high")->load());
+    AP2b.setCutoffFrequency(treeState.getRawParameterValue("high")->load());
+    LP2.setCutoffFrequency(treeState.getRawParameterValue("high")->load());
+    HP2.setCutoffFrequency(treeState.getRawParameterValue("high")->load());
+    
+    soloBand[0] = treeState.getRawParameterValue("solo 1")->load();
+    soloBand[1] = treeState.getRawParameterValue("solo 2")->load();
+    soloBand[2] = treeState.getRawParameterValue("solo 3")->load();
+    soloBand[3] = treeState.getRawParameterValue("solo 4")->load();
+    
+    bypass[0] = treeState.getRawParameterValue("bypass 1")->load();
+    bypass[1] = treeState.getRawParameterValue("bypass 2")->load();
+    bypass[2] = treeState.getRawParameterValue("bypass 3")->load();
+    bypass[3] = treeState.getRawParameterValue("bypass 4")->load();
+
+    gainValue[0] = treeState.getRawParameterValue("gain1")->load();
+    gainValue[1] = treeState.getRawParameterValue("gain2")->load();
+    gainValue[2] = treeState.getRawParameterValue("gain3")->load();
+    gainValue[3] = treeState.getRawParameterValue("gain4")->load();
+    gainValue[4] = treeState.getRawParameterValue("input")->load();
+    gainValue[5] = treeState.getRawParameterValue("output")->load();
+    
+    for(size_t i = 0; i < gain.size(); ++i)
+    {
+        gain[i].setGainDecibels(gainValue[i]);
+    }
+    
+    compressor[0].setThreshold(treeState.getRawParameterValue("thres 1")->load());
+    compressor[0].setRatio(treeState.getRawParameterValue("ratio 1")->load());
+    compressor[0].setAttack(treeState.getRawParameterValue("attack 1")->load());
+    compressor[0].setRelease(treeState.getRawParameterValue("release 1")->load());
+    
+    compressor[1].setThreshold(treeState.getRawParameterValue("thres 2")->load());
+    compressor[1].setRatio(treeState.getRawParameterValue("ratio 2")->load());
+    compressor[1].setAttack(treeState.getRawParameterValue("attack 2")->load());
+    compressor[1].setRelease(treeState.getRawParameterValue("release 2")->load());
+    
+    compressor[2].setThreshold(treeState.getRawParameterValue("thres 3")->load());
+    compressor[2].setRatio(treeState.getRawParameterValue("ratio 3")->load());
+    compressor[2].setAttack(treeState.getRawParameterValue("attack 3")->load());
+    compressor[2].setRelease(treeState.getRawParameterValue("release 3")->load());
+    
+    compressor[3].setThreshold(treeState.getRawParameterValue("thres 4")->load());
+    compressor[3].setRatio(treeState.getRawParameterValue("ratio 4")->load());
+    compressor[3].setAttack(treeState.getRawParameterValue("attack 4")->load());
+    compressor[3].setRelease(treeState.getRawParameterValue("release 4")->load());
+    
+    mixValue[0] = treeState.getRawParameterValue("fb1mix")->load();
+    mixValue[1] = treeState.getRawParameterValue("fb2mix")->load();
+    mixValue[2] = treeState.getRawParameterValue("fb3mix")->load();
+    mixValue[3] = treeState.getRawParameterValue("fb4mix")->load();
+    mixValue[4] = treeState.getRawParameterValue("main mix")->load();
+    
+    for(size_t i = 0; i < mixModule.size(); ++i)
+    {
+        mixModule[i].setWetMixProportion(juce::jmap(mixValue[i], 0.0f, 100.0f, 0.0f, 1.0f));
+    }
 }
 
 //==============================================================================

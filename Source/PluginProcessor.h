@@ -61,9 +61,8 @@ private:
     std::array<float, 5> mixValue;
     
     //Input, output and individual band gains
-    juce::dsp::Gain<float> input, output;//, gain1, gain2, gain3, gain4;
-    std::array<juce::dsp::Gain<float>, 4> gain;
-    std::array<float, 4> gainValue;
+    std::array<juce::dsp::Gain<float>, 6> gain; // 5[4] is input, 6[5] is output
+    std::array<float, 6> gainValue;
     
     //Filters and variables
     using Filter = juce::dsp::LinkwitzRileyFilter<float>;
@@ -78,25 +77,20 @@ private:
     float highBand { 0.0 };
     
     //Compressors
-    juce::dsp::Compressor<float> compressor1;
-    juce::dsp::Compressor<float> compressor2;
-    juce::dsp::Compressor<float> compressor3;
-    juce::dsp::Compressor<float> compressor4;
+    std::array<juce::dsp::Compressor<float>, 4> compressor;
     
     //Solo and bypasses
     std::array<int, 4> soloBand;
-    
-    bool bypass1 { false };
-    bool bypass2 { false };
-    bool bypass3 { false };
-    bool bypass4 { false };
+    std::array<int, 4> bypass;
     
     //Band buffers
     std::array<juce::AudioBuffer<float>, 4> filterBuffers;
     
-    //parameter layout and change functions
+    //functions
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     void parameterChanged (const juce::String& parameterID, float newValue) override;
+    void updateParameters();
+    void splitBandsAndComp(const juce::AudioBuffer<float>& inputBuffer);
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CURBAudioProcessor)
 };
