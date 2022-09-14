@@ -59,6 +59,12 @@ private:
     float mainMixValue { 100.0 };
     juce::dsp::DryWetMixer<float> mainMixModule;
     
+    float fb2MixValue { 100.0 };
+    juce::dsp::DryWetMixer<float> fb2Mix;
+    
+    std::array<float, 4> fbMixValue;
+    std::array<juce::dsp::DryWetMixer<float>, 4> fbMixModule;
+    
     juce::dsp::Gain<float> input, output, gain1, gain2, gain3, gain4;
     
     using Filter = juce::dsp::LinkwitzRileyFilter<float>;

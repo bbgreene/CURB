@@ -38,11 +38,15 @@ CURBAudioProcessor::CURBAudioProcessor()
     treeState.addParameterListener("mid", this);
     treeState.addParameterListener("high", this);
     
+    treeState.addParameterListener("fb1mix", this);
+    
     treeState.addParameterListener("gain1", this);
     treeState.addParameterListener("thres 1", this);
     treeState.addParameterListener("ratio 1", this);
     treeState.addParameterListener("attack 1", this);
     treeState.addParameterListener("release 1", this);
+    
+    treeState.addParameterListener("fb2mix", this);
     
     treeState.addParameterListener("gain2", this);
     treeState.addParameterListener("thres 2", this);
@@ -50,11 +54,15 @@ CURBAudioProcessor::CURBAudioProcessor()
     treeState.addParameterListener("attack 2", this);
     treeState.addParameterListener("release 2", this);
     
+    treeState.addParameterListener("fb3mix", this);
+    
     treeState.addParameterListener("gain3", this);
     treeState.addParameterListener("thres 3", this);
     treeState.addParameterListener("ratio 3", this);
     treeState.addParameterListener("attack 3", this);
     treeState.addParameterListener("release 3", this);
+    
+    treeState.addParameterListener("fb4mix", this);
     
     treeState.addParameterListener("gain4", this);
     treeState.addParameterListener("thres 4", this);
@@ -84,11 +92,15 @@ CURBAudioProcessor::~CURBAudioProcessor()
     treeState.removeParameterListener("mid", this);
     treeState.removeParameterListener("high", this);
     
+    treeState.removeParameterListener("fb1mix", this);
+    
     treeState.removeParameterListener("gain1", this);
     treeState.removeParameterListener("thres 1", this);
     treeState.removeParameterListener("ratio 1", this);
     treeState.removeParameterListener("attack 1", this);
     treeState.removeParameterListener("release 1", this);
+    
+    treeState.removeParameterListener("fb2mix", this);
     
     treeState.removeParameterListener("gain2", this);
     treeState.removeParameterListener("thres 2", this);
@@ -96,11 +108,15 @@ CURBAudioProcessor::~CURBAudioProcessor()
     treeState.removeParameterListener("attack 2", this);
     treeState.removeParameterListener("release 2", this);
     
+    treeState.removeParameterListener("fb3mix", this);
+    
     treeState.removeParameterListener("gain3", this);
     treeState.removeParameterListener("thres 3", this);
     treeState.removeParameterListener("ratio 3", this);
     treeState.removeParameterListener("attack 3", this);
     treeState.removeParameterListener("release 3", this);
+    
+    treeState.removeParameterListener("fb4mix", this);
     
     treeState.removeParameterListener("gain4", this);
     treeState.removeParameterListener("thres 4", this);
@@ -130,6 +146,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     auto pBypass3 = std::make_unique<juce::AudioParameterBool>("bypass 3", "Bypass 3", 0);
     auto pBypass4 = std::make_unique<juce::AudioParameterBool>("bypass 4", "Bypass 4", 0);
     
+    auto pFb1Mix = std::make_unique<juce::AudioParameterFloat>("fb1mix", "Fb1mix", 0.0, 100.0, 100.0);
+    
     auto pGain1 = std::make_unique<juce::AudioParameterFloat>("gain1", "Gain1", gainRange, 0.0f);
     auto p1Thres = std::make_unique<juce::AudioParameterFloat>("thres 1", "Threshold 1", -70.0, 0.0, 0.0);
     auto p1Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 1", "Ratio 1", 1.0, 10.0, 1.0);
@@ -137,6 +155,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     auto p1Rel = std::make_unique<juce::AudioParameterFloat>("release 1", "Release 1", 0.0, 300.0, 100.0);
     
     auto pLowBand = std::make_unique<juce::AudioParameterFloat>("low", "Low", juce::NormalisableRange<float> (40.0, 250.0, 1.0, 1.0), 100);
+    
+    auto pFb2Mix = std::make_unique<juce::AudioParameterFloat>("fb2mix", "Fb2mix", 0.0, 100.0, 100.0);
     
     auto pGain2 = std::make_unique<juce::AudioParameterFloat>("gain2", "Gain2", gainRange, 0.0f);
     auto p2Thres = std::make_unique<juce::AudioParameterFloat>("thres 2", "Threshold 2", -70.0, 0.0, 0.0);
@@ -146,6 +166,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     auto pMidBand = std::make_unique<juce::AudioParameterFloat>("mid", "Mid", juce::NormalisableRange<float> (251.0, 6000.0, 1.0, 1.0), 1000.0);
     
+    auto pFb3Mix = std::make_unique<juce::AudioParameterFloat>("fb3mix", "Fb3mix", 0.0, 100.0, 100.0);
+    
     auto pGain3 = std::make_unique<juce::AudioParameterFloat>("gain3", "Gain3", gainRange, 0.0f);
     auto p3Thres = std::make_unique<juce::AudioParameterFloat>("thres 3", "Threshold 3", -70.0, 0.0, 0.0);
     auto p3Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 3", "Ratio 3", 1.0, 10.0, 1.0);
@@ -153,6 +175,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     auto p3Rel = std::make_unique<juce::AudioParameterFloat>("release 3", "Release 3", 0.0, 300.0, 100.0);
     
     auto pHighBand = std::make_unique<juce::AudioParameterFloat>("high", "High", juce::NormalisableRange<float> (6001.0, 16000.0, 1.0, 1.0), 12000.0);
+    
+    auto pFb4Mix = std::make_unique<juce::AudioParameterFloat>("fb4mix", "Fb4mix", 0.0, 100.0, 100.0);
     
     auto pGain4 = std::make_unique<juce::AudioParameterFloat>("gain4", "Gain4", gainRange, 0.0f);
     auto p4Thres = std::make_unique<juce::AudioParameterFloat>("thres 4", "Threshold 4", -70.0, 0.0, 0.0);
@@ -168,6 +192,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     params.push_back(std::move(pSolo1));
     params.push_back(std::move(pBypass1));
+    params.push_back(std::move(pFb1Mix));
     params.push_back(std::move(pGain1));
     params.push_back(std::move(p1Thres));
     params.push_back(std::move(p1Ratio));
@@ -178,6 +203,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     params.push_back(std::move(pSolo2));
     params.push_back(std::move(pBypass2));
+    params.push_back(std::move(pFb2Mix));
     params.push_back(std::move(pGain2));
     params.push_back(std::move(p2Thres));
     params.push_back(std::move(p2Ratio));
@@ -188,6 +214,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     params.push_back(std::move(pSolo3));
     params.push_back(std::move(pBypass3));
+    params.push_back(std::move(pFb3Mix));
     params.push_back(std::move(pGain3));
     params.push_back(std::move(p3Thres));
     params.push_back(std::move(p3Ratio));
@@ -198,6 +225,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     params.push_back(std::move(pSolo4));
     params.push_back(std::move(pBypass4));
+    params.push_back(std::move(pFb4Mix));
     params.push_back(std::move(pGain4));
     params.push_back(std::move(p4Thres));
     params.push_back(std::move(p4Ratio));
@@ -314,6 +342,26 @@ void CURBAudioProcessor::parameterChanged(const juce::String &parameterID, float
     {
         mainMixValue = treeState.getRawParameterValue("main mix")->load();
         mainMixModule.setWetMixProportion(juce::jmap(mainMixValue, 0.0f, 100.0f, 0.0f, 1.0f));
+    }
+    if(parameterID == "fb1mix")
+    {
+        fbMixValue[0] = treeState.getRawParameterValue("fb1mix")->load();
+        fbMixModule[0].setWetMixProportion(juce::jmap(fbMixValue[0], 0.0f, 100.0f, 0.0f, 1.0f));
+    }
+    if(parameterID == "fb2mix")
+    {
+        fbMixValue[1] = treeState.getRawParameterValue("fb2mix")->load();
+        fbMixModule[1].setWetMixProportion(juce::jmap(fbMixValue[1], 0.0f, 100.0f, 0.0f, 1.0f));
+    }
+    if(parameterID == "fb3mix")
+    {
+        fbMixValue[2] = treeState.getRawParameterValue("fb3mix")->load();
+        fbMixModule[2].setWetMixProportion(juce::jmap(fbMixValue[2], 0.0f, 100.0f, 0.0f, 1.0f));
+    }
+    if(parameterID == "fb4mix")
+    {
+        fbMixValue[3] = treeState.getRawParameterValue("fb4mix")->load();
+        fbMixModule[3].setWetMixProportion(juce::jmap(fbMixValue[3], 0.0f, 100.0f, 0.0f, 1.0f));
     }
 }
 
@@ -486,6 +534,27 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     output.setRampDurationSeconds(0.05);
     output.setGainDecibels(treeState.getRawParameterValue("output")->load());
     
+    fbMixModule[0].prepare(spec);
+    fbMixModule[1].prepare(spec);
+    fbMixModule[2].prepare(spec);
+    fbMixModule[3].prepare(spec);
+    fbMixModule[0].reset();
+    fbMixModule[1].reset();
+    fbMixModule[2].reset();
+    fbMixModule[3].reset();
+    
+    fbMixValue[0] = treeState.getRawParameterValue("fb1mix")->load();
+    fbMixModule[0].setWetMixProportion(juce::jmap(fbMixValue[0], 0.0f, 100.0f, 0.0f, 1.0f));
+
+    fbMixValue[1] = treeState.getRawParameterValue("fb2mix")->load();
+    fbMixModule[1].setWetMixProportion(juce::jmap(fbMixValue[1], 0.0f, 100.0f, 0.0f, 1.0f));
+
+    fbMixValue[2] = treeState.getRawParameterValue("fb3mix")->load();
+    fbMixModule[2].setWetMixProportion(juce::jmap(fbMixValue[2], 0.0f, 100.0f, 0.0f, 1.0f));
+
+    fbMixValue[3] = treeState.getRawParameterValue("fb4mix")->load();
+    fbMixModule[3].setWetMixProportion(juce::jmap(fbMixValue[3], 0.0f, 100.0f, 0.0f, 1.0f));
+   
     mainMixModule.prepare(spec);
     mainMixModule.reset();
     mainMixValue = treeState.getRawParameterValue("main mix")->load();
@@ -573,21 +642,38 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     AP1b.process(fb3Ctx);
     HP2.process(fb3Ctx);
     
+    
+    const auto& fb0Dry = fb0Ctx.getInputBlock();
+    const auto& fb0Wet = fb0Ctx.getOutputBlock();
+    fbMixModule[0].pushDrySamples(fb0Dry);
     if(bypass1) { fb0Ctx.isBypassed = true; };
     compressor1.process(fb0Ctx);
     gain1.process(fb0Ctx);
+    fbMixModule[0].mixWetSamples(fb0Wet);
     
+    const auto& fb1Dry = fb1Ctx.getInputBlock();
+    const auto& fb1Wet = fb1Ctx.getOutputBlock();
+    fbMixModule[1].pushDrySamples(fb1Dry);
     if(bypass2) { fb1Ctx.isBypassed = true; };
     compressor2.process(fb1Ctx);
     gain2.process(fb1Ctx);
+    fbMixModule[1].mixWetSamples(fb1Wet);
     
+    const auto& fb2Dry = fb2Ctx.getInputBlock();
+    const auto& fb2Wet = fb2Ctx.getOutputBlock();
+    fbMixModule[2].pushDrySamples(fb2Dry);
     if(bypass3) { fb2Ctx.isBypassed = true; };
     compressor3.process(fb2Ctx);
     gain3.process(fb2Ctx);
+    fbMixModule[2].mixWetSamples(fb2Wet);
     
+    const auto& fb3Dry = fb3Ctx.getInputBlock();
+    const auto& fb3Wet = fb3Ctx.getOutputBlock();
+    fbMixModule[3].pushDrySamples(fb3Dry);
     if(bypass4) { fb3Ctx.isBypassed = true; };
     compressor4.process(fb3Ctx);
     gain4.process(fb3Ctx);
+    fbMixModule[3].mixWetSamples(fb3Wet);
     
     auto numSamples = buffer.getNumSamples();
     auto numChannels = buffer.getNumChannels();
