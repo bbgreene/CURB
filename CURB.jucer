@@ -5,6 +5,10 @@
               pluginManufacturer="Olumay dsp">
   <MAINGROUP id="tXrOqC" name="CURB">
     <GROUP id="{D09B18C6-1A55-A714-4482-3567FDB29E2F}" name="Source">
+      <GROUP id="{B93CD20B-6909-9176-C51F-FF7253FBEE39}" name="Compressor">
+        <FILE id="Vhcoyu" name="Compressor.cpp" compile="1" resource="0" file="Source/Compressor/Compressor.cpp"/>
+        <FILE id="n25ryY" name="Compressor.h" compile="0" resource="0" file="Source/Compressor/Compressor.h"/>
+      </GROUP>
       <FILE id="G0PYEU" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="v1ntdh" name="PluginProcessor.h" compile="0" resource="0"
