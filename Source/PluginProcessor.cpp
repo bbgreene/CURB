@@ -132,7 +132,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
 {
     std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
     
-    auto gainRange = juce::NormalisableRange<float> (-24.0f, 24.0f, 0.5f, 1.0f);
+    auto gainRange = juce::NormalisableRange<float> (-24.0f, 24.0f, 0.1f, 1.0f);
     auto thresholdRange = juce::NormalisableRange<float> (-50.0f, 0.0f, 0.1f, 1.0f);
     auto ratioRange = juce::NormalisableRange<float> (0.5f, 10.0f, 0.01f, 1.0f);
     auto attackRange = juce::NormalisableRange<float> (0.1f, 150.0f, 0.01f, 1.0f);
@@ -311,7 +311,7 @@ void CURBAudioProcessor::changeProgramName (int index, const juce::String& newNa
 
 //==============================================================================
 void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
-{
+{    
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
@@ -341,6 +341,11 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     for ( auto& buffer : filterBuffers )
     {
         buffer.setSize(spec.numChannels, samplesPerBlock);
+    }
+    
+    for(size_t i = 0; i < gainValue.size(); ++i)
+    {
+        gainValue[i].reset(sampleRate, 0.001f);
     }
     
     for(size_t i = 0; i < gain.size(); ++i)
@@ -470,6 +475,8 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
+    updateParameters();
+    
     auto blockIn = juce::dsp::AudioBlock<float> (buffer);
     auto inCtx = juce::dsp::ProcessContextReplacing<float>(blockIn);
     const auto& inputBlock = inCtx.getInputBlock();
@@ -524,6 +531,8 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     
     gain[5].process(juce::dsp::ProcessContextReplacing<float>(inCtx)); //output gain
     mixModule[4].mixWetSamples(outputBlock); //wet to main mix module
+    
+    
 }
 
 void CURBAudioProcessor::updateParameters()
@@ -551,16 +560,18 @@ void CURBAudioProcessor::updateParameters()
     bypass[2] = treeState.getRawParameterValue("bypass 3")->load();
     bypass[3] = treeState.getRawParameterValue("bypass 4")->load();
 
-    gainValue[0] = treeState.getRawParameterValue("gain1")->load();
-    gainValue[1] = treeState.getRawParameterValue("gain2")->load();
-    gainValue[2] = treeState.getRawParameterValue("gain3")->load();
-    gainValue[3] = treeState.getRawParameterValue("gain4")->load();
-    gainValue[4] = treeState.getRawParameterValue("input")->load();
-    gainValue[5] = treeState.getRawParameterValue("output")->load();
+    gainValue[0].setTargetValue(treeState.getRawParameterValue("gain1")->load());
+    gainValue[1].setTargetValue(treeState.getRawParameterValue("gain2")->load());
+    gainValue[2].setTargetValue(treeState.getRawParameterValue("gain3")->load());
+    gainValue[3].setTargetValue(treeState.getRawParameterValue("gain4")->load());
+    gainValue[4].setTargetValue(treeState.getRawParameterValue("input")->load());
+    gainValue[5].setTargetValue(treeState.getRawParameterValue("output")->load());
+    
+    DBG(gainValue[5].getNextValue());
     
     for(size_t i = 0; i < gain.size(); ++i)
     {
-        gain[i].setGainDecibels(gainValue[i]);
+        gain[i].setGainDecibels(gainValue[i].getNextValue());
     }
     
     compressor[0].setThreshold(treeState.getRawParameterValue("thres 1")->load());

@@ -63,7 +63,7 @@ private:
     
     //Input, output and individual band gains
     std::array<juce::dsp::Gain<float>, 6> gain; // 5[4] is input, 6[5] is output
-    std::array<float, 6> gainValue;
+    std::array<juce::LinearSmoothedValue<float>, 6> gainValue;
     
     //Filters and variables
     using Filter = juce::dsp::LinkwitzRileyFilter<float>;
