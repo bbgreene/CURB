@@ -101,7 +101,7 @@ void Compressor<SampleType>::update()
     threshold = juce::Decibels::decibelsToGain (thresholddB, static_cast<SampleType> (-200.0));
     thresholdInverse = static_cast<SampleType> (1.0) / threshold;
     ratioInverse     = static_cast<SampleType> (1.0) / ratio;
-    ratioInverseUpward = static_cast<SampleType> (1.0) / (1.0 + ((2.0 - 1.0) * (ratio - 1.0)) / (0.5 - 1.0));
+    ratioInverseUpward = static_cast<SampleType> (1.0) / (1.0 + ((1.5 - 1.0) * (ratio - 1.0)) / (0.5 - 1.0));
                                     //basically a jmap //(targetRangeMin + ((targetRangeMax - targetRangeMin) * (sourceValue - sourceRangeMin)) / (sourceRangeMax - sourceRangeMin));
  
     envelopeFilter.setAttackTime (attackTime);
