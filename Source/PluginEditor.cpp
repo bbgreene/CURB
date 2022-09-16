@@ -40,67 +40,67 @@ CURBAudioProcessorEditor::CURBAudioProcessorEditor (CURBAudioProcessor& p)
     
     
     // BORDERS
-    inputBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
+    inputBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     inputBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     inputBorder.setTextLabelPosition(juce::Justification::centred);
     addAndMakeVisible(inputBorder);
     
-    inputTopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
+    inputTopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     inputTopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     inputTopBorder.setTextLabelPosition(juce::Justification::centred);
     inputTopBorder.setText("Input");
     addAndMakeVisible(inputTopBorder);
     
-    band1Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
+    band1Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     band1Border.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band1Border.setTextLabelPosition(juce::Justification::centred);
     addAndMakeVisible(band1Border);
     
-    band1TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
+    band1TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     band1TopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band1TopBorder.setTextLabelPosition(juce::Justification::centred);
     band1TopBorder.setText("Band 1");
     addAndMakeVisible(band1TopBorder);
 
-    band2Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
+    band2Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     band2Border.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band2Border.setTextLabelPosition(juce::Justification::centred);
     addAndMakeVisible(band2Border);
     
-    band2TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
+    band2TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     band2TopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band2TopBorder.setTextLabelPosition(juce::Justification::centred);
     band2TopBorder.setText("Band 2");
     addAndMakeVisible(band2TopBorder);
     
-    band3Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
+    band3Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     band3Border.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band3Border.setTextLabelPosition(juce::Justification::centred);
     addAndMakeVisible(band3Border);
     
-    band3TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
+    band3TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     band3TopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band3TopBorder.setTextLabelPosition(juce::Justification::centred);
     band3TopBorder.setText("Band 3");
     addAndMakeVisible(band3TopBorder);
     
-    band4Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
+    band4Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     band4Border.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band4Border.setTextLabelPosition(juce::Justification::centred);
     addAndMakeVisible(band4Border);
     
-    band4TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
+    band4TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     band4TopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band4TopBorder.setTextLabelPosition(juce::Justification::centred);
     band4TopBorder.setText("Band 4");
     addAndMakeVisible(band4TopBorder);
     
-    outputBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
+    outputBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     outputBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     outputBorder.setTextLabelPosition(juce::Justification::centred);
     addAndMakeVisible(outputBorder);
     
-    outputTopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
+    outputTopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     outputTopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     outputTopBorder.setTextLabelPosition(juce::Justification::centred);
     outputTopBorder.setText("Output");
@@ -120,7 +120,7 @@ CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
 void CURBAudioProcessorEditor::paint (juce::Graphics& g)
 {
     juce::Rectangle<int> background = getLocalBounds();
-    g.setGradientFill(juce::ColourGradient::vertical(juce::Colours::darkred, getHeight() - getHeight(), juce::Colours::darkred.darker(), getHeight()));
+    g.setGradientFill(juce::ColourGradient::vertical(juce::Colours::darkred, getHeight() - getHeight(), juce::Colours::red.darker(), getHeight()));
     g.fillRect(background);
 }
 
