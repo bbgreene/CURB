@@ -5,6 +5,21 @@
               pluginManufacturer="Olumay dsp">
   <MAINGROUP id="tXrOqC" name="CURB">
     <GROUP id="{D09B18C6-1A55-A714-4482-3567FDB29E2F}" name="Source">
+      <GROUP id="{2440F785-8444-1A5D-9F87-220FDBAD7836}" name="bbg_gui">
+        <FILE id="PKU6SU" name="CustomColours.h" compile="0" resource="0" file="Source/bbg_gui/CustomColours.h"/>
+        <FILE id="XCOZ3Q" name="Dial.cpp" compile="1" resource="0" file="Source/bbg_gui/Dial.cpp"/>
+        <FILE id="vD50BL" name="Dial.h" compile="0" resource="0" file="Source/bbg_gui/Dial.h"/>
+        <FILE id="ZEzDbA" name="Label.cpp" compile="1" resource="0" file="Source/bbg_gui/Label.cpp"/>
+        <FILE id="Bf9gnk" name="Label.h" compile="0" resource="0" file="Source/bbg_gui/Label.h"/>
+        <FILE id="cTrHnC" name="Menu.cpp" compile="1" resource="0" file="Source/bbg_gui/Menu.cpp"/>
+        <FILE id="bRcK7n" name="Menu.h" compile="0" resource="0" file="Source/bbg_gui/Menu.h"/>
+        <FILE id="gIWVV7" name="PushButton.cpp" compile="1" resource="0" file="Source/bbg_gui/PushButton.cpp"/>
+        <FILE id="dzf06N" name="PushButton.h" compile="0" resource="0" file="Source/bbg_gui/PushButton.h"/>
+        <FILE id="UYYmjP" name="StyleSheet.cpp" compile="1" resource="0" file="Source/bbg_gui/StyleSheet.cpp"/>
+        <FILE id="HnHMQJ" name="StyleSheet.h" compile="0" resource="0" file="Source/bbg_gui/StyleSheet.h"/>
+        <FILE id="VMt82X" name="Toggle.cpp" compile="1" resource="0" file="Source/bbg_gui/Toggle.cpp"/>
+        <FILE id="LU8mVT" name="Toggle.h" compile="0" resource="0" file="Source/bbg_gui/Toggle.h"/>
+      </GROUP>
       <GROUP id="{B93CD20B-6909-9176-C51F-FF7253FBEE39}" name="Compressor">
         <FILE id="Vhcoyu" name="Compressor.cpp" compile="1" resource="0" file="Source/Compressor/Compressor.cpp"/>
         <FILE id="n25ryY" name="Compressor.h" compile="0" resource="0" file="Source/Compressor/Compressor.h"/>

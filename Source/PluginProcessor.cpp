@@ -615,8 +615,8 @@ bool CURBAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* CURBAudioProcessor::createEditor()
 {
-//    return new CURBAudioProcessorEditor (*this);
-    return new juce::GenericAudioProcessorEditor (*this);
+    return new CURBAudioProcessorEditor (*this);
+//    return new juce::GenericAudioProcessorEditor (*this);
 }
 
 //==============================================================================
