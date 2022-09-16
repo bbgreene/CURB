@@ -362,6 +362,7 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     for ( auto& mix : mixModule )
     {
         mix.prepare(spec);
+        mix.setMixingRule(juce::dsp::DryWetMixingRule::sin6dB);
         mix.reset();
     }
     
