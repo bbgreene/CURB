@@ -13,69 +13,94 @@
 CURBAudioProcessorEditor::CURBAudioProcessorEditor (CURBAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
+    // SET DEFAULT FONT
+    juce::LookAndFeel::getDefaultLookAndFeel().setDefaultSansSerifTypefaceName ("Avenir Next");
+       
+    // DIALS, BUTTONS, MENUS & PARAMETER ATTACHMENTS
+    threshold1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(threshold1);
+    ratio1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(ratio1);
+    attack1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(attack1);
+    release1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(release1);
+    gain1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(gain1);
+    mix1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(mix1);
+    
+    //DIAL LABEL ATTACHMENTS
+    thresholdLabel1.attachToComponent(&threshold1, false);
+    ratioLabel1.attachToComponent(&ratio1, false);
+    attackLabel1.attachToComponent(&attack1, false);
+    releaseLabel1.attachToComponent(&release1, false);
+    gainLabel1.attachToComponent(&gain1, false);
+    mixLabel1.attachToComponent(&mix1, false);
+    
     
     // BORDERS
-    inputBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::purple.brighter());
+    inputBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
     inputBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     inputBorder.setTextLabelPosition(juce::Justification::centred);
     addAndMakeVisible(inputBorder);
     
-    inputTopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::purple.brighter());
+    inputTopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
     inputTopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     inputTopBorder.setTextLabelPosition(juce::Justification::centred);
     inputTopBorder.setText("Input");
     addAndMakeVisible(inputTopBorder);
     
-    band1Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::purple.brighter());
+    band1Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
     band1Border.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band1Border.setTextLabelPosition(juce::Justification::centred);
     addAndMakeVisible(band1Border);
     
-    band1TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::purple.brighter());
+    band1TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
     band1TopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band1TopBorder.setTextLabelPosition(juce::Justification::centred);
     band1TopBorder.setText("Band 1");
     addAndMakeVisible(band1TopBorder);
 
-    band2Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::purple.brighter());
+    band2Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
     band2Border.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band2Border.setTextLabelPosition(juce::Justification::centred);
     addAndMakeVisible(band2Border);
     
-    band2TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::purple.brighter());
+    band2TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
     band2TopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band2TopBorder.setTextLabelPosition(juce::Justification::centred);
     band2TopBorder.setText("Band 2");
     addAndMakeVisible(band2TopBorder);
     
-    band3Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::purple.brighter());
+    band3Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
     band3Border.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band3Border.setTextLabelPosition(juce::Justification::centred);
     addAndMakeVisible(band3Border);
     
-    band3TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::purple.brighter());
+    band3TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
     band3TopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band3TopBorder.setTextLabelPosition(juce::Justification::centred);
     band3TopBorder.setText("Band 3");
     addAndMakeVisible(band3TopBorder);
     
-    band4Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::purple.brighter());
+    band4Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
     band4Border.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band4Border.setTextLabelPosition(juce::Justification::centred);
     addAndMakeVisible(band4Border);
     
-    band4TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::purple.brighter());
+    band4TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
     band4TopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     band4TopBorder.setTextLabelPosition(juce::Justification::centred);
     band4TopBorder.setText("Band 4");
     addAndMakeVisible(band4TopBorder);
     
-    outputBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::purple.brighter());
+    outputBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
     outputBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     outputBorder.setTextLabelPosition(juce::Justification::centred);
     addAndMakeVisible(outputBorder);
     
-    outputTopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::purple.brighter());
+    outputTopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::darkgrey);
     outputTopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
     outputTopBorder.setTextLabelPosition(juce::Justification::centred);
     outputTopBorder.setText("Output");
@@ -95,7 +120,7 @@ CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
 void CURBAudioProcessorEditor::paint (juce::Graphics& g)
 {
     juce::Rectangle<int> background = getLocalBounds();
-    g.setGradientFill(juce::ColourGradient::vertical(juce::Colours::purple.darker(), getHeight() - getHeight(), juce::Colours::purple.darker(), getHeight()));
+    g.setGradientFill(juce::ColourGradient::vertical(juce::Colours::darkred, getHeight() - getHeight(), juce::Colours::darkred.darker(), getHeight()));
     g.fillRect(background);
 }
 
@@ -134,6 +159,23 @@ void CURBAudioProcessorEditor::resized()
     
     outputBorder.setBounds(band4Border.getRight() + borderWidthGap, borderY, smallBorderWidth, mainBorderHeight);
     outputTopBorder.setBounds(band4Border.getRight() + borderWidthGap, borderY, smallBorderWidth, topBorderHeight);
+    
+    auto bigDialSize = getWidth() * 0.06;
+    auto smallDialSize = getWidth() * 0.04;
+
+    auto dialtopRowY = getHeight() * 0.313055;
+    auto dialbottomRowY = getHeight() * 0.556191;
+
+    auto bigDialXOne = band1Border.getX() * 1.08681;
+    auto smallDialXOne = band1Border.getX() * 1.8352;
+    auto smallDailGap = getWidth() * 0.042;
+
+    threshold1.setBounds(bigDialXOne, dialtopRowY, bigDialSize, bigDialSize);
+    ratio1.setBounds(bigDialXOne, dialbottomRowY, bigDialSize, bigDialSize);
+    attack1.setBounds(smallDialXOne, dialtopRowY, smallDialSize, smallDialSize);
+    release1.setBounds(smallDialXOne + smallDailGap, dialtopRowY, smallDialSize, smallDialSize);
+    gain1.setBounds(smallDialXOne, dialbottomRowY, smallDialSize, smallDialSize);
+    mix1.setBounds(smallDialXOne + smallDailGap, dialbottomRowY, smallDialSize, smallDialSize);
     
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
