@@ -39,6 +39,28 @@ private:
     bbg_gui::bbg_Dial gain1 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix1 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
+    bbg_gui::bbg_Dial threshold2 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial ratio2 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
+    bbg_gui::bbg_Dial attack2 { "", 0.1, 150.0, 0.01, 0.0, 0.0 };
+    bbg_gui::bbg_Dial release2 { "", 2.0, 300.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial gain2 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial mix2 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
+    
+    bbg_gui::bbg_Dial threshold3 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial ratio3 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
+    bbg_gui::bbg_Dial attack3 { "", 0.1, 150.0, 0.01, 0.0, 0.0 };
+    bbg_gui::bbg_Dial release3 { "", 2.0, 300.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial gain3 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial mix3 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
+    
+    bbg_gui::bbg_Dial threshold4 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial ratio4 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
+    bbg_gui::bbg_Dial attack4 { "", 0.1, 150.0, 0.01, 0.0, 0.0 };
+    bbg_gui::bbg_Dial release4 { "", 2.0, 300.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial gain4 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial mix4 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
+ 
+    
     // BORDERS
     juce::GroupComponent inputBorder;
     juce::GroupComponent inputTopBorder;
@@ -60,6 +82,27 @@ private:
     bbg_gui::bbg_dialLabel releaseLabel1 { "Rel" };
     bbg_gui::bbg_dialLabel gainLabel1 { "Gain" };
     bbg_gui::bbg_dialLabel mixLabel1 { "Mix" };
+    
+    bbg_gui::bbg_dialLabel thresholdLabel2 { "Threshold" };
+    bbg_gui::bbg_dialLabel ratioLabel2 { "Ratio" };
+    bbg_gui::bbg_dialLabel attackLabel2 { "Att" };
+    bbg_gui::bbg_dialLabel releaseLabel2 { "Rel" };
+    bbg_gui::bbg_dialLabel gainLabel2 { "Gain" };
+    bbg_gui::bbg_dialLabel mixLabel2 { "Mix" };
+    
+    bbg_gui::bbg_dialLabel thresholdLabel3 { "Threshold" };
+    bbg_gui::bbg_dialLabel ratioLabel3 { "Ratio" };
+    bbg_gui::bbg_dialLabel attackLabel3 { "Att" };
+    bbg_gui::bbg_dialLabel releaseLabel3 { "Rel" };
+    bbg_gui::bbg_dialLabel gainLabel3 { "Gain" };
+    bbg_gui::bbg_dialLabel mixLabel3 { "Mix" };
+    
+    bbg_gui::bbg_dialLabel thresholdLabel4 { "Threshold" };
+    bbg_gui::bbg_dialLabel ratioLabel4 { "Ratio" };
+    bbg_gui::bbg_dialLabel attackLabel4 { "Att" };
+    bbg_gui::bbg_dialLabel releaseLabel4 { "Rel" };
+    bbg_gui::bbg_dialLabel gainLabel4 { "Gain" };
+    bbg_gui::bbg_dialLabel mixLabel4 { "Mix" };
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

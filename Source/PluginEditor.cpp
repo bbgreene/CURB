@@ -30,6 +30,45 @@ CURBAudioProcessorEditor::CURBAudioProcessorEditor (CURBAudioProcessor& p)
     mix1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     addAndMakeVisible(mix1);
     
+    threshold2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(threshold2);
+    ratio2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(ratio2);
+    attack2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(attack2);
+    release2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(release2);
+    gain2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(gain2);
+    mix2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(mix2);
+    
+    threshold3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(threshold3);
+    ratio3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(ratio3);
+    attack3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(attack3);
+    release3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(release3);
+    gain3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(gain3);
+    mix3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(mix3);
+    
+    threshold4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(threshold4);
+    ratio4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(ratio4);
+    attack4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(attack4);
+    release4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(release4);
+    gain4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(gain4);
+    mix4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    addAndMakeVisible(mix4);
+    
     //DIAL LABEL ATTACHMENTS
     thresholdLabel1.attachToComponent(&threshold1, false);
     ratioLabel1.attachToComponent(&ratio1, false);
@@ -37,6 +76,27 @@ CURBAudioProcessorEditor::CURBAudioProcessorEditor (CURBAudioProcessor& p)
     releaseLabel1.attachToComponent(&release1, false);
     gainLabel1.attachToComponent(&gain1, false);
     mixLabel1.attachToComponent(&mix1, false);
+    
+    thresholdLabel2.attachToComponent(&threshold2, false);
+    ratioLabel2.attachToComponent(&ratio2, false);
+    attackLabel2.attachToComponent(&attack2, false);
+    releaseLabel2.attachToComponent(&release2, false);
+    gainLabel2.attachToComponent(&gain2, false);
+    mixLabel2.attachToComponent(&mix2, false);
+    
+    thresholdLabel3.attachToComponent(&threshold3, false);
+    ratioLabel3.attachToComponent(&ratio3, false);
+    attackLabel3.attachToComponent(&attack3, false);
+    releaseLabel3.attachToComponent(&release3, false);
+    gainLabel3.attachToComponent(&gain3, false);
+    mixLabel3.attachToComponent(&mix3, false);
+    
+    thresholdLabel4.attachToComponent(&threshold4, false);
+    ratioLabel4.attachToComponent(&ratio4, false);
+    attackLabel4.attachToComponent(&attack4, false);
+    releaseLabel4.attachToComponent(&release4, false);
+    gainLabel4.attachToComponent(&gain4, false);
+    mixLabel4.attachToComponent(&mix4, false);
     
     
     // BORDERS
@@ -141,7 +201,7 @@ void CURBAudioProcessorEditor::resized()
     auto borderWidthGap = getWidth() * 0.01108; //15
     auto smallBorderWidth = getWidth() * 0.09226; //125
     auto largeBorderWidth = getWidth() * 0.18451; //250
-    auto mainBorderHeight = getHeight() *  0.7; //280
+    auto mainBorderHeight = getHeight() *  0.6; //280
     auto topBorderHeight = getHeight() * 0.1; //40
     auto borderY = getHeight() * 0.125; //50
     
@@ -160,22 +220,49 @@ void CURBAudioProcessorEditor::resized()
     outputBorder.setBounds(band4Border.getRight() + borderWidthGap, borderY, smallBorderWidth, mainBorderHeight);
     outputTopBorder.setBounds(band4Border.getRight() + borderWidthGap, borderY, smallBorderWidth, topBorderHeight);
     
-    auto bigDialSize = getWidth() * 0.06;
-    auto smallDialSize = getWidth() * 0.04;
+    auto dialSize = getWidth() * 0.05;
+    auto dialtopRowY = getHeight() * 0.287877;
+    auto dialbottomRowY = getHeight() * 0.513981;
 
-    auto dialtopRowY = getHeight() * 0.313055;
-    auto dialbottomRowY = getHeight() * 0.556191;
+    auto dialLeftXone = band1Border.getX() + 8;
+    auto dialRightXone = band1Border.getX() + 116;
+    auto dialLeftXtwo = band2Border.getX() + 8;
+    auto dialRightXtwo = band2Border.getX() + 116;
+    auto dialLeftXthree = band3Border.getX() + 8;
+    auto dialRightXthree = band3Border.getX() + 116;
+    auto dialLeftXfour = band4Border.getX() + 8;
+    auto dialRightXfour = band4Border.getX() + 116;
+    
+    
+    auto dialRightGap = getWidth() * 0.045;
 
-    auto bigDialXOne = band1Border.getX() * 1.08681;
-    auto smallDialXOne = band1Border.getX() * 1.8352;
-    auto smallDailGap = getWidth() * 0.042;
+    threshold1.setBounds(dialLeftXone, dialtopRowY, dialSize, dialSize);
+    ratio1.setBounds(dialLeftXone, dialbottomRowY, dialSize, dialSize);
+    attack1.setBounds(dialRightXone, dialtopRowY, dialSize, dialSize);
+    release1.setBounds(dialRightXone + dialRightGap, dialtopRowY, dialSize, dialSize);
+    gain1.setBounds(dialRightXone, dialbottomRowY, dialSize, dialSize);
+    mix1.setBounds(dialRightXone + dialRightGap, dialbottomRowY, dialSize, dialSize);
+    
+    threshold2.setBounds(dialLeftXtwo, dialtopRowY, dialSize, dialSize);
+    ratio2.setBounds(dialLeftXtwo, dialbottomRowY, dialSize, dialSize);
+    attack2.setBounds(dialRightXtwo, dialtopRowY, dialSize, dialSize);
+    release2.setBounds(dialRightXtwo + dialRightGap, dialtopRowY, dialSize, dialSize);
+    gain2.setBounds(dialRightXtwo, dialbottomRowY, dialSize, dialSize);
+    mix2.setBounds(dialRightXtwo + dialRightGap, dialbottomRowY, dialSize, dialSize);
 
-    threshold1.setBounds(bigDialXOne, dialtopRowY, bigDialSize, bigDialSize);
-    ratio1.setBounds(bigDialXOne, dialbottomRowY, bigDialSize, bigDialSize);
-    attack1.setBounds(smallDialXOne, dialtopRowY, smallDialSize, smallDialSize);
-    release1.setBounds(smallDialXOne + smallDailGap, dialtopRowY, smallDialSize, smallDialSize);
-    gain1.setBounds(smallDialXOne, dialbottomRowY, smallDialSize, smallDialSize);
-    mix1.setBounds(smallDialXOne + smallDailGap, dialbottomRowY, smallDialSize, smallDialSize);
+    threshold3.setBounds(dialLeftXthree, dialtopRowY, dialSize, dialSize);
+    ratio3.setBounds(dialLeftXthree, dialbottomRowY, dialSize, dialSize);
+    attack3.setBounds(dialRightXthree, dialtopRowY, dialSize, dialSize);
+    release3.setBounds(dialRightXthree + dialRightGap, dialtopRowY, dialSize, dialSize);
+    gain3.setBounds(dialRightXthree, dialbottomRowY, dialSize, dialSize);
+    mix3.setBounds(dialRightXthree + dialRightGap, dialbottomRowY, dialSize, dialSize);
+
+    threshold4.setBounds(dialLeftXfour, dialtopRowY, dialSize, dialSize);
+    ratio4.setBounds(dialLeftXfour, dialbottomRowY, dialSize, dialSize);
+    attack4.setBounds(dialRightXfour, dialtopRowY, dialSize, dialSize);
+    release4.setBounds(dialRightXfour + dialRightGap, dialtopRowY, dialSize, dialSize);
+    gain4.setBounds(dialRightXfour, dialbottomRowY, dialSize, dialSize);
+    mix4.setBounds(dialRightXfour + dialRightGap, dialbottomRowY, dialSize, dialSize);
     
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
