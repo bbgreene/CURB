@@ -452,6 +452,7 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     AP1b.process(fb3Ctx);
     HP2.process(fb3Ctx);
     
+    // rms values pre processing
     float band1InLeft = juce::Decibels::gainToDecibels(filterBuffers[0].getRMSLevel(0, 0, filterBuffers[0].getNumSamples()));
     float band1InRight = juce::Decibels::gainToDecibels(filterBuffers[0].getRMSLevel(1, 0, filterBuffers[0].getNumSamples()));
     
@@ -469,6 +470,7 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     mixModule[0].pushDrySamples(fb0Dry);
     if(bypass[0]) { fb0Ctx.isBypassed = true; };
     compressor[0].process(fb0Ctx);
+    rmsLevelSmoothingAverage(band1InLeft, band1InRight, filterBuffers[0], 2, 0); // band 1 meter averaged to mono
     gain[0].process(fb0Ctx);
     mixModule[0].mixWetSamples(fb0Wet);
     
@@ -477,6 +479,7 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     mixModule[1].pushDrySamples(fb1Dry);
     if(bypass[1]) { fb1Ctx.isBypassed = true; };
     compressor[1].process(fb1Ctx);
+    rmsLevelSmoothingAverage(band2InLeft, band2InRight, filterBuffers[1], 3, 0); // band 2 meter averaged to mono
     gain[1].process(fb1Ctx);
     mixModule[1].mixWetSamples(fb1Wet);
     
@@ -485,6 +488,7 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     mixModule[2].pushDrySamples(fb2Dry);
     if(bypass[2]) { fb2Ctx.isBypassed = true; };
     compressor[2].process(fb2Ctx);
+    rmsLevelSmoothingAverage(band3InLeft, band3InRight, filterBuffers[2], 4, 0); // band 3 meter averaged to mono
     gain[2].process(fb2Ctx);
     mixModule[2].mixWetSamples(fb2Wet);
     
@@ -493,13 +497,9 @@ void CURBAudioProcessor::splitBandsAndComp(const juce::AudioBuffer<float> &input
     mixModule[3].pushDrySamples(fb3Dry);
     if(bypass[3]) { fb3Ctx.isBypassed = true; };
     compressor[3].process(fb3Ctx);
+    rmsLevelSmoothingAverage(band4InLeft, band4InRight, filterBuffers[3], 5, 0); // band 4 meter averaged to mono
     gain[3].process(fb3Ctx);
     mixModule[3].mixWetSamples(fb3Wet);
-    
-    rmsLevelSmoothingAverage(band1InLeft, band1InRight, filterBuffers[0], 2, 0); // band 1 meter averaged to mono
-    rmsLevelSmoothingAverage(band2InLeft, band2InRight, filterBuffers[1], 3, 0); // band 2 meter averaged to mono
-    rmsLevelSmoothingAverage(band3InLeft, band3InRight, filterBuffers[2], 4, 0); // band 3 meter averaged to mono
-    rmsLevelSmoothingAverage(band4InLeft, band4InRight, filterBuffers[3], 5, 0); // band 4 meter averaged to mono
 }
 
 void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -541,8 +541,6 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         }
     };
     
-    
-            
     auto aBandIsSoloed = false;
     for(size_t i = 0; i < soloBand.size(); ++i)
     {
@@ -571,7 +569,6 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
         }
     }
     
-    
     gain[5].process(juce::dsp::ProcessContextReplacing<float>(inCtx)); //output gain
     
     mixModule[4].mixWetSamples(outputBlock); //wet to main mix module
@@ -579,7 +576,6 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     // output meter stereo pair (6 and 7)
     rmsLevelSmoothing(buffer, 6, 0); // meter 6, left channel
     rmsLevelSmoothing(buffer, 7, 1); // meter 7, right channel
-    
 }
 
 void CURBAudioProcessor::updateParameters()
@@ -662,7 +658,6 @@ void CURBAudioProcessor::rmsLevelSmoothing(const juce::AudioBuffer<float> &input
             rmsLevel[meter].setTargetValue(value);
         else
             rmsLevel[meter].setCurrentAndTargetValue(value);
-//        DBG(value);
     }
 }
 
@@ -679,9 +674,7 @@ void CURBAudioProcessor::rmsLevelSmoothingAverage(float inputRMSLeft, float inpu
         const auto averageValueOut = (valueOutLeft + valueOutRight) / 2.0;
         
         const auto gainReductionAverage = averageValueIn - averageValueOut;
-        
-        DBG(gainReductionAverage);
-        
+                
         if(gainReductionAverage < rmsLevel[meter].getCurrentValue())
             rmsLevel[meter].setTargetValue(gainReductionAverage);
         else

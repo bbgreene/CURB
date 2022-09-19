@@ -226,6 +226,22 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     addAndMakeVisible(&outputMeterL);
     addAndMakeVisible(&outputMeterR);
     
+    // TITLE
+    curbTitle.setFont(juce::Font (40.0f, juce::Font::plain));
+    curbTitle.setJustificationType(juce::Justification::centredLeft);
+    curbTitle.setColour(juce::Label::textColourId, juce::Colours::mintcream);
+    addAndMakeVisible(curbTitle);
+    
+    curbVersion.setFont(juce::Font (15.0f, juce::Font::plain));
+    curbVersion.setJustificationType(juce::Justification::centredLeft);
+    curbVersion.setColour(juce::Label::textColourId, juce::Colours::lightslategrey.brighter());
+    addAndMakeVisible(curbVersion);
+    
+    olumay.setFont(juce::Font (15.0f, juce::Font::plain));
+    olumay.setJustificationType(juce::Justification::centredLeft);
+    olumay.setColour(juce::Label::textColourId, juce::Colours::steelblue.brighter());
+    addAndMakeVisible(olumay);
+
     
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -240,7 +256,7 @@ CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
 void CURBAudioProcessorEditor::paint (juce::Graphics& g)
 {
     juce::Rectangle<int> background = getLocalBounds();
-    g.setGradientFill(juce::ColourGradient::vertical(juce::Colours::darkred, getHeight() - getHeight(), juce::Colours::red.darker(), getHeight()));
+    g.setGradientFill(juce::ColourGradient::vertical(juce::Colours::red.darker(), getHeight() - getHeight(), juce::Colours::lightgoldenrodyellow, getHeight()));
     g.fillRect(background);
 }
 
@@ -261,7 +277,7 @@ void CURBAudioProcessorEditor::resized()
      */
     auto borderWidthGap = getWidth() * 0.00794; //10
     auto largeBorderWidth = getWidth() * 0.19842; //250
-    auto mainBorderHeight = getHeight() *  0.6; //280
+    auto mainBorderHeight = getHeight() * .58; //
     auto topBorderHeight = getHeight() * 0.1; //40
     auto band1X = getWidth() * 0.0635;// 80
     auto borderY = getHeight() * 0.125; //50
@@ -274,6 +290,20 @@ void CURBAudioProcessorEditor::resized()
     band3TopBorder.setBounds(band2Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
     band4Border.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
     band4TopBorder.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
+    
+    auto curbTitleX = borderWidthGap;
+    auto curbTitleY = 5;
+    auto curbTitleWidth = 140;
+    auto curbTitleHeight = 30;
+    auto versionX = 150;
+    auto versionY = 10;
+    auto versionWidth = getWidth() * 0.169246;
+    auto versionHeight = getHeight() * 0.068969;
+    auto olumayX = band4Border.getX() * 1.015;
+    
+    curbTitle.setBounds(curbTitleX, curbTitleY, curbTitleWidth, curbTitleHeight);
+    curbVersion.setBounds(versionX, versionY, versionWidth, versionHeight);
+    olumay.setBounds(olumayX, versionY, versionWidth, versionHeight);
     
     auto dialSize = getWidth() * 0.0532; // 67
     auto dialtopRowY = getHeight() * 0.287877;
@@ -321,8 +351,12 @@ void CURBAudioProcessorEditor::resized()
     gain4.setBounds(dialRightXfour, dialbottomRowY, dialSize, dialSize);
     mix4.setBounds(dialRightXfour + dialRightGap, dialbottomRowY, dialSize, dialSize);
  
+    
+    
     output.setBounds(band4Border.getRight() + inputOutGapX, dialbottomRowY, dialSize, dialSize);
-    mainMix.setBounds(output.getRight() + inputOutGapX, dialbottomRowY, dialSize, dialSize);
+    
+    auto mainMixY = output.getBottom() + 16;
+    mainMix.setBounds(band4Border.getRight() + inputOutGapX, mainMixY, dialSize, dialSize);
     
     auto inputMeterX = getWidth() * 0.0114;
     auto outputMeterX = band4Border.getRight() + inputMeterX;

@@ -149,6 +149,10 @@ private:
     bbg_gui::bbg_dialLabel outputLabel { "Output" };
     bbg_gui::bbg_dialLabel mainMixLabel { "Mix" };
     
+    bbg_gui::bbg_dialLabel olumay { "Olumay dsp" };
+    bbg_gui::bbg_dialLabel curbTitle { "C U R B" };
+    bbg_gui::bbg_dialLabel curbVersion { "version 1.1" };
+    
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     CURBAudioProcessor& audioProcessor;
