@@ -77,6 +77,27 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gain1Attachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mix1Attachement;
     
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> thres2Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ratio2Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attack2Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> release2Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gain2Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mix2Attachement;
+    
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> thres3Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ratio3Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attack3Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> release3Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gain3Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mix3Attachement;
+    
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> thres4Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ratio4Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attack4Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> release4Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gain4Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mix4Attachement;
+    
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> outputAttachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mainMixAttachement;
     
@@ -134,7 +155,7 @@ private:
     
     // METERS
     bbg_gui::VerticalGradientMeter inputMeterL, inputMeterR;
-    bbg_gui::VerticalDiscreteMeter band1Meter;
+    bbg_gui::VerticalDiscreteMeter band1Meter, band2Meter, band3Meter, band4Meter;
     bbg_gui::VerticalGradientMeter outputMeterL, outputMeterR;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CURBAudioProcessorEditor)

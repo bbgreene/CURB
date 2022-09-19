@@ -90,7 +90,8 @@ private:
     
     //rms values for meters
     std::array<juce::LinearSmoothedValue<float>, 8> rmsLevel;
-    void rmsLevelSmoothing(const juce::AudioBuffer<float>& inputBuffer, const int meter, const int channel, const bool stereoToMonoAverage);
+    void rmsLevelSmoothing(const juce::AudioBuffer<float>& inputBuffer, const int meter, const int channel);
+    void rmsLevelSmoothingAverage(float inputRMSLeft, float inputRMSRight, const juce::AudioBuffer<float>& outputBuffer, const int meter, const int channel);
     
     //functions
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();

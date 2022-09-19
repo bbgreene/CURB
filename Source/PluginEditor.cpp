@@ -15,6 +15,9 @@ CURBAudioProcessorEditor::CURBAudioProcessorEditor (CURBAudioProcessor& p)
 inputMeterL([&](){ return  audioProcessor.getRmsValue(0);}),
 inputMeterR([&](){ return audioProcessor.getRmsValue(1);}),
 band1Meter([&](){ return audioProcessor.getRmsValue(2);}),
+band2Meter([&](){ return audioProcessor.getRmsValue(3);}),
+band3Meter([&](){ return audioProcessor.getRmsValue(4);}),
+band4Meter([&](){ return audioProcessor.getRmsValue(5);}),
 outputMeterL([&](){ return audioProcessor.getRmsValue(6);}),
 outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
 
@@ -47,42 +50,60 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     addAndMakeVisible(mix1);
     
     threshold2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    thres2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 2", threshold2);
     addAndMakeVisible(threshold2);
     ratio2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    ratio2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "ratio 2", ratio2);
     addAndMakeVisible(ratio2);
     attack2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    attack2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "attack 2", attack2);
     addAndMakeVisible(attack2);
     release2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    release2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "release 2", release2);
     addAndMakeVisible(release2);
     gain2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    gain2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain2", gain2);
     addAndMakeVisible(gain2);
     mix2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    mix2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb2mix", mix2);
     addAndMakeVisible(mix2);
     
     threshold3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    thres3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 3", threshold3);
     addAndMakeVisible(threshold3);
     ratio3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    ratio3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "ratio 3", ratio3);
     addAndMakeVisible(ratio3);
     attack3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    attack3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "attack 3", attack3);
     addAndMakeVisible(attack3);
     release3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    release3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "release 3", release3);
     addAndMakeVisible(release3);
     gain3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    gain3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain3", gain3);
     addAndMakeVisible(gain3);
     mix3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    mix3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb3mix", mix3);
     addAndMakeVisible(mix3);
     
     threshold4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    thres4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 4", threshold4);
     addAndMakeVisible(threshold4);
     ratio4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    ratio4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "ratio 4", ratio4);
     addAndMakeVisible(ratio4);
     attack4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    attack4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "attack 4", attack4);
     addAndMakeVisible(attack4);
     release4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    release4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "release 4", release4);
     addAndMakeVisible(release4);
     gain4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    gain4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain4", gain4);
     addAndMakeVisible(gain4);
     mix4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    mix4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb4mix", mix4);
     addAndMakeVisible(mix4);
     
     output.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
@@ -199,6 +220,9 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     addAndMakeVisible(&inputMeterL);
     addAndMakeVisible(&inputMeterR);
     addAndMakeVisible(&band1Meter);
+    addAndMakeVisible(&band2Meter);
+    addAndMakeVisible(&band3Meter);
+    addAndMakeVisible(&band4Meter);
     addAndMakeVisible(&outputMeterL);
     addAndMakeVisible(&outputMeterR);
     
@@ -308,7 +332,10 @@ void CURBAudioProcessorEditor::resized()
     auto gradientMeterWidth = getWidth() * 0.018;
     auto gradientMeterGap = gradientMeterWidth * 1.3252;
     
-    auto band1MeterX = band1Border.getRight() * 0.51;
+    auto band1MeterX = threshold1.getRight() + 13;
+    auto band2MeterX = threshold2.getRight() + 13;
+    auto band3MeterX = threshold3.getRight() + 13;
+    auto band4MeterX = threshold4.getRight() + 13;
     
     auto bandMeterY = getHeight() * 0.307755;
     auto bandMeterWidth = 20;
@@ -318,6 +345,9 @@ void CURBAudioProcessorEditor::resized()
     inputMeterR.setBounds(inputMeterX + gradientMeterGap, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
     
     band1Meter.setBounds(band1MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
+    band2Meter.setBounds(band2MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
+    band3Meter.setBounds(band3MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
+    band4Meter.setBounds(band4MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
     
     outputMeterL.setBounds(outputMeterX, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
     outputMeterR.setBounds(outputMeterX + gradientMeterGap, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
