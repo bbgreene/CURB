@@ -55,6 +55,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     juce::AudioProcessorValueTreeState treeState;
+    float getRmsValue(const int meter) const;
     
 private:
     //Individual mixers
@@ -86,6 +87,10 @@ private:
     
     //Band buffers
     std::array<juce::AudioBuffer<float>, 4> filterBuffers;
+    
+    //rms values for meters
+    std::array<juce::LinearSmoothedValue<float>, 4> rmsLevel;
+    void rmsLevelSmoothing(const juce::AudioBuffer<float>& inputBuffer, const int meter, const int channel);
     
     //functions
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();

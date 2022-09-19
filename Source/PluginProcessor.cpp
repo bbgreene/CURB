@@ -366,6 +366,24 @@ void CURBAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
         mix.reset();
     }
     
+//    rmsLevelInputLeft.reset(sampleRate, 0.5);
+//    rmsLevelInputRight.reset(sampleRate, 0.5);
+//
+//    rmsLevelInputLeft.setCurrentAndTargetValue(-100.f);
+//    rmsLevelInputRight.setCurrentAndTargetValue(-100.f);
+//
+//    rmsLevelOutputLeft.reset(sampleRate, 0.5);
+//    rmsLevelOutputRight.reset(sampleRate, 0.5);
+//
+//    rmsLevelOutputLeft.setCurrentAndTargetValue(-100.f);
+//    rmsLevelOutputRight.setCurrentAndTargetValue(-100.f);
+    
+    for ( auto& rms : rmsLevel )
+    {
+        rms.reset(sampleRate, 0.5);
+        rms.setCurrentAndTargetValue(-100.f);
+    }
+    
     updateParameters();
 }
 
@@ -472,7 +490,7 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-
+    
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
@@ -487,6 +505,10 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     
     gain[4].process(juce::dsp::ProcessContextReplacing<float>(inCtx)); // input gain
     
+    // input meter
+    rmsLevelSmoothing(buffer, 0, 0); // meter 1, left
+    rmsLevelSmoothing(buffer, 1, 1); // meter 1, right
+
     splitBandsAndComp(buffer);
     
     auto numSamples = buffer.getNumSamples();
@@ -531,6 +553,11 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     }
     
     gain[5].process(juce::dsp::ProcessContextReplacing<float>(inCtx)); //output gain
+    
+    // output meter
+    rmsLevelSmoothing(buffer, 2, 0); // meter 2, left
+    rmsLevelSmoothing(buffer, 3, 1); // meter 2, right
+    
     mixModule[4].mixWetSamples(outputBlock); //wet to main mix module
     
     
@@ -605,6 +632,25 @@ void CURBAudioProcessor::updateParameters()
     {
         mixModule[i].setWetMixProportion(juce::jmap(mixValue[i], 0.0f, 100.0f, 0.0f, 1.0f));
     }
+}
+
+void CURBAudioProcessor::rmsLevelSmoothing(const juce::AudioBuffer<float> &inputBuffer, const int meter, const int channel)
+{
+    rmsLevel[meter].skip(inputBuffer.getNumSamples());
+    {
+        const auto value = juce::Decibels::gainToDecibels(inputBuffer.getRMSLevel(channel, 0, inputBuffer.getNumSamples()));
+        if(value < rmsLevel[meter].getCurrentValue())
+            rmsLevel[meter].setTargetValue(value);
+        else
+            rmsLevel[meter].setCurrentAndTargetValue(value);
+        }
+        {
+    }
+}
+
+float CURBAudioProcessor::getRmsValue(const int meter) const
+{
+    return rmsLevel[meter].getCurrentValue();
 }
 
 //==============================================================================

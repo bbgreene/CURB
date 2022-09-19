@@ -15,6 +15,7 @@
 #include "../Source/bbg_gui/PushButton.h"
 #include "../Source/bbg_gui/Menu.h"
 #include "../Source/bbg_gui/Label.h"
+#include <../Source/bbg_gui/VerticalGradientMeter.h>
 
 
 //==============================================================================
@@ -32,6 +33,8 @@ public:
 
 private:
     // DIALS, BUTTONS AND MENUS
+    bbg_gui::bbg_Dial input { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
+    
     bbg_gui::bbg_Dial threshold1 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial ratio1 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
     bbg_gui::bbg_Dial attack1 { "", 0.1, 150.0, 0.01, 0.0, 0.0 };
@@ -59,7 +62,12 @@ private:
     bbg_gui::bbg_Dial release4 { "", 2.0, 300.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial gain4 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix4 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
+    
+    bbg_gui::bbg_Dial output { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
  
+    // ATTACHMENTS
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputAttachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> outputAttachement;
     
     // BORDERS
     juce::GroupComponent inputBorder;
@@ -76,6 +84,8 @@ private:
     juce::GroupComponent outputTopBorder;
     
     // LABELS
+    bbg_gui::bbg_dialLabel inputLabel { "Input" };
+    
     bbg_gui::bbg_dialLabel thresholdLabel1 { "Threshold" };
     bbg_gui::bbg_dialLabel ratioLabel1 { "Ratio" };
     bbg_gui::bbg_dialLabel attackLabel1 { "Att" };
@@ -104,9 +114,14 @@ private:
     bbg_gui::bbg_dialLabel gainLabel4 { "Gain" };
     bbg_gui::bbg_dialLabel mixLabel4 { "Mix" };
     
+    bbg_gui::bbg_dialLabel outputLabel { "Output" };
+    
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     CURBAudioProcessor& audioProcessor;
+    
+    // METERS
+    bbg_gui::VerticalGradientMeter inputMeterL, inputMeterR, outputMeterL, outputMeterR;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CURBAudioProcessorEditor)
 };

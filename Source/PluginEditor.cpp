@@ -11,12 +11,21 @@
 
 //==============================================================================
 CURBAudioProcessorEditor::CURBAudioProcessorEditor (CURBAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+    : AudioProcessorEditor (&p), audioProcessor (p),
+inputMeterL([&](){ return  audioProcessor.getRmsValue(0);}),
+inputMeterR([&](){ return audioProcessor.getRmsValue(1);}),
+outputMeterL([&](){ return audioProcessor.getRmsValue(2);}),
+outputMeterR([&](){ return audioProcessor.getRmsValue(3);})
+
 {
     // SET DEFAULT FONT
     juce::LookAndFeel::getDefaultLookAndFeel().setDefaultSansSerifTypefaceName ("Avenir Next");
        
     // DIALS, BUTTONS, MENUS & PARAMETER ATTACHMENTS
+    input.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    inputAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "input", input);
+    addAndMakeVisible(input);
+    
     threshold1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     addAndMakeVisible(threshold1);
     ratio1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
@@ -69,7 +78,13 @@ CURBAudioProcessorEditor::CURBAudioProcessorEditor (CURBAudioProcessor& p)
     mix4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     addAndMakeVisible(mix4);
     
+    output.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    outputAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "output", output);
+    addAndMakeVisible(output);
+    
     //DIAL LABEL ATTACHMENTS
+    inputLabel.attachToComponent(&input, false);
+    
     thresholdLabel1.attachToComponent(&threshold1, false);
     ratioLabel1.attachToComponent(&ratio1, false);
     attackLabel1.attachToComponent(&attack1, false);
@@ -97,6 +112,8 @@ CURBAudioProcessorEditor::CURBAudioProcessorEditor (CURBAudioProcessor& p)
     releaseLabel4.attachToComponent(&release4, false);
     gainLabel4.attachToComponent(&gain4, false);
     mixLabel4.attachToComponent(&mix4, false);
+    
+    outputLabel.attachToComponent(&output, false);
     
     
     // BORDERS
@@ -166,6 +183,12 @@ CURBAudioProcessorEditor::CURBAudioProcessorEditor (CURBAudioProcessor& p)
     outputTopBorder.setText("Output");
     addAndMakeVisible(outputTopBorder);
     
+    // METERS
+    addAndMakeVisible(&inputMeterL);
+    addAndMakeVisible(&inputMeterR);
+    addAndMakeVisible(&outputMeterL);
+    addAndMakeVisible(&outputMeterR);
+    
     
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -223,6 +246,9 @@ void CURBAudioProcessorEditor::resized()
     auto dialSize = getWidth() * 0.05;
     auto dialtopRowY = getHeight() * 0.287877;
     auto dialbottomRowY = getHeight() * 0.513981;
+    
+    auto inputX = inputBorder.getX() * JUCE_LIVE_CONSTANT(0.0);
+    auto inputY = inputBorder.getY() * JUCE_LIVE_CONSTANT(0.0);
 
     auto dialLeftXone = band1Border.getX() + 8;
     auto dialRightXone = band1Border.getX() + 116;
@@ -235,6 +261,8 @@ void CURBAudioProcessorEditor::resized()
     
     
     auto dialRightGap = getWidth() * 0.045;
+    
+    input.setBounds(inputX, inputY, dialSize, dialSize);
 
     threshold1.setBounds(dialLeftXone, dialtopRowY, dialSize, dialSize);
     ratio1.setBounds(dialLeftXone, dialbottomRowY, dialSize, dialSize);
@@ -263,6 +291,20 @@ void CURBAudioProcessorEditor::resized()
     release4.setBounds(dialRightXfour + dialRightGap, dialtopRowY, dialSize, dialSize);
     gain4.setBounds(dialRightXfour, dialbottomRowY, dialSize, dialSize);
     mix4.setBounds(dialRightXfour + dialRightGap, dialbottomRowY, dialSize, dialSize);
+    
+    output.setBounds(1200, 20, dialSize, dialSize);
+    
+    auto gradientMeterX = getWidth() * 0.0657129;
+    auto gradientMeterY = getHeight() * 0.200058;
+    auto gradientMeterWidth = getWidth() * 0.0215395;
+    auto gradientMeterHeight = getHeight() * 0.691445;
+    auto gradientMeterGap = gradientMeterWidth * 1.92538;
+
+    inputMeterL.setBounds(gradientMeterX, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
+    inputMeterR.setBounds(gradientMeterX + gradientMeterGap, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
+    
+    outputMeterL.setBounds(800, 50, gradientMeterWidth, gradientMeterHeight);
+    outputMeterR.setBounds(800 + gradientMeterGap, 50, gradientMeterWidth, gradientMeterHeight);
     
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
