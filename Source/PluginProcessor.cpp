@@ -506,8 +506,8 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
     gain[4].process(juce::dsp::ProcessContextReplacing<float>(inCtx)); // input gain
     
     // input meter
-    rmsLevelSmoothing(buffer, 0, 0); // meter 1, left
-    rmsLevelSmoothing(buffer, 1, 1); // meter 1, right
+    rmsLevelSmoothing(buffer, 0, 0, false); // meter 1, left
+    rmsLevelSmoothing(buffer, 1, 1, false); // meter 1, right
 
     splitBandsAndComp(buffer);
     
@@ -551,15 +551,18 @@ void CURBAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
             addFilterBand(buffer, filterBuffers[i]);
         }
     }
+    rmsLevelSmoothing(filterBuffers[0], 2, 0, true);
+    rmsLevelSmoothing(filterBuffers[1], 3, 0, true);
+    rmsLevelSmoothing(filterBuffers[2], 4, 0, true);
+    rmsLevelSmoothing(filterBuffers[3], 5, 0, true);
     
     gain[5].process(juce::dsp::ProcessContextReplacing<float>(inCtx)); //output gain
     
-    // output meter
-    rmsLevelSmoothing(buffer, 2, 0); // meter 2, left
-    rmsLevelSmoothing(buffer, 3, 1); // meter 2, right
-    
     mixModule[4].mixWetSamples(outputBlock); //wet to main mix module
     
+    // output meter
+    rmsLevelSmoothing(buffer, 6, 0, false); // meter 2, left
+    rmsLevelSmoothing(buffer, 7, 1, false); // meter 2, right
     
 }
 
@@ -634,17 +637,26 @@ void CURBAudioProcessor::updateParameters()
     }
 }
 
-void CURBAudioProcessor::rmsLevelSmoothing(const juce::AudioBuffer<float> &inputBuffer, const int meter, const int channel)
+void CURBAudioProcessor::rmsLevelSmoothing(const juce::AudioBuffer<float> &inputBuffer, const int meter, const int channel, const bool stereoToMonoAverage)
 {
     rmsLevel[meter].skip(inputBuffer.getNumSamples());
+    if(! stereoToMonoAverage)
     {
         const auto value = juce::Decibels::gainToDecibels(inputBuffer.getRMSLevel(channel, 0, inputBuffer.getNumSamples()));
         if(value < rmsLevel[meter].getCurrentValue())
             rmsLevel[meter].setTargetValue(value);
         else
             rmsLevel[meter].setCurrentAndTargetValue(value);
-        }
-        {
+    }
+    else
+    {
+        const auto valueLeft = juce::Decibels::gainToDecibels(inputBuffer.getRMSLevel(channel, 0, inputBuffer.getNumSamples()));
+        const auto valueRight = juce::Decibels::gainToDecibels(inputBuffer.getRMSLevel(channel + 1, 0, inputBuffer.getNumSamples()));
+        auto averageValue = (valueLeft + valueRight) / 2.0;
+        if(averageValue < rmsLevel[meter].getCurrentValue())
+            rmsLevel[meter].setTargetValue(averageValue);
+        else
+            rmsLevel[meter].setCurrentAndTargetValue(averageValue);
     }
 }
 

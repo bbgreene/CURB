@@ -14,8 +14,9 @@ CURBAudioProcessorEditor::CURBAudioProcessorEditor (CURBAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p),
 inputMeterL([&](){ return  audioProcessor.getRmsValue(0);}),
 inputMeterR([&](){ return audioProcessor.getRmsValue(1);}),
-outputMeterL([&](){ return audioProcessor.getRmsValue(2);}),
-outputMeterR([&](){ return audioProcessor.getRmsValue(3);})
+band1Meter([&](){ return audioProcessor.getRmsValue(2);}),
+outputMeterL([&](){ return audioProcessor.getRmsValue(6);}),
+outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
 
 {
     // SET DEFAULT FONT
@@ -27,16 +28,22 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(3);})
     addAndMakeVisible(input);
     
     threshold1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    thres1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 1", threshold1);
     addAndMakeVisible(threshold1);
     ratio1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    ratio1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "ratio 1", ratio1);
     addAndMakeVisible(ratio1);
     attack1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    attack1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "attack 1", attack1);
     addAndMakeVisible(attack1);
     release1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    release1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "release 1", release1);
     addAndMakeVisible(release1);
     gain1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    gain1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain1", gain1);
     addAndMakeVisible(gain1);
     mix1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    mix1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb1mix", mix1);
     addAndMakeVisible(mix1);
     
     threshold2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
@@ -82,6 +89,10 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(3);})
     outputAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "output", output);
     addAndMakeVisible(output);
     
+    mainMix.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    mainMixAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "main mix", mainMix);
+    addAndMakeVisible(mainMix);
+    
     //DIAL LABEL ATTACHMENTS
     inputLabel.attachToComponent(&input, false);
     
@@ -114,6 +125,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(3);})
     mixLabel4.attachToComponent(&mix4, false);
     
     outputLabel.attachToComponent(&output, false);
+    mainMixLabel.attachToComponent(&mainMix, false);
     
     
     // BORDERS
@@ -186,13 +198,14 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(3);})
     // METERS
     addAndMakeVisible(&inputMeterL);
     addAndMakeVisible(&inputMeterR);
+    addAndMakeVisible(&band1Meter);
     addAndMakeVisible(&outputMeterL);
     addAndMakeVisible(&outputMeterR);
     
     
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (1355, 400);
+    setSize (1260, 400);
 }
 
 CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
@@ -212,27 +225,25 @@ void CURBAudioProcessorEditor::resized()
     
     /*
      band border width = 250
-     band border gaps = 15
-     input/output width = 125
+     band border gaps = 10
+     input width = 80
+     output width = 150
      
      4 x band borders = 1000
-     7 x band border gaps = 105
-     2 x input/output width = 250
+     3 x band border gaps = 30
+     1 input width = 80
+     output width = 150
      
      */
-    auto leftMarginGap = getWidth() * 0.01108; //15
-    auto borderWidthGap = getWidth() * 0.01108; //15
-    auto smallBorderWidth = getWidth() * 0.09226; //125
-    auto largeBorderWidth = getWidth() * 0.18451; //250
+    auto borderWidthGap = getWidth() * 0.00794; //10
+    auto largeBorderWidth = getWidth() * 0.19842; //250
     auto mainBorderHeight = getHeight() *  0.6; //280
     auto topBorderHeight = getHeight() * 0.1; //40
+    auto band1X = getWidth() * 0.0635;// 80
     auto borderY = getHeight() * 0.125; //50
     
-    inputBorder.setBounds(leftMarginGap, borderY, smallBorderWidth, mainBorderHeight);
-    inputTopBorder.setBounds(leftMarginGap, borderY, smallBorderWidth, topBorderHeight);
-    
-    band1Border.setBounds(inputBorder.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
-    band1TopBorder.setBounds(inputBorder.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
+    band1Border.setBounds(band1X, borderY, largeBorderWidth, mainBorderHeight);
+    band1TopBorder.setBounds(band1X, borderY, largeBorderWidth, topBorderHeight);
     band2Border.setBounds(band1Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
     band2TopBorder.setBounds(band1Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
     band3Border.setBounds(band2Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
@@ -240,16 +251,10 @@ void CURBAudioProcessorEditor::resized()
     band4Border.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
     band4TopBorder.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
     
-    outputBorder.setBounds(band4Border.getRight() + borderWidthGap, borderY, smallBorderWidth, mainBorderHeight);
-    outputTopBorder.setBounds(band4Border.getRight() + borderWidthGap, borderY, smallBorderWidth, topBorderHeight);
-    
-    auto dialSize = getWidth() * 0.05;
+    auto dialSize = getWidth() * 0.0532; // 67
     auto dialtopRowY = getHeight() * 0.287877;
     auto dialbottomRowY = getHeight() * 0.513981;
     
-    auto inputX = inputBorder.getX() * JUCE_LIVE_CONSTANT(0.0);
-    auto inputY = inputBorder.getY() * JUCE_LIVE_CONSTANT(0.0);
-
     auto dialLeftXone = band1Border.getX() + 8;
     auto dialRightXone = band1Border.getX() + 116;
     auto dialLeftXtwo = band2Border.getX() + 8;
@@ -259,10 +264,10 @@ void CURBAudioProcessorEditor::resized()
     auto dialLeftXfour = band4Border.getX() + 8;
     auto dialRightXfour = band4Border.getX() + 116;
     
-    
     auto dialRightGap = getWidth() * 0.045;
     
-    input.setBounds(inputX, inputY, dialSize, dialSize);
+    auto inputOutGapX = (band1X - dialSize) / 2;
+    input.setBounds(inputOutGapX, dialbottomRowY, dialSize, dialSize);
 
     threshold1.setBounds(dialLeftXone, dialtopRowY, dialSize, dialSize);
     ratio1.setBounds(dialLeftXone, dialbottomRowY, dialSize, dialSize);
@@ -291,20 +296,31 @@ void CURBAudioProcessorEditor::resized()
     release4.setBounds(dialRightXfour + dialRightGap, dialtopRowY, dialSize, dialSize);
     gain4.setBounds(dialRightXfour, dialbottomRowY, dialSize, dialSize);
     mix4.setBounds(dialRightXfour + dialRightGap, dialbottomRowY, dialSize, dialSize);
+ 
+    output.setBounds(band4Border.getRight() + inputOutGapX, dialbottomRowY, dialSize, dialSize);
+    mainMix.setBounds(output.getRight() + inputOutGapX, dialbottomRowY, dialSize, dialSize);
     
-    output.setBounds(1200, 20, dialSize, dialSize);
+    auto inputMeterX = getWidth() * 0.0114;
+    auto outputMeterX = band4Border.getRight() + inputMeterX;
     
-    auto gradientMeterX = getWidth() * 0.0657129;
-    auto gradientMeterY = getHeight() * 0.200058;
-    auto gradientMeterWidth = getWidth() * 0.0215395;
-    auto gradientMeterHeight = getHeight() * 0.691445;
-    auto gradientMeterGap = gradientMeterWidth * 1.92538;
+    auto gradientMeterHeight = getHeight() * 0.324003;
+    auto gradientMeterY = getHeight() * 0.147853;
+    auto gradientMeterWidth = getWidth() * 0.018;
+    auto gradientMeterGap = gradientMeterWidth * 1.3252;
+    
+    auto band1MeterX = band1Border.getRight() * 0.51;
+    
+    auto bandMeterY = getHeight() * 0.307755;
+    auto bandMeterWidth = 20;
+    auto bandMeterHeight = mainBorderHeight * 0.588493;
 
-    inputMeterL.setBounds(gradientMeterX, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
-    inputMeterR.setBounds(gradientMeterX + gradientMeterGap, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
+    inputMeterL.setBounds(inputMeterX, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
+    inputMeterR.setBounds(inputMeterX + gradientMeterGap, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
     
-    outputMeterL.setBounds(800, 50, gradientMeterWidth, gradientMeterHeight);
-    outputMeterR.setBounds(800 + gradientMeterGap, 50, gradientMeterWidth, gradientMeterHeight);
+    band1Meter.setBounds(band1MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
+    
+    outputMeterL.setBounds(outputMeterX, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
+    outputMeterR.setBounds(outputMeterX + gradientMeterGap, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
     
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..

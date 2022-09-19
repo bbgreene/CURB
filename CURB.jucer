@@ -19,6 +19,8 @@
         <FILE id="HnHMQJ" name="StyleSheet.h" compile="0" resource="0" file="Source/bbg_gui/StyleSheet.h"/>
         <FILE id="VMt82X" name="Toggle.cpp" compile="1" resource="0" file="Source/bbg_gui/Toggle.cpp"/>
         <FILE id="LU8mVT" name="Toggle.h" compile="0" resource="0" file="Source/bbg_gui/Toggle.h"/>
+        <FILE id="kjMscD" name="VerticalDiscreteMeter.h" compile="0" resource="0"
+              file="Source/bbg_gui/VerticalDiscreteMeter.h"/>
         <FILE id="Xgfbyh" name="VerticalGradientMeter.h" compile="0" resource="0"
               file="Source/bbg_gui/VerticalGradientMeter.h"/>
       </GROUP>

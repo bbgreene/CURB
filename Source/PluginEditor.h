@@ -16,7 +16,7 @@
 #include "../Source/bbg_gui/Menu.h"
 #include "../Source/bbg_gui/Label.h"
 #include <../Source/bbg_gui/VerticalGradientMeter.h>
-
+#include <../Source/bbg_gui/VerticalDiscreteMeter.h>
 
 //==============================================================================
 /**
@@ -64,10 +64,21 @@ private:
     bbg_gui::bbg_Dial mix4 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
     bbg_gui::bbg_Dial output { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial mainMix { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
+
  
     // ATTACHMENTS
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputAttachement;
+    
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> thres1Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ratio1Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attack1Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> release1Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gain1Attachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mix1Attachement;
+    
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> outputAttachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mainMixAttachement;
     
     // BORDERS
     juce::GroupComponent inputBorder;
@@ -115,13 +126,16 @@ private:
     bbg_gui::bbg_dialLabel mixLabel4 { "Mix" };
     
     bbg_gui::bbg_dialLabel outputLabel { "Output" };
+    bbg_gui::bbg_dialLabel mainMixLabel { "Mix" };
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     CURBAudioProcessor& audioProcessor;
     
     // METERS
-    bbg_gui::VerticalGradientMeter inputMeterL, inputMeterR, outputMeterL, outputMeterR;
-
+    bbg_gui::VerticalGradientMeter inputMeterL, inputMeterR;
+    bbg_gui::VerticalDiscreteMeter band1Meter;
+    bbg_gui::VerticalGradientMeter outputMeterL, outputMeterR;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CURBAudioProcessorEditor)
 };
