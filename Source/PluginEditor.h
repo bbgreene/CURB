@@ -118,6 +118,7 @@ private:
     // LABELS
     bbg_gui::bbg_dialLabel inputLabel { "Input" };
     
+    bbg_gui::bbg_borderLabelMiddle bandLabel1 { "BAND 1" };
     bbg_gui::bbg_dialLabel thresholdLabel1 { "Threshold" };
     bbg_gui::bbg_dialLabel ratioLabel1 { "Ratio" };
     bbg_gui::bbg_dialLabel attackLabel1 { "Att" };
@@ -125,6 +126,7 @@ private:
     bbg_gui::bbg_dialLabel gainLabel1 { "Gain" };
     bbg_gui::bbg_dialLabel mixLabel1 { "Mix" };
     
+    bbg_gui::bbg_borderLabelMiddle bandLabel2 { "BAND 2" };
     bbg_gui::bbg_dialLabel thresholdLabel2 { "Threshold" };
     bbg_gui::bbg_dialLabel ratioLabel2 { "Ratio" };
     bbg_gui::bbg_dialLabel attackLabel2 { "Att" };
@@ -132,6 +134,7 @@ private:
     bbg_gui::bbg_dialLabel gainLabel2 { "Gain" };
     bbg_gui::bbg_dialLabel mixLabel2 { "Mix" };
     
+    bbg_gui::bbg_borderLabelMiddle bandLabel3 { "BAND 3" };
     bbg_gui::bbg_dialLabel thresholdLabel3 { "Threshold" };
     bbg_gui::bbg_dialLabel ratioLabel3 { "Ratio" };
     bbg_gui::bbg_dialLabel attackLabel3 { "Att" };
@@ -139,6 +142,7 @@ private:
     bbg_gui::bbg_dialLabel gainLabel3 { "Gain" };
     bbg_gui::bbg_dialLabel mixLabel3 { "Mix" };
     
+    bbg_gui::bbg_borderLabelMiddle bandLabel4 { "BAND 4" };
     bbg_gui::bbg_dialLabel thresholdLabel4 { "Threshold" };
     bbg_gui::bbg_dialLabel ratioLabel4 { "Ratio" };
     bbg_gui::bbg_dialLabel attackLabel4 { "Att" };

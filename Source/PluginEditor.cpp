@@ -114,9 +114,36 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mainMixAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "main mix", mainMix);
     addAndMakeVisible(mainMix);
     
-    //DIAL LABEL ATTACHMENTS
+    // BORDERS
+    band1Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    addAndMakeVisible(band1Border);
+    
+    band1TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    addAndMakeVisible(band1TopBorder);
+
+    band2Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    addAndMakeVisible(band2Border);
+    
+    band2TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    addAndMakeVisible(band2TopBorder);
+    
+    band3Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    addAndMakeVisible(band3Border);
+    
+    band3TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    addAndMakeVisible(band3TopBorder);
+    
+    band4Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    addAndMakeVisible(band4Border);
+    
+    band4TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    addAndMakeVisible(band4TopBorder);
+    
+    
+    //LABEL ATTACHMENTS
     inputLabel.attachToComponent(&input, false);
     
+    bandLabel1.attachToComponent(&band1TopBorder, false);
     thresholdLabel1.attachToComponent(&threshold1, false);
     ratioLabel1.attachToComponent(&ratio1, false);
     attackLabel1.attachToComponent(&attack1, false);
@@ -124,6 +151,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     gainLabel1.attachToComponent(&gain1, false);
     mixLabel1.attachToComponent(&mix1, false);
     
+    bandLabel2.attachToComponent(&band2TopBorder, false);
     thresholdLabel2.attachToComponent(&threshold2, false);
     ratioLabel2.attachToComponent(&ratio2, false);
     attackLabel2.attachToComponent(&attack2, false);
@@ -131,6 +159,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     gainLabel2.attachToComponent(&gain2, false);
     mixLabel2.attachToComponent(&mix2, false);
     
+    bandLabel3.attachToComponent(&band3TopBorder, false);
     thresholdLabel3.attachToComponent(&threshold3, false);
     ratioLabel3.attachToComponent(&ratio3, false);
     attackLabel3.attachToComponent(&attack3, false);
@@ -138,6 +167,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     gainLabel3.attachToComponent(&gain3, false);
     mixLabel3.attachToComponent(&mix3, false);
     
+    bandLabel4.attachToComponent(&band4TopBorder, false);
     thresholdLabel4.attachToComponent(&threshold4, false);
     ratioLabel4.attachToComponent(&ratio4, false);
     attackLabel4.attachToComponent(&attack4, false);
@@ -147,74 +177,6 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     
     outputLabel.attachToComponent(&output, false);
     mainMixLabel.attachToComponent(&mainMix, false);
-    
-    
-    // BORDERS
-    inputBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    inputBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
-    inputBorder.setTextLabelPosition(juce::Justification::centred);
-    addAndMakeVisible(inputBorder);
-    
-    inputTopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    inputTopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
-    inputTopBorder.setTextLabelPosition(juce::Justification::centred);
-    inputTopBorder.setText("Input");
-    addAndMakeVisible(inputTopBorder);
-    
-    band1Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    band1Border.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
-    band1Border.setTextLabelPosition(juce::Justification::centred);
-    addAndMakeVisible(band1Border);
-    
-    band1TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    band1TopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
-    band1TopBorder.setTextLabelPosition(juce::Justification::centred);
-    band1TopBorder.setText("Band 1");
-    addAndMakeVisible(band1TopBorder);
-
-    band2Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    band2Border.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
-    band2Border.setTextLabelPosition(juce::Justification::centred);
-    addAndMakeVisible(band2Border);
-    
-    band2TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    band2TopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
-    band2TopBorder.setTextLabelPosition(juce::Justification::centred);
-    band2TopBorder.setText("Band 2");
-    addAndMakeVisible(band2TopBorder);
-    
-    band3Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    band3Border.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
-    band3Border.setTextLabelPosition(juce::Justification::centred);
-    addAndMakeVisible(band3Border);
-    
-    band3TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    band3TopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
-    band3TopBorder.setTextLabelPosition(juce::Justification::centred);
-    band3TopBorder.setText("Band 3");
-    addAndMakeVisible(band3TopBorder);
-    
-    band4Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    band4Border.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
-    band4Border.setTextLabelPosition(juce::Justification::centred);
-    addAndMakeVisible(band4Border);
-    
-    band4TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    band4TopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
-    band4TopBorder.setTextLabelPosition(juce::Justification::centred);
-    band4TopBorder.setText("Band 4");
-    addAndMakeVisible(band4TopBorder);
-    
-    outputBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    outputBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
-    outputBorder.setTextLabelPosition(juce::Justification::centred);
-    addAndMakeVisible(outputBorder);
-    
-    outputTopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    outputTopBorder.setColour(juce::GroupComponent::ColourIds::textColourId, CustomColours::creamWhite.darker());
-    outputTopBorder.setTextLabelPosition(juce::Justification::centred);
-    outputTopBorder.setText("Output");
-    addAndMakeVisible(outputTopBorder);
     
     // METERS
     addAndMakeVisible(&inputMeterL);
