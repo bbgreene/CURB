@@ -54,6 +54,10 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mix1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb1mix", mix1);
     addAndMakeVisible(mix1);
     
+    lowBandSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
+    lowAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "low", lowBandSlider);
+    addAndMakeVisible(lowBandSlider);
+    
     band2SoloAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "solo 2", band2SoloButton);
     addAndMakeVisible(band2SoloButton);
     band2BypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass 2", band2BypassButton);
@@ -77,6 +81,10 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mix2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     mix2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb2mix", mix2);
     addAndMakeVisible(mix2);
+    
+    midBandSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
+    midAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "mid", midBandSlider);
+    addAndMakeVisible(midBandSlider);
     
     band3SoloAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "solo 3", band3SoloButton);
     addAndMakeVisible(band3SoloButton);
@@ -102,10 +110,15 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mix3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb3mix", mix3);
     addAndMakeVisible(mix3);
     
+    highBandSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
+    highAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "high", highBandSlider);
+    addAndMakeVisible(highBandSlider);
+    
     band4SoloAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "solo 4", band4SoloButton);
     addAndMakeVisible(band4SoloButton);
     band4BypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass 4", band4BypassButton);
     addAndMakeVisible(band4BypassButton);
+    
     threshold4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     thres4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 4", threshold4);
     addAndMakeVisible(threshold4);
@@ -129,7 +142,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     outputAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "output", output);
     addAndMakeVisible(output);
     
-    mainMix.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    mainMix.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
     mainMixAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "main mix", mainMix);
     addAndMakeVisible(mainMix);
     
@@ -180,6 +193,8 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     gainLabel1.attachToComponent(&gain1, false);
     mixLabel1.attachToComponent(&mix1, false);
     
+    lowLabel.attachToComponent(&lowBandSlider, false);
+    
     bandLabel2.attachToComponent(&band2TopBorder, false);
     thresholdLabel2.attachToComponent(&threshold2, false);
     ratioLabel2.attachToComponent(&ratio2, false);
@@ -189,6 +204,8 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     gainLabel2.attachToComponent(&gain2, false);
     mixLabel2.attachToComponent(&mix2, false);
     
+    midLabel.attachToComponent(&midBandSlider, false);
+
     bandLabel3.attachToComponent(&band3TopBorder, false);
     thresholdLabel3.attachToComponent(&threshold3, false);
     ratioLabel3.attachToComponent(&ratio3, false);
@@ -198,6 +215,8 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     gainLabel3.attachToComponent(&gain3, false);
     mixLabel3.attachToComponent(&mix3, false);
     
+    highLabel.attachToComponent(&highBandSlider, false);
+
     bandLabel4.attachToComponent(&band4TopBorder, false);
     thresholdLabel4.attachToComponent(&threshold4, false);
     ratioLabel4.attachToComponent(&ratio4, false);
@@ -335,6 +354,8 @@ void CURBAudioProcessorEditor::resized()
     release1.setBounds(dialRightXone + dialRightGap, dialtopRowY, dialSize, dialSize);
     gain1.setBounds(dialRightXone, dialbottomRowY, dialSize, dialSize);
     mix1.setBounds(dialRightXone + dialRightGap, dialbottomRowY, dialSize, dialSize);
+    
+    lowBandSlider.setBounds(band1TopBorder.getRight(), 20, 40, 25);
     
     band2SoloButton.setBounds(band2TopBorder.getX() + soloButtonXadd, band2TopBorder.getY() + soloButtonYadd, band2TopBorder.getWidth() * soloButtonWidth, band2TopBorder.getHeight() * soloButtonHeight);
     band2BypassButton.setBounds(band2TopBorder.getX() + bypassButtonXadd, band2TopBorder.getY() + bypassButtonYadd, band2TopBorder.getWidth() * bypassButtonWidth, band2TopBorder.getHeight() * bypassButtonHeight);
