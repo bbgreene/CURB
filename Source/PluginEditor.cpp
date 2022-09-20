@@ -29,6 +29,11 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     input.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     inputAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "input", input);
     addAndMakeVisible(input);
+
+    band1SoloAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "solo 1", band1SoloButton);
+    addAndMakeVisible(band1SoloButton);
+    band1BypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass 1", band1BypassButton);
+    addAndMakeVisible(band1BypassButton);
     
     threshold1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     thres1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 1", threshold1);
@@ -49,6 +54,11 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mix1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb1mix", mix1);
     addAndMakeVisible(mix1);
     
+    band2SoloAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "solo 2", band2SoloButton);
+    addAndMakeVisible(band2SoloButton);
+    band2BypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass 2", band2BypassButton);
+    addAndMakeVisible(band2BypassButton);
+    
     threshold2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     thres2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 2", threshold2);
     addAndMakeVisible(threshold2);
@@ -67,6 +77,11 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mix2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     mix2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb2mix", mix2);
     addAndMakeVisible(mix2);
+    
+    band3SoloAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "solo 3", band3SoloButton);
+    addAndMakeVisible(band3SoloButton);
+    band3BypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass 3", band3BypassButton);
+    addAndMakeVisible(band3BypassButton);
     
     threshold3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     thres3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 3", threshold3);
@@ -87,6 +102,10 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mix3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb3mix", mix3);
     addAndMakeVisible(mix3);
     
+    band4SoloAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "solo 4", band4SoloButton);
+    addAndMakeVisible(band4SoloButton);
+    band4BypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass 4", band4BypassButton);
+    addAndMakeVisible(band4BypassButton);
     threshold4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     thres4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 4", threshold4);
     addAndMakeVisible(threshold4);
@@ -115,28 +134,37 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     addAndMakeVisible(mainMix);
     
     // BORDERS
+    auto alpha = 0.2;
     band1Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    band1Border.setAlpha(alpha);
     addAndMakeVisible(band1Border);
     
     band1TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    band1TopBorder.setAlpha(alpha);
     addAndMakeVisible(band1TopBorder);
 
     band2Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    band2Border.setAlpha(alpha);
     addAndMakeVisible(band2Border);
     
     band2TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    band2TopBorder.setAlpha(alpha);
     addAndMakeVisible(band2TopBorder);
     
     band3Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    band3Border.setAlpha(alpha);
     addAndMakeVisible(band3Border);
     
     band3TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    band3TopBorder.setAlpha(alpha);
     addAndMakeVisible(band3TopBorder);
     
     band4Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    band4Border.setAlpha(alpha);
     addAndMakeVisible(band4Border);
     
     band4TopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    band4TopBorder.setAlpha(alpha);
     addAndMakeVisible(band4TopBorder);
     
     
@@ -271,6 +299,16 @@ void CURBAudioProcessorEditor::resized()
     auto dialtopRowY = getHeight() * 0.287877;
     auto dialbottomRowY = getHeight() * 0.513981;
     
+    auto soloButtonXadd = 27;
+    auto soloButtonYadd = 13;
+    auto soloButtonWidth = 0.111317;
+    auto soloButtonHeight = 0.451928;
+    
+    auto bypassButtonXadd = 197;
+    auto bypassButtonYadd = 13;
+    auto bypassButtonWidth = 0.111317;
+    auto bypassButtonHeight = 0.451928;
+    
     auto dialLeftXone = band1Border.getX() + 8;
     auto dialRightXone = band1Border.getX() + 116;
     auto dialLeftXtwo = band2Border.getX() + 8;
@@ -285,6 +323,8 @@ void CURBAudioProcessorEditor::resized()
     auto inputOutGapX = (band1X - dialSize) / 2;
     input.setBounds(inputOutGapX, dialbottomRowY, dialSize, dialSize);
 
+    band1SoloButton.setBounds(band1TopBorder.getX() + soloButtonXadd, band1TopBorder.getY() + soloButtonYadd, band1TopBorder.getWidth() * soloButtonWidth, band1TopBorder.getHeight() * soloButtonHeight);
+    band1BypassButton.setBounds(band1TopBorder.getX() + bypassButtonXadd, band1TopBorder.getY() + bypassButtonYadd, band1TopBorder.getWidth() * bypassButtonWidth, band1TopBorder.getHeight() * bypassButtonHeight);
     threshold1.setBounds(dialLeftXone, dialtopRowY, dialSize, dialSize);
     ratio1.setBounds(dialLeftXone, dialbottomRowY, dialSize, dialSize);
     attack1.setBounds(dialRightXone, dialtopRowY, dialSize, dialSize);
@@ -292,6 +332,8 @@ void CURBAudioProcessorEditor::resized()
     gain1.setBounds(dialRightXone, dialbottomRowY, dialSize, dialSize);
     mix1.setBounds(dialRightXone + dialRightGap, dialbottomRowY, dialSize, dialSize);
     
+    band2SoloButton.setBounds(band2TopBorder.getX() + soloButtonXadd, band2TopBorder.getY() + soloButtonYadd, band2TopBorder.getWidth() * soloButtonWidth, band2TopBorder.getHeight() * soloButtonHeight);
+    band2BypassButton.setBounds(band2TopBorder.getX() + bypassButtonXadd, band2TopBorder.getY() + bypassButtonYadd, band2TopBorder.getWidth() * bypassButtonWidth, band2TopBorder.getHeight() * bypassButtonHeight);
     threshold2.setBounds(dialLeftXtwo, dialtopRowY, dialSize, dialSize);
     ratio2.setBounds(dialLeftXtwo, dialbottomRowY, dialSize, dialSize);
     attack2.setBounds(dialRightXtwo, dialtopRowY, dialSize, dialSize);
@@ -299,6 +341,8 @@ void CURBAudioProcessorEditor::resized()
     gain2.setBounds(dialRightXtwo, dialbottomRowY, dialSize, dialSize);
     mix2.setBounds(dialRightXtwo + dialRightGap, dialbottomRowY, dialSize, dialSize);
 
+    band3SoloButton.setBounds(band3TopBorder.getX() + soloButtonXadd, band3TopBorder.getY() + soloButtonYadd, band3TopBorder.getWidth() * soloButtonWidth, band3TopBorder.getHeight() * soloButtonHeight);
+    band3BypassButton.setBounds(band3TopBorder.getX() + bypassButtonXadd, band3TopBorder.getY() + bypassButtonYadd, band3TopBorder.getWidth() * bypassButtonWidth, band3TopBorder.getHeight() * bypassButtonHeight);
     threshold3.setBounds(dialLeftXthree, dialtopRowY, dialSize, dialSize);
     ratio3.setBounds(dialLeftXthree, dialbottomRowY, dialSize, dialSize);
     attack3.setBounds(dialRightXthree, dialtopRowY, dialSize, dialSize);
@@ -306,6 +350,8 @@ void CURBAudioProcessorEditor::resized()
     gain3.setBounds(dialRightXthree, dialbottomRowY, dialSize, dialSize);
     mix3.setBounds(dialRightXthree + dialRightGap, dialbottomRowY, dialSize, dialSize);
 
+    band4SoloButton.setBounds(band4TopBorder.getX() + soloButtonXadd, band4TopBorder.getY() + soloButtonYadd, band4TopBorder.getWidth() * soloButtonWidth, band4TopBorder.getHeight() * soloButtonHeight);
+    band4BypassButton.setBounds(band4TopBorder.getX() + bypassButtonXadd, band4TopBorder.getY() + bypassButtonYadd, band4TopBorder.getWidth() * bypassButtonWidth, band4TopBorder.getHeight() * bypassButtonHeight);
     threshold4.setBounds(dialLeftXfour, dialtopRowY, dialSize, dialSize);
     ratio4.setBounds(dialLeftXfour, dialbottomRowY, dialSize, dialSize);
     attack4.setBounds(dialRightXfour, dialtopRowY, dialSize, dialSize);

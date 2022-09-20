@@ -35,6 +35,8 @@ private:
     // DIALS, BUTTONS AND MENUS
     bbg_gui::bbg_Dial input { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     
+    bbg_gui::bbg_PushButton band1SoloButton { "S" };
+    bbg_gui::bbg_PushButton band1BypassButton { "BYP" };
     bbg_gui::bbg_Dial threshold1 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial ratio1 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
     bbg_gui::bbg_Dial attack1 { "", 0.1, 150.0, 0.01, 0.0, 0.0 };
@@ -42,6 +44,8 @@ private:
     bbg_gui::bbg_Dial gain1 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix1 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
+    bbg_gui::bbg_PushButton band2SoloButton { "S" };
+    bbg_gui::bbg_PushButton band2BypassButton { "BYP" };
     bbg_gui::bbg_Dial threshold2 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial ratio2 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
     bbg_gui::bbg_Dial attack2 { "", 0.1, 150.0, 0.01, 0.0, 0.0 };
@@ -49,6 +53,8 @@ private:
     bbg_gui::bbg_Dial gain2 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix2 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
+    bbg_gui::bbg_PushButton band3SoloButton { "S" };
+    bbg_gui::bbg_PushButton band3BypassButton { "BYP" };
     bbg_gui::bbg_Dial threshold3 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial ratio3 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
     bbg_gui::bbg_Dial attack3 { "", 0.1, 150.0, 0.01, 0.0, 0.0 };
@@ -56,6 +62,8 @@ private:
     bbg_gui::bbg_Dial gain3 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix3 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
+    bbg_gui::bbg_PushButton band4SoloButton { "S" };
+    bbg_gui::bbg_PushButton band4BypassButton { "BYP" };
     bbg_gui::bbg_Dial threshold4 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial ratio4 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
     bbg_gui::bbg_Dial attack4 { "", 0.1, 150.0, 0.01, 0.0, 0.0 };
@@ -70,6 +78,8 @@ private:
     // ATTACHMENTS
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputAttachement;
     
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> band1SoloAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> band1BypassAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> thres1Attachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ratio1Attachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attack1Attachement;
@@ -77,6 +87,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gain1Attachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mix1Attachement;
     
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> band2SoloAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> band2BypassAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> thres2Attachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ratio2Attachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attack2Attachement;
@@ -84,6 +96,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gain2Attachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mix2Attachement;
     
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> band3SoloAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> band3BypassAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> thres3Attachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ratio3Attachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attack3Attachement;
@@ -91,6 +105,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gain3Attachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mix3Attachement;
     
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> band4SoloAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> band4BypassAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> thres4Attachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> ratio4Attachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> attack4Attachement;
