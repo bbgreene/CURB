@@ -174,6 +174,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     bandLabel1.attachToComponent(&band1TopBorder, false);
     thresholdLabel1.attachToComponent(&threshold1, false);
     ratioLabel1.attachToComponent(&ratio1, false);
+    band1MeterLabel.attachToComponent(&band1Meter, false);
     attackLabel1.attachToComponent(&attack1, false);
     releaseLabel1.attachToComponent(&release1, false);
     gainLabel1.attachToComponent(&gain1, false);
@@ -182,6 +183,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     bandLabel2.attachToComponent(&band2TopBorder, false);
     thresholdLabel2.attachToComponent(&threshold2, false);
     ratioLabel2.attachToComponent(&ratio2, false);
+    band2MeterLabel.attachToComponent(&band2Meter, false);
     attackLabel2.attachToComponent(&attack2, false);
     releaseLabel2.attachToComponent(&release2, false);
     gainLabel2.attachToComponent(&gain2, false);
@@ -190,6 +192,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     bandLabel3.attachToComponent(&band3TopBorder, false);
     thresholdLabel3.attachToComponent(&threshold3, false);
     ratioLabel3.attachToComponent(&ratio3, false);
+    band3MeterLabel.attachToComponent(&band3Meter, false);
     attackLabel3.attachToComponent(&attack3, false);
     releaseLabel3.attachToComponent(&release3, false);
     gainLabel3.attachToComponent(&gain3, false);
@@ -198,6 +201,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     bandLabel4.attachToComponent(&band4TopBorder, false);
     thresholdLabel4.attachToComponent(&threshold4, false);
     ratioLabel4.attachToComponent(&ratio4, false);
+    band4MeterLabel.attachToComponent(&band4Meter, false);
     attackLabel4.attachToComponent(&attack4, false);
     releaseLabel4.attachToComponent(&release4, false);
     gainLabel4.attachToComponent(&gain4, false);
@@ -380,7 +384,7 @@ void CURBAudioProcessorEditor::resized()
     auto band4MeterX = threshold4.getRight() + 13;
     
     auto bandMeterY = getHeight() * 0.307755;
-    auto bandMeterWidth = 20;
+    auto bandMeterWidth = 26;
     auto bandMeterHeight = mainBorderHeight * 0.588493;
 
     inputMeterL.setBounds(inputMeterX, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
