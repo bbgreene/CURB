@@ -35,9 +35,12 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     band1BypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass 1", band1BypassButton);
     addAndMakeVisible(band1BypassButton);
     
+    
+    
     threshold1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     thres1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 1", threshold1);
     addAndMakeVisible(threshold1);
+    
     ratio1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
     ratio1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "ratio 1", ratio1);
     addAndMakeVisible(ratio1);
@@ -251,8 +254,12 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     olumay.setJustificationType(juce::Justification::centredLeft);
     olumay.setColour(juce::Label::textColourId, juce::Colours::steelblue.brighter());
     addAndMakeVisible(olumay);
-
     
+    
+    toolTip.setFont(juce::Font("Helvetica", 15, juce::Font::FontStyleFlags::bold));
+    toolTip.setColour(juce::Label::ColourIds::textColourId, juce::Colours::black);
+    addAndMakeVisible(toolTip);
+                                
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (1190, 330);
@@ -265,9 +272,23 @@ CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
 //==============================================================================
 void CURBAudioProcessorEditor::paint (juce::Graphics& g)
 {
+    toolTip.setText(isEntered ? "Test tool tip" : "", juce::dontSendNotification);
     juce::Rectangle<int> background = getLocalBounds();
     g.setGradientFill(juce::ColourGradient::vertical(juce::Colours::gainsboro, getHeight() - getHeight(),juce::Colours::gainsboro.darker(), getHeight()));
     g.fillRect(background);
+}
+
+void CURBAudioProcessorEditor::mouseEnter(const juce::MouseEvent &event)
+{
+    isEntered = true;
+//    toolTip.setText("Hello", juce::dontSendNotification);
+
+}
+
+void CURBAudioProcessorEditor::mouseExit(const juce::MouseEvent &event)
+{
+    isEntered = false;
+//    toolTip.setText("", juce::dontSendNotification);
 }
 
 void CURBAudioProcessorEditor::resized()
@@ -422,7 +443,9 @@ void CURBAudioProcessorEditor::resized()
     auto mainMixXGap = 3;
     auto mainMixYGap = 84;
     
+    toolTip.setBounds(20, 300, 150, 20);
     
     mainMix.setBounds(output.getX() + mainMixXGap, output.getY() + mainMixYGap, bandSliderWidth, bandSliderHeight);
     
 }
+

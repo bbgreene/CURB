@@ -31,6 +31,9 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
+    
+    void mouseEnter(const juce::MouseEvent &event) override;
+    void mouseExit(const juce::MouseEvent &event) override;
 
 private:
     // DIALS, BUTTONS AND MENUS
@@ -205,6 +208,9 @@ private:
     bbg_gui::VerticalGradientMeter inputMeterL, inputMeterR;
     bbg_gui::VerticalDiscreteMeter band1Meter, band2Meter, band3Meter, band4Meter;
     bbg_gui::VerticalGradientMeter outputMeterL, outputMeterR;
+    
+    juce::Label toolTip;
+    bool isEntered { false };
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CURBAudioProcessorEditor)
 };
