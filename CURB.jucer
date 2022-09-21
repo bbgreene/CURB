@@ -15,6 +15,10 @@
         <FILE id="bRcK7n" name="Menu.h" compile="0" resource="0" file="Source/bbg_gui/Menu.h"/>
         <FILE id="gIWVV7" name="PushButton.cpp" compile="1" resource="0" file="Source/bbg_gui/PushButton.cpp"/>
         <FILE id="dzf06N" name="PushButton.h" compile="0" resource="0" file="Source/bbg_gui/PushButton.h"/>
+        <FILE id="lW2PFY" name="SliderHorizontal.cpp" compile="1" resource="0"
+              file="Source/bbg_gui/SliderHorizontal.cpp"/>
+        <FILE id="dOAS5s" name="SliderHorizontal.h" compile="0" resource="0"
+              file="Source/bbg_gui/SliderHorizontal.h"/>
         <FILE id="UYYmjP" name="StyleSheet.cpp" compile="1" resource="0" file="Source/bbg_gui/StyleSheet.cpp"/>
         <FILE id="HnHMQJ" name="StyleSheet.h" compile="0" resource="0" file="Source/bbg_gui/StyleSheet.h"/>
         <FILE id="VMt82X" name="Toggle.cpp" compile="1" resource="0" file="Source/bbg_gui/Toggle.cpp"/>

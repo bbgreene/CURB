@@ -54,7 +54,6 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mix1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb1mix", mix1);
     addAndMakeVisible(mix1);
     
-    lowBandSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
     lowAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "low", lowBandSlider);
     addAndMakeVisible(lowBandSlider);
     
@@ -82,7 +81,6 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mix2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb2mix", mix2);
     addAndMakeVisible(mix2);
     
-    midBandSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
     midAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "mid", midBandSlider);
     addAndMakeVisible(midBandSlider);
     
@@ -110,7 +108,6 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mix3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb3mix", mix3);
     addAndMakeVisible(mix3);
     
-    highBandSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
     highAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "high", highBandSlider);
     addAndMakeVisible(highBandSlider);
     
@@ -142,12 +139,19 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     outputAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "output", output);
     addAndMakeVisible(output);
     
-    mainMix.setSliderStyle(juce::Slider::SliderStyle::LinearBar);
     mainMixAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "main mix", mainMix);
     addAndMakeVisible(mainMix);
     
     // BORDERS
     auto alpha = 0.2;
+    crossOverBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    crossOverBorder.setAlpha(alpha);
+    addAndMakeVisible(crossOverBorder);
+    
+    crossOverTopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
+    crossOverTopBorder.setAlpha(alpha);
+    addAndMakeVisible(crossOverTopBorder);
+    
     band1Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     band1Border.setAlpha(alpha);
     addAndMakeVisible(band1Border);
@@ -182,6 +186,8 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     
     
     //LABEL ATTACHMENTS
+    crossOverLabel.attachToComponent(&crossOverTopBorder, false);
+    
     inputLabel.attachToComponent(&input, false);
     
     bandLabel1.attachToComponent(&band1TopBorder, false);
@@ -258,7 +264,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (1260, 400);
+    setSize (1190, 347);
 }
 
 CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
@@ -277,148 +283,289 @@ void CURBAudioProcessorEditor::resized()
 {
     
     /*
+     gradient meter width = 15
+     gradient meter gap = 19
+     dial size = 67
+     
+     input area size (band border 1st X) = 80
      band border width = 250
-     band border gaps = 10
-     input width = 80
-     output width = 150
+     band border gap = 10
+     output area size = 80
      
-     4 x band borders = 1000
-     3 x band border gaps = 30
-     1 input width = 80
-     output width = 150
-     
-     */
-    auto borderWidthGap = getWidth() * 0.00794; //10
-    auto largeBorderWidth = getWidth() * 0.19842; //250
-    auto mainBorderHeight = getHeight() * .58; //
-    auto topBorderHeight = getHeight() * 0.1; //40
-    auto band1X = getWidth() * 0.0635;// 80
-    auto borderY = getHeight() * 0.125; //50
+     Total width:
+     Input/output area size x 2 = 160
+     4 x band border = 1000
+     3 x border gaps = 30
+     TOTAL WIDTH = 1190
     
-    band1Border.setBounds(band1X, borderY, largeBorderWidth, mainBorderHeight);
+     topborder height = 40
+     band border height = 232
+     crossoverborderheight = 85
+     border y gap = 10
+     comment area = 40
+     
+     4 x border y gap = 40
+     1 x crossoverborderheight = 90
+     1 x band border height = 232
+     1 x comment area = 30
+     TOTAL HEIGHT = 392
+    */
+    
+    auto band1X = 80;// 80
+    auto borderY = 68; //60
+    auto borderWidthGap = 10; //10
+    auto largeBorderWidth = 250; //250
+    auto largeBorderHeight = 232; // 232
+    auto topBorderHeight = 40; //40
+    
+    band1Border.setBounds(band1X, borderY, largeBorderWidth, largeBorderHeight);
     band1TopBorder.setBounds(band1X, borderY, largeBorderWidth, topBorderHeight);
-    band2Border.setBounds(band1Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
+    band2Border.setBounds(band1Border.getRight() + borderWidthGap, borderY, largeBorderWidth, largeBorderHeight);
     band2TopBorder.setBounds(band1Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
-    band3Border.setBounds(band2Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
+    band3Border.setBounds(band2Border.getRight() + borderWidthGap, borderY, largeBorderWidth, largeBorderHeight);
     band3TopBorder.setBounds(band2Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
-    band4Border.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
+    band4Border.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, largeBorderHeight);
     band4TopBorder.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
     
-    auto curbTitleX = borderWidthGap;
-    auto curbTitleY = 5;
-    auto curbTitleWidth = 140;
-    auto curbTitleHeight = 30;
-    auto versionX = 150;
-    auto versionY = 10;
-    auto versionWidth = getWidth() * 0.169246;
-    auto versionHeight = getHeight() * 0.068969;
-    auto olumayX = band4Border.getX() * 1.015;
+    auto crossOverX = band1Border.getRight() - 40;
+    auto crossOverY = 10;
+    auto crossOverWidth = 610;
+    auto crossOverHeight = 58;
+    auto bandSliderXGap = 26;
+    auto bandSliderYGap = 26;// 53;
+    auto bandSliderWidth = 61;
+    auto bandSliderHeight = 24;
     
-    curbTitle.setBounds(curbTitleX, curbTitleY, curbTitleWidth, curbTitleHeight);
-    curbVersion.setBounds(versionX, versionY, versionWidth, versionHeight);
-    olumay.setBounds(olumayX, versionY, versionWidth, versionHeight);
+    crossOverBorder.setBounds(crossOverX, crossOverY, crossOverWidth, crossOverHeight);
+//    crossOverTopBorder.setBounds(crossOverX, crossOverY, crossOverWidth, topBorderHeight);
+    lowBandSlider.setBounds(band1Border.getRight() - bandSliderXGap, crossOverBorder.getY() + bandSliderYGap, bandSliderWidth, bandSliderHeight);
+    midBandSlider.setBounds(band2Border.getRight() - bandSliderXGap, crossOverBorder.getY() + bandSliderYGap, bandSliderWidth, bandSliderHeight);
+    highBandSlider.setBounds(band3Border.getRight() - bandSliderXGap, crossOverBorder.getY() + bandSliderYGap, bandSliderWidth, bandSliderHeight);
     
-    auto dialSize = getWidth() * 0.0532; // 67
-    auto dialtopRowY = getHeight() * 0.287877;
-    auto dialbottomRowY = getHeight() * 0.513981;
+    auto inputOutputMeterX = 26;
+    auto inputOutputMeterY = 8;
+    auto inputOutputMeterWidth = 12;
+    auto inputOutputMeterHeight = 129;
+    auto inputOutputMeterXGap = 4;
     
-    auto soloButtonXadd = 27;
-    auto soloButtonYadd = 13;
-    auto soloButtonWidth = 0.111317;
-    auto soloButtonHeight = 0.451928;
+    auto inputOutGapX = 6.5;
+    auto dialTopRowGapY = 65;
+    auto dialBottomRowGapY = 154;
+    auto dialSize = 67;
     
-    auto bypassButtonXadd = 197;
-    auto bypassButtonYadd = 13;
-    auto bypassButtonWidth = 0.111317;
-    auto bypassButtonHeight = 0.451928;
+    inputMeterL.setBounds(inputOutputMeterX, band1Border.getY() + inputOutputMeterY, inputOutputMeterWidth, inputOutputMeterHeight);
+    inputMeterR.setBounds(inputMeterL.getRight() + inputOutputMeterXGap, band1Border.getY() + inputOutputMeterY, inputOutputMeterWidth, inputOutputMeterHeight);
+    input.setBounds(inputOutGapX, band1Border.getY() + dialBottomRowGapY, dialSize, dialSize);
     
-    auto dialLeftXone = band1Border.getX() + 8;
-    auto dialRightXone = band1Border.getX() + 116;
-    auto dialLeftXtwo = band2Border.getX() + 8;
-    auto dialRightXtwo = band2Border.getX() + 116;
-    auto dialLeftXthree = band3Border.getX() + 8;
-    auto dialRightXthree = band3Border.getX() + 116;
-    auto dialLeftXfour = band4Border.getX() + 8;
-    auto dialRightXfour = band4Border.getX() + 116;
-    
-    auto dialRightGap = getWidth() * 0.045;
-    
-    auto inputOutGapX = (band1X - dialSize) / 2;
-    input.setBounds(inputOutGapX, dialbottomRowY, dialSize, dialSize);
-
-    band1SoloButton.setBounds(band1TopBorder.getX() + soloButtonXadd, band1TopBorder.getY() + soloButtonYadd, band1TopBorder.getWidth() * soloButtonWidth, band1TopBorder.getHeight() * soloButtonHeight);
-    band1BypassButton.setBounds(band1TopBorder.getX() + bypassButtonXadd, band1TopBorder.getY() + bypassButtonYadd, band1TopBorder.getWidth() * bypassButtonWidth, band1TopBorder.getHeight() * bypassButtonHeight);
-    threshold1.setBounds(dialLeftXone, dialtopRowY, dialSize, dialSize);
-    ratio1.setBounds(dialLeftXone, dialbottomRowY, dialSize, dialSize);
-    attack1.setBounds(dialRightXone, dialtopRowY, dialSize, dialSize);
-    release1.setBounds(dialRightXone + dialRightGap, dialtopRowY, dialSize, dialSize);
-    gain1.setBounds(dialRightXone, dialbottomRowY, dialSize, dialSize);
-    mix1.setBounds(dialRightXone + dialRightGap, dialbottomRowY, dialSize, dialSize);
-    
-    lowBandSlider.setBounds(band1TopBorder.getRight(), 20, 40, 25);
-    
-    band2SoloButton.setBounds(band2TopBorder.getX() + soloButtonXadd, band2TopBorder.getY() + soloButtonYadd, band2TopBorder.getWidth() * soloButtonWidth, band2TopBorder.getHeight() * soloButtonHeight);
-    band2BypassButton.setBounds(band2TopBorder.getX() + bypassButtonXadd, band2TopBorder.getY() + bypassButtonYadd, band2TopBorder.getWidth() * bypassButtonWidth, band2TopBorder.getHeight() * bypassButtonHeight);
-    threshold2.setBounds(dialLeftXtwo, dialtopRowY, dialSize, dialSize);
-    ratio2.setBounds(dialLeftXtwo, dialbottomRowY, dialSize, dialSize);
-    attack2.setBounds(dialRightXtwo, dialtopRowY, dialSize, dialSize);
-    release2.setBounds(dialRightXtwo + dialRightGap, dialtopRowY, dialSize, dialSize);
-    gain2.setBounds(dialRightXtwo, dialbottomRowY, dialSize, dialSize);
-    mix2.setBounds(dialRightXtwo + dialRightGap, dialbottomRowY, dialSize, dialSize);
-
-    band3SoloButton.setBounds(band3TopBorder.getX() + soloButtonXadd, band3TopBorder.getY() + soloButtonYadd, band3TopBorder.getWidth() * soloButtonWidth, band3TopBorder.getHeight() * soloButtonHeight);
-    band3BypassButton.setBounds(band3TopBorder.getX() + bypassButtonXadd, band3TopBorder.getY() + bypassButtonYadd, band3TopBorder.getWidth() * bypassButtonWidth, band3TopBorder.getHeight() * bypassButtonHeight);
-    threshold3.setBounds(dialLeftXthree, dialtopRowY, dialSize, dialSize);
-    ratio3.setBounds(dialLeftXthree, dialbottomRowY, dialSize, dialSize);
-    attack3.setBounds(dialRightXthree, dialtopRowY, dialSize, dialSize);
-    release3.setBounds(dialRightXthree + dialRightGap, dialtopRowY, dialSize, dialSize);
-    gain3.setBounds(dialRightXthree, dialbottomRowY, dialSize, dialSize);
-    mix3.setBounds(dialRightXthree + dialRightGap, dialbottomRowY, dialSize, dialSize);
-
-    band4SoloButton.setBounds(band4TopBorder.getX() + soloButtonXadd, band4TopBorder.getY() + soloButtonYadd, band4TopBorder.getWidth() * soloButtonWidth, band4TopBorder.getHeight() * soloButtonHeight);
-    band4BypassButton.setBounds(band4TopBorder.getX() + bypassButtonXadd, band4TopBorder.getY() + bypassButtonYadd, band4TopBorder.getWidth() * bypassButtonWidth, band4TopBorder.getHeight() * bypassButtonHeight);
-    threshold4.setBounds(dialLeftXfour, dialtopRowY, dialSize, dialSize);
-    ratio4.setBounds(dialLeftXfour, dialbottomRowY, dialSize, dialSize);
-    attack4.setBounds(dialRightXfour, dialtopRowY, dialSize, dialSize);
-    release4.setBounds(dialRightXfour + dialRightGap, dialtopRowY, dialSize, dialSize);
-    gain4.setBounds(dialRightXfour, dialbottomRowY, dialSize, dialSize);
-    mix4.setBounds(dialRightXfour + dialRightGap, dialbottomRowY, dialSize, dialSize);
- 
-    
-    
-    output.setBounds(band4Border.getRight() + inputOutGapX, dialbottomRowY, dialSize, dialSize);
-    
-    auto mainMixY = output.getBottom() + 16;
-    mainMix.setBounds(band4Border.getRight() + inputOutGapX, mainMixY, dialSize, dialSize);
-    
-    auto inputMeterX = getWidth() * 0.0114;
-    auto outputMeterX = band4Border.getRight() + inputMeterX;
-    
-    auto gradientMeterHeight = getHeight() * 0.324003;
-    auto gradientMeterY = getHeight() * 0.147853;
-    auto gradientMeterWidth = getWidth() * 0.018;
-    auto gradientMeterGap = gradientMeterWidth * 1.3252;
-    
-    auto band1MeterX = threshold1.getRight() + 13;
-    auto band2MeterX = threshold2.getRight() + 13;
-    auto band3MeterX = threshold3.getRight() + 13;
-    auto band4MeterX = threshold4.getRight() + 13;
-    
-    auto bandMeterY = getHeight() * 0.307755;
+    auto soloXGap = 25;
+    auto soloBypassYGap = 13;
+    auto bypassXGap = 189;
+    auto buttonWidth = 35;
+    auto buttonHeight = 18;
+    auto bandThresRatioXGap = 10;
+    auto bandAttGainXGap = 110;
+    auto bandRelMixXGap = 173;
+    auto bandMeterXGap = 86;
+    auto bandMeterYGap = 73;
     auto bandMeterWidth = 26;
-    auto bandMeterHeight = mainBorderHeight * 0.588493;
-
-    inputMeterL.setBounds(inputMeterX, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
-    inputMeterR.setBounds(inputMeterX + gradientMeterGap, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
+    auto bandMeterHeight = 149;
     
-    band1Meter.setBounds(band1MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
-    band2Meter.setBounds(band2MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
-    band3Meter.setBounds(band3MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
-    band4Meter.setBounds(band4MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
     
-    outputMeterL.setBounds(outputMeterX, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
-    outputMeterR.setBounds(outputMeterX + gradientMeterGap, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
+    band1SoloButton.setBounds(band1Border.getX() + soloXGap, band1Border.getY() + soloBypassYGap, buttonWidth, buttonHeight);
+    band1BypassButton.setBounds(band1Border.getX() + bypassXGap, band1Border.getY() + soloBypassYGap, buttonWidth, buttonHeight);
+    threshold1.setBounds(band1Border.getX() + bandThresRatioXGap, band1Border.getY() + dialTopRowGapY, dialSize, dialSize);
+    ratio1.setBounds(band1Border.getX() + bandThresRatioXGap, band1Border.getY() + dialBottomRowGapY, dialSize, dialSize);
+    band1Meter.setBounds(band1Border.getX() + bandMeterXGap, band1Border.getY() + bandMeterYGap, bandMeterWidth, bandMeterHeight);
+    attack1.setBounds(band1Border.getX() + bandAttGainXGap, band1Border.getY() + dialTopRowGapY, dialSize, dialSize);
+    gain1.setBounds(band1Border.getX() + bandAttGainXGap, band1Border.getY() + dialBottomRowGapY, dialSize, dialSize);
+    release1.setBounds(band1Border.getX() + bandRelMixXGap, band1Border.getY() + dialTopRowGapY, dialSize, dialSize);
+    mix1.setBounds(band1Border.getX() + bandRelMixXGap, band1Border.getY() + dialBottomRowGapY, dialSize, dialSize);
     
+    band2SoloButton.setBounds(band2Border.getX() + soloXGap, band2Border.getY() + soloBypassYGap, buttonWidth, buttonHeight);
+    band2BypassButton.setBounds(band2Border.getX() + bypassXGap, band2Border.getY() + soloBypassYGap, buttonWidth, buttonHeight);
+    threshold2.setBounds(band2Border.getX() + bandThresRatioXGap, band2Border.getY() + dialTopRowGapY, dialSize, dialSize);
+    ratio2.setBounds(band2Border.getX() + bandThresRatioXGap, band2Border.getY() + dialBottomRowGapY, dialSize, dialSize);
+    band2Meter.setBounds(band2Border.getX() + bandMeterXGap, band2Border.getY() + bandMeterYGap, bandMeterWidth, bandMeterHeight);
+    attack2.setBounds(band2Border.getX() + bandAttGainXGap, band2Border.getY() + dialTopRowGapY, dialSize, dialSize);
+    gain2.setBounds(band2Border.getX() + bandAttGainXGap, band2Border.getY() + dialBottomRowGapY, dialSize, dialSize);
+    release2.setBounds(band2Border.getX() + bandRelMixXGap, band2Border.getY() + dialTopRowGapY, dialSize, dialSize);
+    mix2.setBounds(band2Border.getX() + bandRelMixXGap, band2Border.getY() + dialBottomRowGapY, dialSize, dialSize);
+    
+    band3SoloButton.setBounds(band3Border.getX() + soloXGap, band3Border.getY() + soloBypassYGap, buttonWidth, buttonHeight);
+    band3BypassButton.setBounds(band3Border.getX() + bypassXGap, band3Border.getY() + soloBypassYGap, buttonWidth, buttonHeight);
+    threshold3.setBounds(band3Border.getX() + bandThresRatioXGap, band3Border.getY() + dialTopRowGapY, dialSize, dialSize);
+    ratio3.setBounds(band3Border.getX() + bandThresRatioXGap, band3Border.getY() + dialBottomRowGapY, dialSize, dialSize);
+    band3Meter.setBounds(band3Border.getX() + bandMeterXGap, band3Border.getY() + bandMeterYGap, bandMeterWidth, bandMeterHeight);
+    attack3.setBounds(band3Border.getX() + bandAttGainXGap, band3Border.getY() + dialTopRowGapY, dialSize, dialSize);
+    gain3.setBounds(band3Border.getX() + bandAttGainXGap, band3Border.getY() + dialBottomRowGapY, dialSize, dialSize);
+    release3.setBounds(band3Border.getX() + bandRelMixXGap, band3Border.getY() + dialTopRowGapY, dialSize, dialSize);
+    mix3.setBounds(band3Border.getX() + bandRelMixXGap, band3Border.getY() + dialBottomRowGapY, dialSize, dialSize);
+    
+    band4SoloButton.setBounds(band4Border.getX() + soloXGap, band4Border.getY() + soloBypassYGap, buttonWidth, buttonHeight);
+    band4BypassButton.setBounds(band4Border.getX() + bypassXGap, band4Border.getY() + soloBypassYGap, buttonWidth, buttonHeight);
+    threshold4.setBounds(band4Border.getX() + bandThresRatioXGap, band4Border.getY() + dialTopRowGapY, dialSize, dialSize);
+    ratio4.setBounds(band4Border.getX() + bandThresRatioXGap, band4Border.getY() + dialBottomRowGapY, dialSize, dialSize);
+    band4Meter.setBounds(band4Border.getX() + bandMeterXGap, band4Border.getY() + bandMeterYGap, bandMeterWidth, bandMeterHeight);
+    attack4.setBounds(band4Border.getX() + bandAttGainXGap, band4Border.getY() + dialTopRowGapY, dialSize, dialSize);
+    gain4.setBounds(band4Border.getX() + bandAttGainXGap, band4Border.getY() + dialBottomRowGapY, dialSize, dialSize);
+    release4.setBounds(band4Border.getX() + bandRelMixXGap, band4Border.getY() + dialTopRowGapY, dialSize, dialSize);
+    mix4.setBounds(band4Border.getX() + bandRelMixXGap, band4Border.getY() + dialBottomRowGapY, dialSize, dialSize);
+    
+    outputMeterL.setBounds(band4Border.getRight() + inputOutputMeterX, band4Border.getY() + inputOutputMeterY, inputOutputMeterWidth, inputOutputMeterHeight);
+    outputMeterR.setBounds(outputMeterL.getRight() + inputOutputMeterXGap, band4Border.getY() + inputOutputMeterY, inputOutputMeterWidth, inputOutputMeterHeight);
+    output.setBounds(band4Border.getRight() + inputOutGapX, band4Border.getY() + dialBottomRowGapY, dialSize, dialSize);
+    
+    auto mainMixXGap = 3;
+    auto mainMixYGap = 84;
+    
+    
+    mainMix.setBounds(output.getX() + mainMixXGap, output.getY() + mainMixYGap, bandSliderWidth, bandSliderHeight);
+    
+    
+//
+//    /*
+//     band border width = 250
+//     band border gaps = 10
+//     input width = 80
+//     output width = 150
+//
+//     4 x band borders = 1000
+//     3 x band border gaps = 30
+//     1 input width = 80
+//     output width = 150
+//
+//     */
+//    auto borderWidthGap = getWidth() * 0.00794; //10
+//    auto largeBorderWidth = getWidth() * 0.19842; //250
+//    auto mainBorderHeight = getHeight() * .58; // 232
+//    auto topBorderHeight = getHeight() * 0.1; //40
+//    auto band1X = getWidth() * 0.0635;// 80
+//    auto borderY = getHeight() * 0.125; //50
+//
+//    band1Border.setBounds(band1X, borderY, largeBorderWidth, mainBorderHeight);
+//    band1TopBorder.setBounds(band1X, borderY, largeBorderWidth, topBorderHeight);
+//    band2Border.setBounds(band1Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
+//    band2TopBorder.setBounds(band1Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
+//    band3Border.setBounds(band2Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
+//    band3TopBorder.setBounds(band2Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
+//    band4Border.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
+//    band4TopBorder.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
+//
+//    auto curbTitleX = borderWidthGap;
+//    auto curbTitleY = 5;
+//    auto curbTitleWidth = 140;
+//    auto curbTitleHeight = 30;
+//    auto versionX = 150;
+//    auto versionY = 10;
+//    auto versionWidth = getWidth() * 0.169246;
+//    auto versionHeight = getHeight() * 0.068969;
+//    auto olumayX = band4Border.getX() * 1.015;
+//
+//    curbTitle.setBounds(curbTitleX, curbTitleY, curbTitleWidth, curbTitleHeight);
+//    curbVersion.setBounds(versionX, versionY, versionWidth, versionHeight);
+//    olumay.setBounds(olumayX, versionY, versionWidth, versionHeight);
+//
+//    auto dialSize = getWidth() * 0.0532; // 67
+//    auto dialtopRowY = getHeight() * 0.287877;
+//    auto dialbottomRowY = getHeight() * 0.513981;
+//
+//    auto soloButtonXadd = 27;
+//    auto soloButtonYadd = 13;
+//    auto soloButtonWidth = 0.111317;
+//    auto soloButtonHeight = 0.451928;
+//
+//    auto bypassButtonXadd = 197;
+//    auto bypassButtonYadd = 13;
+//    auto bypassButtonWidth = 0.111317;
+//    auto bypassButtonHeight = 0.451928;
+//
+//    auto dialLeftXone = band1Border.getX() + 8;
+//    auto dialRightXone = band1Border.getX() + 116;
+//    auto dialLeftXtwo = band2Border.getX() + 8;
+//    auto dialRightXtwo = band2Border.getX() + 116;
+//    auto dialLeftXthree = band3Border.getX() + 8;
+//    auto dialRightXthree = band3Border.getX() + 116;
+//    auto dialLeftXfour = band4Border.getX() + 8;
+//    auto dialRightXfour = band4Border.getX() + 116;
+//
+//    auto dialRightGap = getWidth() * 0.045;
+//
+//    auto inputOutGapX = (band1X - dialSize) / 2;
+//    input.setBounds(inputOutGapX, dialbottomRowY, dialSize, dialSize);
+//
+//    band1SoloButton.setBounds(band1TopBorder.getX() + soloButtonXadd, band1TopBorder.getY() + soloButtonYadd, band1TopBorder.getWidth() * soloButtonWidth, band1TopBorder.getHeight() * soloButtonHeight);
+//    band1BypassButton.setBounds(band1TopBorder.getX() + bypassButtonXadd, band1TopBorder.getY() + bypassButtonYadd, band1TopBorder.getWidth() * bypassButtonWidth, band1TopBorder.getHeight() * bypassButtonHeight);
+//    threshold1.setBounds(dialLeftXone, dialtopRowY, dialSize, dialSize);
+//    ratio1.setBounds(dialLeftXone, dialbottomRowY, dialSize, dialSize);
+//    attack1.setBounds(dialRightXone, dialtopRowY, dialSize, dialSize);
+//    release1.setBounds(dialRightXone + dialRightGap, dialtopRowY, dialSize, dialSize);
+//    gain1.setBounds(dialRightXone, dialbottomRowY, dialSize, dialSize);
+//    mix1.setBounds(dialRightXone + dialRightGap, dialbottomRowY, dialSize, dialSize);
+//
+//    lowBandSlider.setBounds(band1TopBorder.getRight(), 20, 40, 25);
+//
+//    band2SoloButton.setBounds(band2TopBorder.getX() + soloButtonXadd, band2TopBorder.getY() + soloButtonYadd, band2TopBorder.getWidth() * soloButtonWidth, band2TopBorder.getHeight() * soloButtonHeight);
+//    band2BypassButton.setBounds(band2TopBorder.getX() + bypassButtonXadd, band2TopBorder.getY() + bypassButtonYadd, band2TopBorder.getWidth() * bypassButtonWidth, band2TopBorder.getHeight() * bypassButtonHeight);
+//    threshold2.setBounds(dialLeftXtwo, dialtopRowY, dialSize, dialSize);
+//    ratio2.setBounds(dialLeftXtwo, dialbottomRowY, dialSize, dialSize);
+//    attack2.setBounds(dialRightXtwo, dialtopRowY, dialSize, dialSize);
+//    release2.setBounds(dialRightXtwo + dialRightGap, dialtopRowY, dialSize, dialSize);
+//    gain2.setBounds(dialRightXtwo, dialbottomRowY, dialSize, dialSize);
+//    mix2.setBounds(dialRightXtwo + dialRightGap, dialbottomRowY, dialSize, dialSize);
+//
+//    band3SoloButton.setBounds(band3TopBorder.getX() + soloButtonXadd, band3TopBorder.getY() + soloButtonYadd, band3TopBorder.getWidth() * soloButtonWidth, band3TopBorder.getHeight() * soloButtonHeight);
+//    band3BypassButton.setBounds(band3TopBorder.getX() + bypassButtonXadd, band3TopBorder.getY() + bypassButtonYadd, band3TopBorder.getWidth() * bypassButtonWidth, band3TopBorder.getHeight() * bypassButtonHeight);
+//    threshold3.setBounds(dialLeftXthree, dialtopRowY, dialSize, dialSize);
+//    ratio3.setBounds(dialLeftXthree, dialbottomRowY, dialSize, dialSize);
+//    attack3.setBounds(dialRightXthree, dialtopRowY, dialSize, dialSize);
+//    release3.setBounds(dialRightXthree + dialRightGap, dialtopRowY, dialSize, dialSize);
+//    gain3.setBounds(dialRightXthree, dialbottomRowY, dialSize, dialSize);
+//    mix3.setBounds(dialRightXthree + dialRightGap, dialbottomRowY, dialSize, dialSize);
+//
+//    band4SoloButton.setBounds(band4TopBorder.getX() + soloButtonXadd, band4TopBorder.getY() + soloButtonYadd, band4TopBorder.getWidth() * soloButtonWidth, band4TopBorder.getHeight() * soloButtonHeight);
+//    band4BypassButton.setBounds(band4TopBorder.getX() + bypassButtonXadd, band4TopBorder.getY() + bypassButtonYadd, band4TopBorder.getWidth() * bypassButtonWidth, band4TopBorder.getHeight() * bypassButtonHeight);
+//    threshold4.setBounds(dialLeftXfour, dialtopRowY, dialSize, dialSize);
+//    ratio4.setBounds(dialLeftXfour, dialbottomRowY, dialSize, dialSize);
+//    attack4.setBounds(dialRightXfour, dialtopRowY, dialSize, dialSize);
+//    release4.setBounds(dialRightXfour + dialRightGap, dialtopRowY, dialSize, dialSize);
+//    gain4.setBounds(dialRightXfour, dialbottomRowY, dialSize, dialSize);
+//    mix4.setBounds(dialRightXfour + dialRightGap, dialbottomRowY, dialSize, dialSize);
+//
+//
+//
+//    output.setBounds(band4Border.getRight() + inputOutGapX, dialbottomRowY, dialSize, dialSize);
+//
+//    auto mainMixY = output.getBottom() + 16;
+//    mainMix.setBounds(band4Border.getRight() + inputOutGapX, mainMixY, dialSize, dialSize);
+//
+//    auto inputMeterX = getWidth() * 0.0114;
+//    auto outputMeterX = band4Border.getRight() + inputMeterX;
+//
+//    auto gradientMeterHeight = getHeight() * 0.324003;
+//    auto gradientMeterY = getHeight() * 0.147853;
+//    auto gradientMeterWidth = getWidth() * 0.01191;
+//    auto gradientMeterGap = gradientMeterWidth * 1.3252;
+//
+//    auto band1MeterX = threshold1.getRight() + 13;
+//    auto band2MeterX = threshold2.getRight() + 13;
+//    auto band3MeterX = threshold3.getRight() + 13;
+//    auto band4MeterX = threshold4.getRight() + 13;
+//
+//    auto bandMeterY = getHeight() * 0.307755;
+//    auto bandMeterWidth = 26;
+//    auto bandMeterHeight = mainBorderHeight * 0.588493;
+//
+//    inputMeterL.setBounds(inputMeterX, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
+//    inputMeterR.setBounds(inputMeterX + gradientMeterGap, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
+//
+//    band1Meter.setBounds(band1MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
+//    band2Meter.setBounds(band2MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
+//    band3Meter.setBounds(band3MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
+//    band4Meter.setBounds(band4MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
+//
+//    outputMeterL.setBounds(outputMeterX, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
+//    outputMeterR.setBounds(outputMeterX + gradientMeterGap, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
+//
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 }

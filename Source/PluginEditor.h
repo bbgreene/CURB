@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "../Source/bbg_gui/Dial.h"
+#include "../Source/bbg_gui/SliderHorizontal.h"
 #include "../Source/bbg_gui/Toggle.h"
 #include "../Source/bbg_gui/PushButton.h"
 #include "../Source/bbg_gui/Menu.h"
@@ -44,7 +45,7 @@ private:
     bbg_gui::bbg_Dial gain1 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix1 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
-    juce::Slider lowBandSlider;
+    bbg_gui::bbg_SliderHorizontal lowBandSlider { "", 40.0, 250.0, 1.0, 0.0, 0.0 };
     
     bbg_gui::bbg_PushButton band2SoloButton { "S" };
     bbg_gui::bbg_PushButton band2BypassButton { "BYP" };
@@ -55,7 +56,7 @@ private:
     bbg_gui::bbg_Dial gain2 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix2 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
-    juce::Slider  midBandSlider;
+    bbg_gui::bbg_SliderHorizontal midBandSlider { "", 251.0, 6000.0, 1.0, 0.0, 0.0 };
     
     bbg_gui::bbg_PushButton band3SoloButton { "S" };
     bbg_gui::bbg_PushButton band3BypassButton { "BYP" };
@@ -66,7 +67,7 @@ private:
     bbg_gui::bbg_Dial gain3 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix3 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
-    juce::Slider  highBandSlider;
+    bbg_gui::bbg_SliderHorizontal highBandSlider { "", 6001.0, 16000.0, 1.0, 0.0, 0.0 };
     
     bbg_gui::bbg_PushButton band4SoloButton { "S" };
     bbg_gui::bbg_PushButton band4BypassButton { "BYP" };
@@ -78,7 +79,7 @@ private:
     bbg_gui::bbg_Dial mix4 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
     bbg_gui::bbg_Dial output { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
-    juce::Slider  mainMix;
+    bbg_gui::bbg_SliderHorizontal  mainMix { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
 
  
     // ATTACHMENTS
@@ -130,6 +131,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mainMixAttachement;
     
     // BORDERS
+    juce::GroupComponent crossOverBorder;
+    juce::GroupComponent crossOverTopBorder;
     juce::GroupComponent inputBorder;
     juce::GroupComponent inputTopBorder;
     juce::GroupComponent band1Border;
@@ -144,7 +147,10 @@ private:
     juce::GroupComponent outputTopBorder;
     
     // LABELS
+    
     bbg_gui::bbg_dialLabel inputLabel { "Input" };
+    
+    bbg_gui::bbg_borderLabelMiddle crossOverLabel { "Crossover" };
     
     bbg_gui::bbg_borderLabelMiddle bandLabel1 { "BAND 1" };
     bbg_gui::bbg_dialLabel thresholdLabel1 { "Threshold" };
@@ -155,7 +161,7 @@ private:
     bbg_gui::bbg_dialLabel gainLabel1 { "Gain" };
     bbg_gui::bbg_dialLabel mixLabel1 { "Mix" };
     
-    bbg_gui::bbg_dialLabel lowLabel { "Low" };
+    bbg_gui::bbg_horizontalSliderLabel lowLabel { "Low" };
     
     bbg_gui::bbg_borderLabelMiddle bandLabel2 { "BAND 2" };
     bbg_gui::bbg_dialLabel thresholdLabel2 { "Threshold" };
@@ -166,7 +172,7 @@ private:
     bbg_gui::bbg_dialLabel gainLabel2 { "Gain" };
     bbg_gui::bbg_dialLabel mixLabel2 { "Mix" };
     
-    bbg_gui::bbg_dialLabel midLabel { "Mid" };
+    bbg_gui::bbg_horizontalSliderLabel midLabel { "Mid" };
     
     bbg_gui::bbg_borderLabelMiddle bandLabel3 { "BAND 3" };
     bbg_gui::bbg_dialLabel thresholdLabel3 { "Threshold" };
@@ -177,7 +183,7 @@ private:
     bbg_gui::bbg_dialLabel gainLabel3 { "Gain" };
     bbg_gui::bbg_dialLabel mixLabel3 { "Mix" };
     
-    bbg_gui::bbg_dialLabel highLabel { "High" };
+    bbg_gui::bbg_horizontalSliderLabel highLabel { "High" };
     
     bbg_gui::bbg_borderLabelMiddle bandLabel4 { "BAND 4" };
     bbg_gui::bbg_dialLabel thresholdLabel4 { "Threshold" };
@@ -189,7 +195,7 @@ private:
     bbg_gui::bbg_dialLabel mixLabel4 { "Mix" };
     
     bbg_gui::bbg_dialLabel outputLabel { "Output" };
-    bbg_gui::bbg_dialLabel mainMixLabel { "Mix" };
+    bbg_gui::bbg_horizontalSliderLabel mainMixLabel { "Mix" };
     
     bbg_gui::bbg_dialLabel olumay { "Olumay dsp" };
     bbg_gui::bbg_dialLabel curbTitle { "C U R B" };
