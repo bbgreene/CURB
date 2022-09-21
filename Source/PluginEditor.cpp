@@ -144,13 +144,6 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     
     // BORDERS
     auto alpha = 0.2;
-    crossOverBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    crossOverBorder.setAlpha(alpha);
-    addAndMakeVisible(crossOverBorder);
-    
-    crossOverTopBorder.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
-    crossOverTopBorder.setAlpha(alpha);
-    addAndMakeVisible(crossOverTopBorder);
     
     band1Border.setColour(juce::GroupComponent::ColourIds::outlineColourId, juce::Colours::grey);
     band1Border.setAlpha(alpha);
@@ -186,8 +179,6 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     
     
     //LABEL ATTACHMENTS
-    crossOverLabel.attachToComponent(&crossOverTopBorder, false);
-    
     inputLabel.attachToComponent(&input, false);
     
     bandLabel1.attachToComponent(&band1TopBorder, false);
@@ -264,7 +255,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (1190, 347);
+    setSize (1190, 330);
 }
 
 CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
@@ -275,7 +266,7 @@ CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
 void CURBAudioProcessorEditor::paint (juce::Graphics& g)
 {
     juce::Rectangle<int> background = getLocalBounds();
-    g.setGradientFill(juce::ColourGradient::vertical(juce::Colours::red.darker(), getHeight() - getHeight(), juce::Colours::lightgoldenrodyellow, getHeight()));
+    g.setGradientFill(juce::ColourGradient::vertical(juce::Colours::gainsboro, getHeight() - getHeight(),juce::Colours::gainsboro.darker(), getHeight()));
     g.fillRect(background);
 }
 
@@ -311,8 +302,27 @@ void CURBAudioProcessorEditor::resized()
      TOTAL HEIGHT = 392
     */
     
+    auto curbTitleX = 6;
+    auto curbTitleY = 8;
+    auto curbTitleWidth = 120;
+    auto curbTitleHeight = 28;
+    
+    auto curbVersionX = 50;
+    auto curbVersionY = 33;
+    auto curbVersionWidth = 70;
+    auto curbVersionHeight = 18;
+    
+    auto olumayX = 1112;
+    auto olumayY = 27;
+    auto olumayWidth = 100;
+    auto olumayHeight = 13;
+    
+    curbTitle.setBounds(curbTitleX, curbTitleY, curbTitleWidth, curbTitleHeight);
+    curbVersion.setBounds(curbVersionX, curbVersionY, curbVersionWidth, curbVersionHeight);
+    olumay.setBounds(olumayX, olumayY, olumayWidth, olumayHeight);
+    
     auto band1X = 80;// 80
-    auto borderY = 68; //60
+    auto borderY = 52;
     auto borderWidthGap = 10; //10
     auto largeBorderWidth = 250; //250
     auto largeBorderHeight = 232; // 232
@@ -327,20 +337,14 @@ void CURBAudioProcessorEditor::resized()
     band4Border.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, largeBorderHeight);
     band4TopBorder.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
     
-    auto crossOverX = band1Border.getRight() - 40;
-    auto crossOverY = 10;
-    auto crossOverWidth = 610;
-    auto crossOverHeight = 58;
     auto bandSliderXGap = 26;
-    auto bandSliderYGap = 26;// 53;
+    auto bandSliderY = 25;
     auto bandSliderWidth = 61;
     auto bandSliderHeight = 24;
-    
-    crossOverBorder.setBounds(crossOverX, crossOverY, crossOverWidth, crossOverHeight);
-//    crossOverTopBorder.setBounds(crossOverX, crossOverY, crossOverWidth, topBorderHeight);
-    lowBandSlider.setBounds(band1Border.getRight() - bandSliderXGap, crossOverBorder.getY() + bandSliderYGap, bandSliderWidth, bandSliderHeight);
-    midBandSlider.setBounds(band2Border.getRight() - bandSliderXGap, crossOverBorder.getY() + bandSliderYGap, bandSliderWidth, bandSliderHeight);
-    highBandSlider.setBounds(band3Border.getRight() - bandSliderXGap, crossOverBorder.getY() + bandSliderYGap, bandSliderWidth, bandSliderHeight);
+
+    lowBandSlider.setBounds(band1Border.getRight() - bandSliderXGap, bandSliderY, bandSliderWidth, bandSliderHeight);
+    midBandSlider.setBounds(band2Border.getRight() - bandSliderXGap, bandSliderY, bandSliderWidth, bandSliderHeight);
+    highBandSlider.setBounds(band3Border.getRight() - bandSliderXGap, bandSliderY, bandSliderWidth, bandSliderHeight);
     
     auto inputOutputMeterX = 26;
     auto inputOutputMeterY = 8;
@@ -421,151 +425,4 @@ void CURBAudioProcessorEditor::resized()
     
     mainMix.setBounds(output.getX() + mainMixXGap, output.getY() + mainMixYGap, bandSliderWidth, bandSliderHeight);
     
-    
-//
-//    /*
-//     band border width = 250
-//     band border gaps = 10
-//     input width = 80
-//     output width = 150
-//
-//     4 x band borders = 1000
-//     3 x band border gaps = 30
-//     1 input width = 80
-//     output width = 150
-//
-//     */
-//    auto borderWidthGap = getWidth() * 0.00794; //10
-//    auto largeBorderWidth = getWidth() * 0.19842; //250
-//    auto mainBorderHeight = getHeight() * .58; // 232
-//    auto topBorderHeight = getHeight() * 0.1; //40
-//    auto band1X = getWidth() * 0.0635;// 80
-//    auto borderY = getHeight() * 0.125; //50
-//
-//    band1Border.setBounds(band1X, borderY, largeBorderWidth, mainBorderHeight);
-//    band1TopBorder.setBounds(band1X, borderY, largeBorderWidth, topBorderHeight);
-//    band2Border.setBounds(band1Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
-//    band2TopBorder.setBounds(band1Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
-//    band3Border.setBounds(band2Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
-//    band3TopBorder.setBounds(band2Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
-//    band4Border.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, mainBorderHeight);
-//    band4TopBorder.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
-//
-//    auto curbTitleX = borderWidthGap;
-//    auto curbTitleY = 5;
-//    auto curbTitleWidth = 140;
-//    auto curbTitleHeight = 30;
-//    auto versionX = 150;
-//    auto versionY = 10;
-//    auto versionWidth = getWidth() * 0.169246;
-//    auto versionHeight = getHeight() * 0.068969;
-//    auto olumayX = band4Border.getX() * 1.015;
-//
-//    curbTitle.setBounds(curbTitleX, curbTitleY, curbTitleWidth, curbTitleHeight);
-//    curbVersion.setBounds(versionX, versionY, versionWidth, versionHeight);
-//    olumay.setBounds(olumayX, versionY, versionWidth, versionHeight);
-//
-//    auto dialSize = getWidth() * 0.0532; // 67
-//    auto dialtopRowY = getHeight() * 0.287877;
-//    auto dialbottomRowY = getHeight() * 0.513981;
-//
-//    auto soloButtonXadd = 27;
-//    auto soloButtonYadd = 13;
-//    auto soloButtonWidth = 0.111317;
-//    auto soloButtonHeight = 0.451928;
-//
-//    auto bypassButtonXadd = 197;
-//    auto bypassButtonYadd = 13;
-//    auto bypassButtonWidth = 0.111317;
-//    auto bypassButtonHeight = 0.451928;
-//
-//    auto dialLeftXone = band1Border.getX() + 8;
-//    auto dialRightXone = band1Border.getX() + 116;
-//    auto dialLeftXtwo = band2Border.getX() + 8;
-//    auto dialRightXtwo = band2Border.getX() + 116;
-//    auto dialLeftXthree = band3Border.getX() + 8;
-//    auto dialRightXthree = band3Border.getX() + 116;
-//    auto dialLeftXfour = band4Border.getX() + 8;
-//    auto dialRightXfour = band4Border.getX() + 116;
-//
-//    auto dialRightGap = getWidth() * 0.045;
-//
-//    auto inputOutGapX = (band1X - dialSize) / 2;
-//    input.setBounds(inputOutGapX, dialbottomRowY, dialSize, dialSize);
-//
-//    band1SoloButton.setBounds(band1TopBorder.getX() + soloButtonXadd, band1TopBorder.getY() + soloButtonYadd, band1TopBorder.getWidth() * soloButtonWidth, band1TopBorder.getHeight() * soloButtonHeight);
-//    band1BypassButton.setBounds(band1TopBorder.getX() + bypassButtonXadd, band1TopBorder.getY() + bypassButtonYadd, band1TopBorder.getWidth() * bypassButtonWidth, band1TopBorder.getHeight() * bypassButtonHeight);
-//    threshold1.setBounds(dialLeftXone, dialtopRowY, dialSize, dialSize);
-//    ratio1.setBounds(dialLeftXone, dialbottomRowY, dialSize, dialSize);
-//    attack1.setBounds(dialRightXone, dialtopRowY, dialSize, dialSize);
-//    release1.setBounds(dialRightXone + dialRightGap, dialtopRowY, dialSize, dialSize);
-//    gain1.setBounds(dialRightXone, dialbottomRowY, dialSize, dialSize);
-//    mix1.setBounds(dialRightXone + dialRightGap, dialbottomRowY, dialSize, dialSize);
-//
-//    lowBandSlider.setBounds(band1TopBorder.getRight(), 20, 40, 25);
-//
-//    band2SoloButton.setBounds(band2TopBorder.getX() + soloButtonXadd, band2TopBorder.getY() + soloButtonYadd, band2TopBorder.getWidth() * soloButtonWidth, band2TopBorder.getHeight() * soloButtonHeight);
-//    band2BypassButton.setBounds(band2TopBorder.getX() + bypassButtonXadd, band2TopBorder.getY() + bypassButtonYadd, band2TopBorder.getWidth() * bypassButtonWidth, band2TopBorder.getHeight() * bypassButtonHeight);
-//    threshold2.setBounds(dialLeftXtwo, dialtopRowY, dialSize, dialSize);
-//    ratio2.setBounds(dialLeftXtwo, dialbottomRowY, dialSize, dialSize);
-//    attack2.setBounds(dialRightXtwo, dialtopRowY, dialSize, dialSize);
-//    release2.setBounds(dialRightXtwo + dialRightGap, dialtopRowY, dialSize, dialSize);
-//    gain2.setBounds(dialRightXtwo, dialbottomRowY, dialSize, dialSize);
-//    mix2.setBounds(dialRightXtwo + dialRightGap, dialbottomRowY, dialSize, dialSize);
-//
-//    band3SoloButton.setBounds(band3TopBorder.getX() + soloButtonXadd, band3TopBorder.getY() + soloButtonYadd, band3TopBorder.getWidth() * soloButtonWidth, band3TopBorder.getHeight() * soloButtonHeight);
-//    band3BypassButton.setBounds(band3TopBorder.getX() + bypassButtonXadd, band3TopBorder.getY() + bypassButtonYadd, band3TopBorder.getWidth() * bypassButtonWidth, band3TopBorder.getHeight() * bypassButtonHeight);
-//    threshold3.setBounds(dialLeftXthree, dialtopRowY, dialSize, dialSize);
-//    ratio3.setBounds(dialLeftXthree, dialbottomRowY, dialSize, dialSize);
-//    attack3.setBounds(dialRightXthree, dialtopRowY, dialSize, dialSize);
-//    release3.setBounds(dialRightXthree + dialRightGap, dialtopRowY, dialSize, dialSize);
-//    gain3.setBounds(dialRightXthree, dialbottomRowY, dialSize, dialSize);
-//    mix3.setBounds(dialRightXthree + dialRightGap, dialbottomRowY, dialSize, dialSize);
-//
-//    band4SoloButton.setBounds(band4TopBorder.getX() + soloButtonXadd, band4TopBorder.getY() + soloButtonYadd, band4TopBorder.getWidth() * soloButtonWidth, band4TopBorder.getHeight() * soloButtonHeight);
-//    band4BypassButton.setBounds(band4TopBorder.getX() + bypassButtonXadd, band4TopBorder.getY() + bypassButtonYadd, band4TopBorder.getWidth() * bypassButtonWidth, band4TopBorder.getHeight() * bypassButtonHeight);
-//    threshold4.setBounds(dialLeftXfour, dialtopRowY, dialSize, dialSize);
-//    ratio4.setBounds(dialLeftXfour, dialbottomRowY, dialSize, dialSize);
-//    attack4.setBounds(dialRightXfour, dialtopRowY, dialSize, dialSize);
-//    release4.setBounds(dialRightXfour + dialRightGap, dialtopRowY, dialSize, dialSize);
-//    gain4.setBounds(dialRightXfour, dialbottomRowY, dialSize, dialSize);
-//    mix4.setBounds(dialRightXfour + dialRightGap, dialbottomRowY, dialSize, dialSize);
-//
-//
-//
-//    output.setBounds(band4Border.getRight() + inputOutGapX, dialbottomRowY, dialSize, dialSize);
-//
-//    auto mainMixY = output.getBottom() + 16;
-//    mainMix.setBounds(band4Border.getRight() + inputOutGapX, mainMixY, dialSize, dialSize);
-//
-//    auto inputMeterX = getWidth() * 0.0114;
-//    auto outputMeterX = band4Border.getRight() + inputMeterX;
-//
-//    auto gradientMeterHeight = getHeight() * 0.324003;
-//    auto gradientMeterY = getHeight() * 0.147853;
-//    auto gradientMeterWidth = getWidth() * 0.01191;
-//    auto gradientMeterGap = gradientMeterWidth * 1.3252;
-//
-//    auto band1MeterX = threshold1.getRight() + 13;
-//    auto band2MeterX = threshold2.getRight() + 13;
-//    auto band3MeterX = threshold3.getRight() + 13;
-//    auto band4MeterX = threshold4.getRight() + 13;
-//
-//    auto bandMeterY = getHeight() * 0.307755;
-//    auto bandMeterWidth = 26;
-//    auto bandMeterHeight = mainBorderHeight * 0.588493;
-//
-//    inputMeterL.setBounds(inputMeterX, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
-//    inputMeterR.setBounds(inputMeterX + gradientMeterGap, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
-//
-//    band1Meter.setBounds(band1MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
-//    band2Meter.setBounds(band2MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
-//    band3Meter.setBounds(band3MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
-//    band4Meter.setBounds(band4MeterX, bandMeterY, bandMeterWidth, bandMeterHeight);
-//
-//    outputMeterL.setBounds(outputMeterX, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
-//    outputMeterR.setBounds(outputMeterX + gradientMeterGap, gradientMeterY, gradientMeterWidth, gradientMeterHeight);
-//
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
 }

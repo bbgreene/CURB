@@ -131,8 +131,6 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mainMixAttachement;
     
     // BORDERS
-    juce::GroupComponent crossOverBorder;
-    juce::GroupComponent crossOverTopBorder;
     juce::GroupComponent inputBorder;
     juce::GroupComponent inputTopBorder;
     juce::GroupComponent band1Border;
@@ -150,9 +148,7 @@ private:
     
     bbg_gui::bbg_dialLabel inputLabel { "Input" };
     
-    bbg_gui::bbg_borderLabelMiddle crossOverLabel { "Crossover" };
-    
-    bbg_gui::bbg_borderLabelMiddle bandLabel1 { "BAND 1" };
+    bbg_gui::bbg_borderLabelMiddle bandLabel1 { "1" };
     bbg_gui::bbg_dialLabel thresholdLabel1 { "Threshold" };
     bbg_gui::bbg_dialLabel ratioLabel1 { "Ratio" };
     bbg_gui::bbg_meterLabel band1MeterLabel { "GR" };
@@ -163,7 +159,7 @@ private:
     
     bbg_gui::bbg_horizontalSliderLabel lowLabel { "Low" };
     
-    bbg_gui::bbg_borderLabelMiddle bandLabel2 { "BAND 2" };
+    bbg_gui::bbg_borderLabelMiddle bandLabel2 { "2" };
     bbg_gui::bbg_dialLabel thresholdLabel2 { "Threshold" };
     bbg_gui::bbg_dialLabel ratioLabel2 { "Ratio" };
     bbg_gui::bbg_meterLabel band2MeterLabel { "GR" };
@@ -174,7 +170,7 @@ private:
     
     bbg_gui::bbg_horizontalSliderLabel midLabel { "Mid" };
     
-    bbg_gui::bbg_borderLabelMiddle bandLabel3 { "BAND 3" };
+    bbg_gui::bbg_borderLabelMiddle bandLabel3 { "3" };
     bbg_gui::bbg_dialLabel thresholdLabel3 { "Threshold" };
     bbg_gui::bbg_dialLabel ratioLabel3 { "Ratio" };
     bbg_gui::bbg_meterLabel band3MeterLabel { "GR" };
@@ -185,7 +181,7 @@ private:
     
     bbg_gui::bbg_horizontalSliderLabel highLabel { "High" };
     
-    bbg_gui::bbg_borderLabelMiddle bandLabel4 { "BAND 4" };
+    bbg_gui::bbg_borderLabelMiddle bandLabel4 { "4" };
     bbg_gui::bbg_dialLabel thresholdLabel4 { "Threshold" };
     bbg_gui::bbg_dialLabel ratioLabel4 { "Ratio" };
     bbg_gui::bbg_meterLabel band4MeterLabel { "GR" };
