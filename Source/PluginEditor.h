@@ -40,8 +40,8 @@ private:
     bbg_gui::bbg_PushButton band1BypassButton { "BYP" };
     bbg_gui::bbg_Dial threshold1 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial ratio1 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
-    bbg_gui::bbg_Dial attack1 { "", 0.1, 150.0, 0.01, 0.0, 0.0 };
-    bbg_gui::bbg_Dial release1 { "", 2.0, 300.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial attack1 { "", 1.0, 150.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_Dial release1 { "", 2.0, 300.0, 1.0, 0.0, 0.0 };
     bbg_gui::bbg_Dial gain1 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix1 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
@@ -51,8 +51,8 @@ private:
     bbg_gui::bbg_PushButton band2BypassButton { "BYP" };
     bbg_gui::bbg_Dial threshold2 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial ratio2 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
-    bbg_gui::bbg_Dial attack2 { "", 0.1, 150.0, 0.01, 0.0, 0.0 };
-    bbg_gui::bbg_Dial release2 { "", 2.0, 300.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial attack2 { "", 1.0, 150.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_Dial release2 { "", 2.0, 300.0, 1.0, 0.0, 0.0 };
     bbg_gui::bbg_Dial gain2 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix2 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
@@ -62,8 +62,8 @@ private:
     bbg_gui::bbg_PushButton band3BypassButton { "BYP" };
     bbg_gui::bbg_Dial threshold3 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial ratio3 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
-    bbg_gui::bbg_Dial attack3 { "", 0.1, 150.0, 0.01, 0.0, 0.0 };
-    bbg_gui::bbg_Dial release3 { "", 2.0, 300.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial attack3 { "", 1.0, 150.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_Dial release3 { "", 2.0, 300.0, 1.0, 0.0, 0.0 };
     bbg_gui::bbg_Dial gain3 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix3 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
@@ -73,8 +73,8 @@ private:
     bbg_gui::bbg_PushButton band4BypassButton { "BYP" };
     bbg_gui::bbg_Dial threshold4 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial ratio4 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
-    bbg_gui::bbg_Dial attack4 { "", 0.1, 150.0, 0.01, 0.0, 0.0 };
-    bbg_gui::bbg_Dial release4 { "", 2.0, 300.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial attack4 { "", 1.0, 150.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_Dial release4 { "", 2.0, 300.0, 1.0, 0.0, 0.0 };
     bbg_gui::bbg_Dial gain4 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix4 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     

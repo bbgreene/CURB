@@ -131,14 +131,18 @@ CURBAudioProcessor::~CURBAudioProcessor()
 juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createParameterLayout()
 {
     std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
-    
+
     auto gainRange = juce::NormalisableRange<float> (-24.0f, 24.0f, 0.1f, 1.0f);
     auto thresholdRange = juce::NormalisableRange<float> (-50.0f, 0.0f, 0.1f, 1.0f);
     auto ratioRange = juce::NormalisableRange<float> (0.5f, 10.0f, 0.01f, 1.0f);
-    auto attackRange = juce::NormalisableRange<float> (0.1f, 150.0f, 0.01f, 1.0f);
-    auto releaseRange = juce::NormalisableRange<float> (2.0f, 300.0f, 0.01f, 1.0f);
+    auto attackRange = juce::NormalisableRange<float> (1.0f, 150.0f, 1.0f, 1.0f);
+    auto releaseRange = juce::NormalisableRange<float> (2.0f, 300.0f, 1.0f, 1.0f);
+    auto mixRange = juce::NormalisableRange<float> (0.0, 100.0, 0.01, 1.0);
     
-    auto pInput = std::make_unique<juce::AudioParameterFloat>("input", "Input", gainRange, 0.0f);
+    auto pInput = std::make_unique<juce::AudioParameterFloat>("input", "Input", gainRange, 0.0f, juce::String(),
+                                                              juce::AudioProcessorParameter::genericParameter,
+                                                              [](float value, int) {return (value > -10.0f && value < 10.0f) ? juce::String (value, 2) + " dB" : juce::String (value, 1) + " dB";},
+                                                              [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
     auto pSolo1 = std::make_unique<juce::AudioParameterBool>("solo 1", "Solo 1", 0);
     auto pSolo2 = std::make_unique<juce::AudioParameterBool>("solo 2", "Solo 2", 0);
@@ -150,47 +154,160 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     auto pBypass3 = std::make_unique<juce::AudioParameterBool>("bypass 3", "Bypass 3", 0);
     auto pBypass4 = std::make_unique<juce::AudioParameterBool>("bypass 4", "Bypass 4", 0);
     
-    auto pFb1Mix = std::make_unique<juce::AudioParameterFloat>("fb1mix", "Fb1mix", 0.0, 100.0, 100.0);
+    auto pFb1Mix = std::make_unique<juce::AudioParameterFloat>("fb1mix", "Fb1mix", mixRange,
+                                                               100.0,
+                                                               juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return (value < 100.0) ? juce::String (value, 1) + " %" : juce::String (value, 0) + " %";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
-    auto pGain1 = std::make_unique<juce::AudioParameterFloat>("gain1", "Gain1", gainRange, 0.0f);
-    auto p1Thres = std::make_unique<juce::AudioParameterFloat>("thres 1", "Threshold 1", thresholdRange, 0.0f);
-    auto p1Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 1", "Ratio 1", ratioRange, 1.0f);
-    auto p1Att = std::make_unique<juce::AudioParameterFloat>("attack 1", "Attack 1",   attackRange, 20.0f);
-    auto p1Rel = std::make_unique<juce::AudioParameterFloat>("release 1", "Release 1", releaseRange, 40.0f);
+    auto pGain1 = std::make_unique<juce::AudioParameterFloat>("gain1", "Gain1", gainRange, 0.0f, juce::String(),
+                                                              juce::AudioProcessorParameter::genericParameter,
+                                                              [](float value, int) {return (value > -10.0f && value < 10.0f) ? juce::String (value, 2) + " dB" : juce::String (value, 1) + " dB";},
+                                                              [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
-    auto pLowBand = std::make_unique<juce::AudioParameterFloat>("low", "Low", juce::NormalisableRange<float> (40.0, 250.0, 1.0, 1.0), 100);
+    auto p1Thres = std::make_unique<juce::AudioParameterFloat>("thres 1", "Threshold 1", thresholdRange, 0.0f, juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return juce::String (value, 1) + " dB";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});;
     
-    auto pFb2Mix = std::make_unique<juce::AudioParameterFloat>("fb2mix", "Fb2mix", 0.0, 100.0, 100.0);
+    auto p1Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 1", "Ratio 1", ratioRange, 1.0f, juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return (value == 1.0) ? juce::String (value, 0) + ":1" :  juce::String (value, 1) + ":1";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
-    auto pGain2 = std::make_unique<juce::AudioParameterFloat>("gain2", "Gain2", gainRange, 0.0f);
-    auto p2Thres = std::make_unique<juce::AudioParameterFloat>("thres 2", "Threshold 2", thresholdRange, 0.0f);
-    auto p2Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 2", "Ratio 2", ratioRange, 1.0f);
-    auto p2Att = std::make_unique<juce::AudioParameterFloat>("attack 2", "Attack 2", attackRange, 20.0f);
-    auto p2Rel = std::make_unique<juce::AudioParameterFloat>("release 2", "Release 2", releaseRange, 40.0f);
+    auto p1Att = std::make_unique<juce::AudioParameterFloat>("attack 1", "Attack 1",   attackRange, 20.0f, juce::String(),
+                                                             juce::AudioProcessorParameter::genericParameter,
+                                                             [](float value, int) {return juce::String (value, 0) + " ms";},
+                                                             [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
-    auto pMidBand = std::make_unique<juce::AudioParameterFloat>("mid", "Mid", juce::NormalisableRange<float> (251.0, 6000.0, 1.0, 1.0), 1000.0);
+    auto p1Rel = std::make_unique<juce::AudioParameterFloat>("release 1", "Release 1", releaseRange, 40.0f, juce::String(),
+                                                             juce::AudioProcessorParameter::genericParameter,
+                                                             [](float value, int) {return (value < 1000) ? juce::String (value, 0) + " ms" : juce::String (value / 1000, 2) + " s";},
+                                                             [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
-    auto pFb3Mix = std::make_unique<juce::AudioParameterFloat>("fb3mix", "Fb3mix", 0.0, 100.0, 100.0);
+    auto pLowBand = std::make_unique<juce::AudioParameterFloat>("low", "Low", juce::NormalisableRange<float> (40.0, 250.0, 1.0, 1.0), 100, juce::String(),
+                                                                juce::AudioProcessorParameter::genericParameter,
+                                                                [](float value, int) {return juce::String (value, 0) + " Hz";},
+                                                                [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});;
     
-    auto pGain3 = std::make_unique<juce::AudioParameterFloat>("gain3", "Gain3", gainRange, 0.0f);
-    auto p3Thres = std::make_unique<juce::AudioParameterFloat>("thres 3", "Threshold 3", thresholdRange, 0.0f);
-    auto p3Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 3", "Ratio 3",ratioRange, 1.0f);
-    auto p3Att = std::make_unique<juce::AudioParameterFloat>("attack 3", "Attack 3", attackRange, 20.0f);
-    auto p3Rel = std::make_unique<juce::AudioParameterFloat>("release 3", "Release 3", releaseRange, 40.0f);
+    auto pFb2Mix = std::make_unique<juce::AudioParameterFloat>("fb2mix", "Fb2mix", mixRange,
+                                                               100.0,
+                                                               juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return (value < 100.0) ? juce::String (value, 1) + " %" : juce::String (value, 0) + " %";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
-    auto pHighBand = std::make_unique<juce::AudioParameterFloat>("high", "High", juce::NormalisableRange<float> (6001.0, 16000.0, 1.0, 1.0), 12000.0);
+    auto pGain2 = std::make_unique<juce::AudioParameterFloat>("gain2", "Gain2", gainRange, 0.0f, juce::String(),
+                                                              juce::AudioProcessorParameter::genericParameter,
+                                                              [](float value, int) {return (value > -10.0f && value < 10.0f) ? juce::String (value, 2) + " dB" : juce::String (value, 1) + " dB";},
+                                                              [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
-    auto pFb4Mix = std::make_unique<juce::AudioParameterFloat>("fb4mix", "Fb4mix", 0.0, 100.0, 100.0);
+    auto p2Thres = std::make_unique<juce::AudioParameterFloat>("thres 2", "Threshold 2", thresholdRange, 0.0f,  juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return juce::String (value, 1) + " dB";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
-    auto pGain4 = std::make_unique<juce::AudioParameterFloat>("gain4", "Gain4", gainRange, 0.0f);
-    auto p4Thres = std::make_unique<juce::AudioParameterFloat>("thres 4", "Threshold 4", thresholdRange, 0.0f);
-    auto p4Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 4", "Ratio 4", ratioRange, 1.0f);
-    auto p4Att = std::make_unique<juce::AudioParameterFloat>("attack 4", "Attack 4", attackRange, 20.0f);
-    auto p4Rel = std::make_unique<juce::AudioParameterFloat>("release 4", "Release 4", releaseRange, 40.0f);
+    auto p2Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 2", "Ratio 2", ratioRange, 1.0f, juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return (value == 1.0) ? juce::String (value, 0) + ":1" :  juce::String (value, 1) + ":1";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
-    auto pOutput = std::make_unique<juce::AudioParameterFloat>("output", "Output", gainRange, 0.0f);
+    auto p2Att = std::make_unique<juce::AudioParameterFloat>("attack 2", "Attack 2", attackRange, 20.0f, juce::String(),
+                                                             juce::AudioProcessorParameter::genericParameter,
+                                                             [](float value, int) {return juce::String (value, 0) + " ms";},
+                                                             [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
-    auto pMainMix = std::make_unique<juce::AudioParameterFloat>("main mix", "Main Mix", 0.0, 100.0, 100.0);
+    auto p2Rel = std::make_unique<juce::AudioParameterFloat>("release 2", "Release 2", releaseRange, 40.0f, juce::String(),
+                                                             juce::AudioProcessorParameter::genericParameter,
+                                                             [](float value, int) {return (value < 1000) ? juce::String (value, 0) + " ms" : juce::String (value / 1000, 2) + " s";},
+                                                             [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto pMidBand = std::make_unique<juce::AudioParameterFloat>("mid", "Mid", juce::NormalisableRange<float> (251.0, 6000.0, 1.0, 1.0), 1000.0, juce::String(),
+                                                                juce::AudioProcessorParameter::genericParameter,
+                                                                [](float value, int) {return juce::String (value, 0) + " Hz";},
+                                                                [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});;
+    
+    auto pFb3Mix = std::make_unique<juce::AudioParameterFloat>("fb3mix", "Fb3mix", mixRange,
+                                                               100.0,
+                                                               juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return (value < 100.0) ? juce::String (value, 1) + " %" : juce::String (value, 0) + " %";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto pGain3 = std::make_unique<juce::AudioParameterFloat>("gain3", "Gain3", gainRange, 0.0f, juce::String(),
+                                                              juce::AudioProcessorParameter::genericParameter,
+                                                              [](float value, int) {return (value > -10.0f && value < 10.0f) ? juce::String (value, 2) + " dB" : juce::String (value, 1) + " dB";},
+                                                              [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto p3Thres = std::make_unique<juce::AudioParameterFloat>("thres 3", "Threshold 3", thresholdRange, 0.0f,  juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return juce::String (value, 1) + " dB";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto p3Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 3", "Ratio 3",ratioRange, 1.0f, juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return (value == 1.0) ? juce::String (value, 0) + ":1" :  juce::String (value, 1) + ":1";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto p3Att = std::make_unique<juce::AudioParameterFloat>("attack 3", "Attack 3", attackRange, 20.0f, juce::String(),
+                                                             juce::AudioProcessorParameter::genericParameter,
+                                                             [](float value, int) {return juce::String (value, 0) + " ms";},
+                                                             [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto p3Rel = std::make_unique<juce::AudioParameterFloat>("release 3", "Release 3", releaseRange, 40.0f, juce::String(),
+                                                             juce::AudioProcessorParameter::genericParameter,
+                                                             [](float value, int) {return (value < 1000) ? juce::String (value, 0) + " ms" : juce::String (value / 1000, 2) + " s";},
+                                                             [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto pHighBand = std::make_unique<juce::AudioParameterFloat>("high", "High", juce::NormalisableRange<float> (6001.0, 16000.0, 1.0, 1.0), 12000.0, juce::String(),
+                                                                 juce::AudioProcessorParameter::genericParameter,
+                                                                 [](float value, int) {return juce::String (value, 0) + " Hz";},
+                                                                 [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});;
+    
+    auto pFb4Mix = std::make_unique<juce::AudioParameterFloat>("fb4mix", "Fb4mix", mixRange,
+                                                               100.0,
+                                                               juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return (value < 100.0) ? juce::String (value, 1) + " %" : juce::String (value, 0) + " %";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto pGain4 = std::make_unique<juce::AudioParameterFloat>("gain4", "Gain4", gainRange, 0.0f, juce::String(),
+                                                              juce::AudioProcessorParameter::genericParameter,
+                                                              [](float value, int) {return (value > -10.0f && value < 10.0f) ? juce::String (value, 2) + " dB" : juce::String (value, 1) + " dB";},
+                                                              [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto p4Thres = std::make_unique<juce::AudioParameterFloat>("thres 4", "Threshold 4", thresholdRange, 0.0f, juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return juce::String (value, 1) + " dB";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto p4Ratio = std::make_unique<juce::AudioParameterFloat>("ratio 4", "Ratio 4", ratioRange, 1.0f, juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return (value == 1.0) ? juce::String (value, 0) + ":1" :  juce::String (value, 1) + ":1";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto p4Att = std::make_unique<juce::AudioParameterFloat>("attack 4", "Attack 4", attackRange, 20.0f, juce::String(),
+                                                             juce::AudioProcessorParameter::genericParameter,
+                                                             [](float value, int) {return juce::String (value, 0) + " ms";},
+                                                             [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto p4Rel = std::make_unique<juce::AudioParameterFloat>("release 4", "Release 4", releaseRange, 40.0f, juce::String(),
+                                                             juce::AudioProcessorParameter::genericParameter,
+                                                             [](float value, int) {return (value < 1000) ? juce::String (value, 0) + " ms" : juce::String (value / 1000, 2) + " s";},
+                                                             [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto pOutput = std::make_unique<juce::AudioParameterFloat>("output", "Output", gainRange, 0.0f, juce::String(),
+                                                               juce::AudioProcessorParameter::genericParameter,
+                                                               [](float value, int) {return (value > -10.0f && value < 10.0f) ? juce::String (value, 2) + " dB" : juce::String (value, 1) + " dB";},
+                                                               [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
+    
+    auto pMainMix = std::make_unique<juce::AudioParameterFloat>("main mix", "Main Mix", mixRange,
+                                                                100.0,
+                                                                juce::String(),
+                                                                juce::AudioProcessorParameter::genericParameter,
+                                                                [](float value, int) {return (value < 100.0) ? juce::String (value, 1) + " %" : juce::String (value, 0) + " %";},
+                                                                [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
     params.push_back(std::move(pInput));
     
