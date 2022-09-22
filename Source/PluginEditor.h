@@ -32,56 +32,56 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     
-    void mouseEnter(const juce::MouseEvent &event) override;
-    void mouseExit(const juce::MouseEvent &event) override;
+    void mouseEnter (const juce::MouseEvent& event) override;
+    void mouseExit (const juce::MouseEvent& event) override;
 
 private:
     // DIALS, BUTTONS AND MENUS
-    bbg_gui::bbg_Dial input { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial input;// { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     
     bbg_gui::bbg_PushButton band1SoloButton { "S" };
     bbg_gui::bbg_PushButton band1BypassButton { "BYP" };
-    bbg_gui::bbg_Dial threshold1 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
-    bbg_gui::bbg_Dial ratio1 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
-    bbg_gui::bbg_Dial attack1 { "", 1.0, 150.0, 1.0, 0.0, 0.0 };
-    bbg_gui::bbg_Dial release1 { "", 2.0, 300.0, 1.0, 0.0, 0.0 };
-    bbg_gui::bbg_Dial gain1 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
-    bbg_gui::bbg_Dial mix1 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial threshold1;// { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial ratio1;// { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
+    bbg_gui::bbg_Dial attack1;// { "", 1.0, 150.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_Dial release1;// { "", 2.0, 300.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_Dial gain1;// { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial mix1;// { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
     bbg_gui::bbg_SliderHorizontal lowBandSlider { "", 40.0, 250.0, 1.0, 0.0, 0.0 };
     
     bbg_gui::bbg_PushButton band2SoloButton { "S" };
     bbg_gui::bbg_PushButton band2BypassButton { "BYP" };
-    bbg_gui::bbg_Dial threshold2 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
-    bbg_gui::bbg_Dial ratio2 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
-    bbg_gui::bbg_Dial attack2 { "", 1.0, 150.0, 1.0, 0.0, 0.0 };
-    bbg_gui::bbg_Dial release2 { "", 2.0, 300.0, 1.0, 0.0, 0.0 };
-    bbg_gui::bbg_Dial gain2 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
-    bbg_gui::bbg_Dial mix2 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial threshold2;// { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial ratio2;// { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
+    bbg_gui::bbg_Dial attack2;// { "", 1.0, 150.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_Dial release2;// { "", 2.0, 300.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_Dial gain2;// { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial mix2;// { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
     bbg_gui::bbg_SliderHorizontal midBandSlider { "", 251.0, 6000.0, 1.0, 0.0, 0.0 };
     
     bbg_gui::bbg_PushButton band3SoloButton { "S" };
     bbg_gui::bbg_PushButton band3BypassButton { "BYP" };
-    bbg_gui::bbg_Dial threshold3 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
-    bbg_gui::bbg_Dial ratio3 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
-    bbg_gui::bbg_Dial attack3 { "", 1.0, 150.0, 1.0, 0.0, 0.0 };
-    bbg_gui::bbg_Dial release3 { "", 2.0, 300.0, 1.0, 0.0, 0.0 };
-    bbg_gui::bbg_Dial gain3 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
-    bbg_gui::bbg_Dial mix3 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial threshold3;// { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial ratio3;// { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
+    bbg_gui::bbg_Dial attack3;// { "", 1.0, 150.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_Dial release3;// { "", 2.0, 300.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_Dial gain3;// { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial mix3;//{ "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
     bbg_gui::bbg_SliderHorizontal highBandSlider { "", 6001.0, 16000.0, 1.0, 0.0, 0.0 };
     
     bbg_gui::bbg_PushButton band4SoloButton { "S" };
     bbg_gui::bbg_PushButton band4BypassButton { "BYP" };
-    bbg_gui::bbg_Dial threshold4 { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
-    bbg_gui::bbg_Dial ratio4 { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
-    bbg_gui::bbg_Dial attack4 { "", 1.0, 150.0, 1.0, 0.0, 0.0 };
-    bbg_gui::bbg_Dial release4 { "", 2.0, 300.0, 1.0, 0.0, 0.0 };
-    bbg_gui::bbg_Dial gain4 { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
-    bbg_gui::bbg_Dial mix4 { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial threshold4;// { "", -50.0, 0.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial ratio4;// { "", 0.5, 10.0, 0.01, 0.0, 0.0 };
+    bbg_gui::bbg_Dial attack4;// { "", 1.0, 150.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_Dial release4;// { "", 2.0, 300.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_Dial gain4;// { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial mix4;// { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
-    bbg_gui::bbg_Dial output { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_Dial output;// { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_SliderHorizontal  mainMix { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
 
  
@@ -209,8 +209,32 @@ private:
     bbg_gui::VerticalDiscreteMeter band1Meter, band2Meter, band3Meter, band4Meter;
     bbg_gui::VerticalGradientMeter outputMeterL, outputMeterR;
     
+    juce::String inputTip = { "Input: boost or attenuate the level of the incoming before it undergoes dynamic processing" };
+    juce::String thresholdTip = { "Threshold: sets where compression begins. Signals above the threshold are attenuated by an amount specified by the Ratio parameter" };
+    juce::String ratioTip = { "Ratio: sets the ratio between the input and output signal of this band. Settings below 1:1 will mean upward compression for this band" };
+    juce::String attackTip = { "Attack: defines how long it takes to reach maximum compression once a signal exceeds the threshold" };
+    juce::String releaseTip = { "Release: sets how long it takes for the compressor to return to normal operation after the signal falls below the threshold" };
+    juce::String gainTip = { "Gain: the output level for a band. With no dynamic processing, consider this as a boost or cut" };
+    juce::String mixTip = { "Mix: adjusts the balance between the compressed and uncompressed signals for this band " };
+    juce::String outputTip = { "Output: boost or attenuate the level of the signal post dynamic processing" };
+    juce::String mainMixTip = { "Main Mix: adjusts the balance between the overall processed and unprocessed signals." };
+    
+    
     juce::Label toolTip;
-    bool isEntered { false };
+    std::vector<bbg_gui::bbg_Dial*> sliderPointer =     { &input,
+                                                        &threshold1, &ratio1, &attack1, &release1, &gain1, &mix1,
+                                                        &threshold2, &ratio2, &attack2, &release2, &gain2, &mix2,
+                                                        &threshold3, &ratio3, &attack3, &release3, &gain3, &mix3,
+                                                        &threshold4, &ratio4, &attack4, &release4, &gain4, &mix4,
+                                                        &output};
+    
+    std::vector<juce::String> sliderLabel =             { inputTip,
+                                                        thresholdTip, ratioTip, attackTip, releaseTip, gainTip, mixTip,
+                                                        thresholdTip, ratioTip, attackTip, releaseTip, gainTip, mixTip,
+                                                        thresholdTip, ratioTip, attackTip, releaseTip, gainTip, mixTip,
+                                                        thresholdTip, ratioTip, attackTip, releaseTip, gainTip, mixTip,
+                                                        outputTip};
+    
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CURBAudioProcessorEditor)
 };

@@ -27,6 +27,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
        
     // DIALS, BUTTONS, MENUS & PARAMETER ATTACHMENTS
     input.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    input.addMouseListener(this, false);
     inputAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "input", input);
     addAndMakeVisible(input);
 
@@ -35,113 +36,146 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     band1BypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass 1", band1BypassButton);
     addAndMakeVisible(band1BypassButton);
     
-    
-    
     threshold1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    threshold1.addMouseListener(this, false);
     thres1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 1", threshold1);
     addAndMakeVisible(threshold1);
     
     ratio1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    ratio1.addMouseListener(this, false);
     ratio1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "ratio 1", ratio1);
     addAndMakeVisible(ratio1);
     attack1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    attack1.addMouseListener(this, false);
     attack1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "attack 1", attack1);
     addAndMakeVisible(attack1);
     release1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    release1.addMouseListener(this, false);
     release1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "release 1", release1);
     addAndMakeVisible(release1);
     gain1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    gain1.addMouseListener(this, false);
     gain1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain1", gain1);
     addAndMakeVisible(gain1);
     mix1.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    mix1.addMouseListener(this, false);
     mix1Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb1mix", mix1);
     addAndMakeVisible(mix1);
     
+    lowBandSlider.addMouseListener(this, false);
     lowAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "low", lowBandSlider);
     addAndMakeVisible(lowBandSlider);
     
+    band2SoloButton.addMouseListener(this, false);
     band2SoloAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "solo 2", band2SoloButton);
     addAndMakeVisible(band2SoloButton);
+    band2BypassButton.addMouseListener(this, false);
     band2BypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass 2", band2BypassButton);
     addAndMakeVisible(band2BypassButton);
     
     threshold2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    threshold2.addMouseListener(this, false);
     thres2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 2", threshold2);
     addAndMakeVisible(threshold2);
     ratio2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    ratio2.addMouseListener(this, false);
     ratio2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "ratio 2", ratio2);
     addAndMakeVisible(ratio2);
     attack2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    attack2.addMouseListener(this, false);
     attack2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "attack 2", attack2);
     addAndMakeVisible(attack2);
     release2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    release2.addMouseListener(this, false);
     release2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "release 2", release2);
     addAndMakeVisible(release2);
     gain2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    gain2.addMouseListener(this, false);
     gain2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain2", gain2);
     addAndMakeVisible(gain2);
     mix2.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    mix2.addMouseListener(this, false);
     mix2Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb2mix", mix2);
     addAndMakeVisible(mix2);
     
+    midBandSlider.addMouseListener(this, false);
     midAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "mid", midBandSlider);
     addAndMakeVisible(midBandSlider);
     
+    band3SoloButton.addMouseListener(this, false);
     band3SoloAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "solo 3", band3SoloButton);
     addAndMakeVisible(band3SoloButton);
+    band3BypassButton.addMouseListener(this, false);
     band3BypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass 3", band3BypassButton);
     addAndMakeVisible(band3BypassButton);
     
     threshold3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    threshold3.addMouseListener(this, false);
     thres3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 3", threshold3);
     addAndMakeVisible(threshold3);
     ratio3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    ratio3.addMouseListener(this, false);
     ratio3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "ratio 3", ratio3);
     addAndMakeVisible(ratio3);
     attack3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    attack3.addMouseListener(this, false);
     attack3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "attack 3", attack3);
     addAndMakeVisible(attack3);
     release3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    release3.addMouseListener(this, false);
     release3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "release 3", release3);
     addAndMakeVisible(release3);
     gain3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    gain3.addMouseListener(this, false);
     gain3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain3", gain3);
     addAndMakeVisible(gain3);
     mix3.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    mix3.addMouseListener(this, false);
     mix3Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb3mix", mix3);
     addAndMakeVisible(mix3);
     
+    highBandSlider.addMouseListener(this, false);
     highAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "high", highBandSlider);
     addAndMakeVisible(highBandSlider);
     
+    band4SoloButton.addMouseListener(this, false);
     band4SoloAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "solo 4", band4SoloButton);
     addAndMakeVisible(band4SoloButton);
+    band4BypassButton.addMouseListener(this, false);
     band4BypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass 4", band4BypassButton);
     addAndMakeVisible(band4BypassButton);
     
     threshold4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    threshold4.addMouseListener(this, false);
     thres4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "thres 4", threshold4);
     addAndMakeVisible(threshold4);
     ratio4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    ratio4.addMouseListener(this, false);
     ratio4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "ratio 4", ratio4);
     addAndMakeVisible(ratio4);
     attack4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    attack4.addMouseListener(this, false);
     attack4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "attack 4", attack4);
     addAndMakeVisible(attack4);
     release4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    release4.addMouseListener(this, false);
     release4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "release 4", release4);
     addAndMakeVisible(release4);
     gain4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    gain4.addMouseListener(this, false);
     gain4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "gain4", gain4);
     addAndMakeVisible(gain4);
     mix4.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    mix4.addMouseListener(this, false);
     mix4Attachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "fb4mix", mix4);
     addAndMakeVisible(mix4);
     
     output.setDialStyle(bbg_gui::bbg_Dial::DialStyle::kDialModernStyle);
+    output.addMouseListener(this, false);
     outputAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "output", output);
     addAndMakeVisible(output);
     
+    mainMix.addMouseListener(this, false);
     mainMixAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "main mix", mainMix);
     addAndMakeVisible(mainMix);
     
@@ -254,12 +288,10 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     olumay.setJustificationType(juce::Justification::centredLeft);
     olumay.setColour(juce::Label::textColourId, juce::Colours::steelblue.brighter());
     addAndMakeVisible(olumay);
-    
-    
-    toolTip.setFont(juce::Font("Helvetica", 15, juce::Font::FontStyleFlags::bold));
+                         
+    toolTip.setFont(juce::Font ("Avenir Next", 15, juce::Font::FontStyleFlags::plain));
     toolTip.setColour(juce::Label::ColourIds::textColourId, juce::Colours::black);
     addAndMakeVisible(toolTip);
-                                
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (1190, 330);
@@ -267,29 +299,22 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
 
 CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
 {
+    for(int i = 0; i < sliderPointer.size(); ++i)
+    {
+        sliderPointer[i]->setLookAndFeel(nullptr);
+    }
+    
 }
 
 //==============================================================================
 void CURBAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    toolTip.setText(isEntered ? "Test tool tip" : "", juce::dontSendNotification);
     juce::Rectangle<int> background = getLocalBounds();
     g.setGradientFill(juce::ColourGradient::vertical(juce::Colours::gainsboro, getHeight() - getHeight(),juce::Colours::gainsboro.darker(), getHeight()));
     g.fillRect(background);
 }
 
-void CURBAudioProcessorEditor::mouseEnter(const juce::MouseEvent &event)
-{
-    isEntered = true;
-//    toolTip.setText("Hello", juce::dontSendNotification);
 
-}
-
-void CURBAudioProcessorEditor::mouseExit(const juce::MouseEvent &event)
-{
-    isEntered = false;
-//    toolTip.setText("", juce::dontSendNotification);
-}
 
 void CURBAudioProcessorEditor::resized()
 {
@@ -442,10 +467,33 @@ void CURBAudioProcessorEditor::resized()
     
     auto mainMixXGap = 3;
     auto mainMixYGap = 84;
-    
-    toolTip.setBounds(20, 300, 150, 20);
-    
+        
     mainMix.setBounds(output.getX() + mainMixXGap, output.getY() + mainMixYGap, bandSliderWidth, bandSliderHeight);
     
+    toolTip.setBounds(20, 300, 700, 30);
+}
+
+void CURBAudioProcessorEditor::mouseEnter(const juce::MouseEvent &event)
+{
+    for(int i = 0; i < sliderPointer.size(); ++i)
+    {
+        if(event.eventComponent == sliderPointer[i])
+        {
+            toolTip.setText(sliderLabel[i], juce::dontSendNotification);
+        }
+    }
+    
+}
+    
+
+void CURBAudioProcessorEditor::mouseExit(const juce::MouseEvent &event)
+{
+    for(int i = 0; i < sliderPointer.size(); ++i)
+    {
+        if(event.eventComponent == sliderPointer[i])
+        {
+            toolTip.setText("", juce::dontSendNotification);
+        }
+    }
 }
 
