@@ -72,6 +72,7 @@ CURBAudioProcessor::CURBAudioProcessor()
     
     treeState.addParameterListener("output", this);
     treeState.addParameterListener("main mix", this);
+    treeState.addParameterListener("preset", this);
 }
 
 CURBAudioProcessor::~CURBAudioProcessor()
@@ -126,6 +127,7 @@ CURBAudioProcessor::~CURBAudioProcessor()
     
     treeState.removeParameterListener("output", this);
     treeState.removeParameterListener("main mix", this);
+    treeState.removeParameterListener("preset", this);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createParameterLayout()
@@ -309,6 +311,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
                                                                 [](float value, int) {return (value < 100.0) ? juce::String (value, 1) + " %" : juce::String (value, 0) + " %";},
                                                                 [](juce::String text) {return text.dropLastCharacters (3).getFloatValue();});
     
+    auto pPreset = std::make_unique<juce::AudioParameterInt>("preset", "Preset", 0, 5, 0);
+    
     params.push_back(std::move(pInput));
     
     params.push_back(std::move(pSolo1));
@@ -355,6 +359,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
     
     params.push_back(std::move(pOutput));
     params.push_back(std::move(pMainMix));
+    params.push_back(std::move(pPreset));
 
     return { params.begin(), params.end() };
 }

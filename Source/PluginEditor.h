@@ -83,7 +83,7 @@ private:
     
     bbg_gui::bbg_Dial output;// { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_SliderHorizontal  mainMix;// { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
-
+    bbg_gui::bbg_Menu preset;
  
     // ATTACHMENTS
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputAttachement;
@@ -132,6 +132,7 @@ private:
     
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> outputAttachement;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mainMixAttachement;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> presetAttachment;
     
     // BORDERS
     juce::GroupComponent inputBorder;
@@ -195,6 +196,7 @@ private:
     
     bbg_gui::bbg_dialLabel outputLabel { "Output" };
     bbg_gui::bbg_horizontalSliderLabel mainMixLabel { "Mix" };
+    bbg_gui::bbg_menuLabel presetLabel { "Preset" };
     
     bbg_gui::bbg_dialLabel olumay { "Olumay dsp" };
     bbg_gui::bbg_dialLabel curbTitle { "C U R B" };
@@ -232,6 +234,7 @@ private:
     juce::String bandMeterTip = { "GR: displays gain reduction for this band" };
     
     juce::Label toolTip;
+    
     //set of pointers in a vector that point to dials for tips
     std::vector<bbg_gui::bbg_Dial*> sliderPointer =     { &input,
                                                         &threshold1, &ratio1, &attack1, &release1, &gain1, &mix1,

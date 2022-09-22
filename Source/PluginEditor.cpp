@@ -181,6 +181,16 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mainMixAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "main mix", mainMix);
     addAndMakeVisible(mainMix);
     
+    preset.setText("Default");
+    preset.addItem("Default", 1);
+    preset.addItem("Preset 2", 2);
+    preset.addItem("Preset 3", 3);
+    preset.addItem("Preset 4", 4);
+    preset.addItem("Preset 5", 5);
+    preset.addItem("Preset 6", 6);
+    presetAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.treeState, "preset", preset);
+    addAndMakeVisible(preset);
+    
     // BORDERS
     auto alpha = 0.2;
     
@@ -264,6 +274,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     
     outputLabel.attachToComponent(&output, false);
     mainMixLabel.attachToComponent(&mainMix, false);
+    presetLabel.attachToComponent(&preset, false);
     
     // METERS
     inputMeterL.addMouseListener(this, false);
@@ -492,9 +503,12 @@ void CURBAudioProcessorEditor::resized()
     output.setBounds(band4Border.getRight() + inputOutGapX, band4Border.getY() + dialBottomRowGapY, dialSize, dialSize);
     
     auto mainMixXGap = 3;
-    auto mainMixYGap = 84;
-        
+    auto mainMixYGap = 93;
+    auto presetX = 883;
+    auto presetWidth = 207;
+    
     mainMix.setBounds(output.getX() + mainMixXGap, output.getY() + mainMixYGap, bandSliderWidth, bandSliderHeight);
+    preset.setBounds(presetX, output.getY() + mainMixYGap, presetWidth, bandSliderHeight);
     
     toolTip.setBounds(6.5, 290, 700, 30);
 }
