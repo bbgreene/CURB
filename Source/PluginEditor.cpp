@@ -31,8 +31,10 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     inputAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "input", input);
     addAndMakeVisible(input);
 
+    band1SoloButton.addMouseListener(this, false);
     band1SoloAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "solo 1", band1SoloButton);
     addAndMakeVisible(band1SoloButton);
+    band1BypassButton.addMouseListener(this, false);
     band1BypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, "bypass 1", band1BypassButton);
     addAndMakeVisible(band1BypassButton);
     
@@ -264,6 +266,15 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mainMixLabel.attachToComponent(&mainMix, false);
     
     // METERS
+    inputMeterL.addMouseListener(this, false);
+    inputMeterR.addMouseListener(this, false);
+    outputMeterL.addMouseListener(this, false);
+    outputMeterR.addMouseListener(this, false);
+    band1Meter.addMouseListener(this, false);
+    band2Meter.addMouseListener(this, false);
+    band3Meter.addMouseListener(this, false);
+    band4Meter.addMouseListener(this, false);
+    
     addAndMakeVisible(&inputMeterL);
     addAndMakeVisible(&inputMeterR);
     addAndMakeVisible(&band1Meter);
@@ -303,7 +314,22 @@ CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
     {
         sliderPointer[i]->setLookAndFeel(nullptr);
     }
-    
+    for(int i = 0; i < buttonPointer.size(); ++i)
+    {
+        buttonPointer[i]->setLookAndFeel(nullptr);
+    }
+    for(int i = 0; i < horizontalSliderPointer.size(); ++i)
+    {
+        horizontalSliderPointer[i]->setLookAndFeel(nullptr);
+    }
+    for(int i = 0; i < verticalMeterPointer.size(); ++i)
+    {
+        verticalMeterPointer[i]->setLookAndFeel(nullptr);
+    }
+    for(int i = 0; i < bandMeterPointer.size(); ++i)
+    {
+        bandMeterPointer[i]->setLookAndFeel(nullptr);
+    }
 }
 
 //==============================================================================
@@ -470,7 +496,7 @@ void CURBAudioProcessorEditor::resized()
         
     mainMix.setBounds(output.getX() + mainMixXGap, output.getY() + mainMixYGap, bandSliderWidth, bandSliderHeight);
     
-    toolTip.setBounds(20, 300, 700, 30);
+    toolTip.setBounds(6.5, 290, 700, 30);
 }
 
 void CURBAudioProcessorEditor::mouseEnter(const juce::MouseEvent &event)
@@ -482,7 +508,34 @@ void CURBAudioProcessorEditor::mouseEnter(const juce::MouseEvent &event)
             toolTip.setText(sliderLabel[i], juce::dontSendNotification);
         }
     }
-    
+    for(int i = 0; i < buttonPointer.size(); ++i)
+    {
+        if(event.eventComponent == buttonPointer[i])
+        {
+            toolTip.setText(buttonLabel[i], juce::dontSendNotification);
+        }
+    }
+    for(int i = 0; i < horizontalSliderPointer.size(); ++i)
+    {
+        if(event.eventComponent == horizontalSliderPointer[i])
+        {
+            toolTip.setText(horizontalLabel[i], juce::dontSendNotification);
+        }
+    }
+    for(int i = 0; i < verticalMeterPointer.size(); ++i)
+    {
+        if(event.eventComponent == verticalMeterPointer[i])
+        {
+            toolTip.setText(verticalMeterLabel[i], juce::dontSendNotification);
+        }
+    }
+    for(int i = 0; i < bandMeterPointer.size(); ++i)
+    {
+        if(event.eventComponent == bandMeterPointer[i])
+        {
+            toolTip.setText(bandMeterLabel[i], juce::dontSendNotification);
+        }
+    }
 }
     
 
@@ -491,6 +544,34 @@ void CURBAudioProcessorEditor::mouseExit(const juce::MouseEvent &event)
     for(int i = 0; i < sliderPointer.size(); ++i)
     {
         if(event.eventComponent == sliderPointer[i])
+        {
+            toolTip.setText("", juce::dontSendNotification);
+        }
+    }
+    for(int i = 0; i < buttonPointer.size(); ++i)
+    {
+        if(event.eventComponent == buttonPointer[i])
+        {
+            toolTip.setText("", juce::dontSendNotification);
+        }
+    }
+    for(int i = 0; i < horizontalSliderPointer.size(); ++i)
+    {
+        if(event.eventComponent == horizontalSliderPointer[i])
+        {
+            toolTip.setText("", juce::dontSendNotification);
+        }
+    }
+    for(int i = 0; i < verticalMeterPointer.size(); ++i)
+    {
+        if(event.eventComponent == verticalMeterPointer[i])
+        {
+            toolTip.setText("", juce::dontSendNotification);
+        }
+    }
+    for(int i = 0; i < bandMeterPointer.size(); ++i)
+    {
+        if(event.eventComponent == bandMeterPointer[i])
         {
             toolTip.setText("", juce::dontSendNotification);
         }

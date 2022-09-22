@@ -48,7 +48,7 @@ private:
     bbg_gui::bbg_Dial gain1;// { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix1;// { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
-    bbg_gui::bbg_SliderHorizontal lowBandSlider { "", 40.0, 250.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_SliderHorizontal lowBandSlider;// { "", 40.0, 250.0, 1.0, 0.0, 0.0 };
     
     bbg_gui::bbg_PushButton band2SoloButton { "S" };
     bbg_gui::bbg_PushButton band2BypassButton { "BYP" };
@@ -59,7 +59,7 @@ private:
     bbg_gui::bbg_Dial gain2;// { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix2;// { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
-    bbg_gui::bbg_SliderHorizontal midBandSlider { "", 251.0, 6000.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_SliderHorizontal midBandSlider;// { "", 251.0, 6000.0, 1.0, 0.0, 0.0 };
     
     bbg_gui::bbg_PushButton band3SoloButton { "S" };
     bbg_gui::bbg_PushButton band3BypassButton { "BYP" };
@@ -70,7 +70,7 @@ private:
     bbg_gui::bbg_Dial gain3;// { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Dial mix3;//{ "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
-    bbg_gui::bbg_SliderHorizontal highBandSlider { "", 6001.0, 16000.0, 1.0, 0.0, 0.0 };
+    bbg_gui::bbg_SliderHorizontal highBandSlider;// { "", 6001.0, 16000.0, 1.0, 0.0, 0.0 };
     
     bbg_gui::bbg_PushButton band4SoloButton { "S" };
     bbg_gui::bbg_PushButton band4BypassButton { "BYP" };
@@ -82,7 +82,7 @@ private:
     bbg_gui::bbg_Dial mix4;// { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     
     bbg_gui::bbg_Dial output;// { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
-    bbg_gui::bbg_SliderHorizontal  mainMix { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
+    bbg_gui::bbg_SliderHorizontal  mainMix;// { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
 
  
     // ATTACHMENTS
@@ -215,19 +215,31 @@ private:
     juce::String attackTip = { "Attack: defines how long it takes to reach maximum compression once a signal exceeds the threshold" };
     juce::String releaseTip = { "Release: sets how long it takes for the compressor to return to normal operation after the signal falls below the threshold" };
     juce::String gainTip = { "Gain: the output level for a band. With no dynamic processing, consider this as a boost or cut" };
-    juce::String mixTip = { "Mix: adjusts the balance between the compressed and uncompressed signals for this band " };
+    juce::String mixTip = { "Mix: adjusts the balance between the compressed and uncompressed signals for this band" };
     juce::String outputTip = { "Output: boost or attenuate the level of the signal post dynamic processing" };
-    juce::String mainMixTip = { "Main Mix: adjusts the balance between the overall processed and unprocessed signals." };
     
+    juce::String soloTip = { "Solo: listen to this band post processing" };
+    juce::String bypassTip = { "Bypass: returns the entire band to a unity gain status with no processing at all" };
+    
+    juce::String lowBandTip = { "Low: crossover point. Frequencies below this number are processing in Band 1. Frequencies above a processed in in Band 2" };
+    juce::String midBandTip = { "Mid: crossover point. Frequencies below this number are processing in Band 2. Frequencies above a processed in in Band 3" };
+    juce::String highBandTip = { "High: crossover point. Frequencies below this number are processing in Band 3. Frequencies above a processed in in Band 4" };
+    juce::String mainMixTip = { "Main Mix: adjusts the balance between the overall processed and unprocessed signals" };
+    
+    juce::String inputMeterTip = { "Input meter" };
+    juce::String outputMeterTip = { "Output meter" };
+    
+    juce::String bandMeterTip = { "GR: displays gain reduction for this band" };
     
     juce::Label toolTip;
+    //set of pointers in a vector that point to dials for tips
     std::vector<bbg_gui::bbg_Dial*> sliderPointer =     { &input,
                                                         &threshold1, &ratio1, &attack1, &release1, &gain1, &mix1,
                                                         &threshold2, &ratio2, &attack2, &release2, &gain2, &mix2,
                                                         &threshold3, &ratio3, &attack3, &release3, &gain3, &mix3,
                                                         &threshold4, &ratio4, &attack4, &release4, &gain4, &mix4,
                                                         &output};
-    
+    //set of labels in a vector holding strings
     std::vector<juce::String> sliderLabel =             { inputTip,
                                                         thresholdTip, ratioTip, attackTip, releaseTip, gainTip, mixTip,
                                                         thresholdTip, ratioTip, attackTip, releaseTip, gainTip, mixTip,
@@ -235,6 +247,31 @@ private:
                                                         thresholdTip, ratioTip, attackTip, releaseTip, gainTip, mixTip,
                                                         outputTip};
     
+    //set of pointers in a vector that point to buttons for tips
+    std::vector<bbg_gui::bbg_PushButton*> buttonPointer =   { &band1SoloButton, &band2SoloButton, &band3SoloButton, &band4SoloButton,
+                                                            &band1BypassButton, &band2BypassButton, &band3BypassButton, &band4BypassButton };
     
+    //set of labels in a vector holding strings
+    std::vector<juce::String> buttonLabel =     { soloTip, soloTip, soloTip, soloTip,
+                                                bypassTip, bypassTip, bypassTip, bypassTip };
+    
+    //set of pointers in a vector that point to buttons for tips
+    std::vector<bbg_gui::bbg_SliderHorizontal*> horizontalSliderPointer =   { &lowBandSlider, &midBandSlider, &highBandSlider, &mainMix };
+    
+    //set of labels in a vector holding strings
+    std::vector<juce::String> horizontalLabel =     { lowBandTip, midBandTip, highBandTip, mainMixTip };
+    
+    //set of pointers in a vector that point to vertical meters for tips
+    std::vector<bbg_gui::VerticalGradientMeter*> verticalMeterPointer =   { &inputMeterL, &inputMeterR, &outputMeterL, &outputMeterR };
+    
+    //set of labels in a vector holding strings
+    std::vector<juce::String> verticalMeterLabel =     { inputMeterTip, inputMeterTip, outputMeterTip, outputMeterTip };
+    
+    //set of pointers in a vector that point to discrete meters for tips
+    std::vector<bbg_gui::VerticalDiscreteMeter*> bandMeterPointer =   { &band1Meter, &band2Meter, &band3Meter, &band4Meter };
+    
+    //set of labels in a vector holding strings
+    std::vector<juce::String> bandMeterLabel =     { bandMeterTip, bandMeterTip, bandMeterTip, bandMeterTip };
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CURBAudioProcessorEditor)
 };
