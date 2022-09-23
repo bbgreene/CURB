@@ -213,29 +213,29 @@ private:
     bbg_gui::VerticalGradientMeter outputMeterL, outputMeterR;
     
     juce::String inputTip = { "Input: boost or attenuate the level of the incoming before it undergoes dynamic processing" };
-    juce::String thresholdTip = { "Threshold: sets where compression begins. Signals above the threshold are attenuated by an amount specified by the Ratio parameter" };
+    juce::String thresholdTip = { "Threshold: sets where compression begins for this particular band. Signals above the threshold are attenuated by an amount specified by the Ratio parameter" };
     juce::String ratioTip = { "Ratio: sets the ratio between the input and output signal of this band. Settings below 1:1 will mean upward compression for this band" };
-    juce::String attackTip = { "Attack: defines how long it takes to reach maximum compression once a signal exceeds the threshold" };
+    juce::String attackTip = { "Attack: defines how long it takes to reach maximum compression once the signal exceeds the threshold" };
     juce::String releaseTip = { "Release: sets how long it takes for the compressor to return to normal operation after the signal falls below the threshold" };
-    juce::String gainTip = { "Gain: the output level for a band. With no dynamic processing, consider this as a boost or cut" };
+    juce::String gainTip = { "Gain: the output level for a band post dynamic processing. With no dynamic processing, consider this as a band boost or cut" };
     juce::String mixTip = { "Mix: adjusts the balance between the compressed and uncompressed signals for this band" };
     juce::String outputTip = { "Output: boost or attenuate the level of the signal post dynamic processing" };
     
     juce::String soloTip = { "Solo: listen to this band post processing" };
     juce::String bypassTip = { "Bypass: returns the entire band to a unity gain status with no processing at all" };
     
-    juce::String lowBandTip = { "Low: crossover point. Frequencies below this number are processing in Band 1. Frequencies above a processed in in Band 2" };
-    juce::String midBandTip = { "Mid: crossover point. Frequencies below this number are processing in Band 2. Frequencies above a processed in in Band 3" };
-    juce::String highBandTip = { "High: crossover point. Frequencies below this number are processing in Band 3. Frequencies above a processed in in Band 4" };
-    juce::String mainMixTip = { "Main Mix: adjusts the balance between the overall processed and unprocessed signals" };
+    juce::String lowBandTip = { "Low: crossover point between Band 1 and 2. Frequencies below this number are processed in Band 1. Frequencies above it are processed in Band 2" };
+    juce::String midBandTip = { "Mid: crossover point between Band 2 and 3. Frequencies below this number are processed in Band 2. Frequencies above it are processed in Band 3" };
+    juce::String highBandTip = { "High: crossover point between Band 3 and 4. Frequencies below this number are processed in Band 3. Frequencies above it are processed in Band 4" };
+    juce::String mainMixTip = { "Mix: adjusts the overall balance between the processed and unprocessed signals" };
     
-    juce::String inputMeterTip = { "Input meter" };
-    juce::String outputMeterTip = { "Output meter" };
+    juce::String inputMeterTip = { "Input meter displaying stereo information" };
+    juce::String outputMeterTip = { "Output meter displaying stereo information" };
     
     juce::String bandMeterTip = { "GR: displays gain reduction for this band" };
     
-    juce::String presetTip = { "Preset: various presets" };
-    juce::String presetStepTip = { "Preset Step: step up and down through the various presets" };
+    juce::String presetTip = { "Preset: various presets to get you started" };
+    juce::String presetStepTip = { "Preset Step: step through the various presets" };
     
     juce::Label toolTip;
     
