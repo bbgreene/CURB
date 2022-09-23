@@ -136,7 +136,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CURBAudioProcessor::createPa
 
     auto gainRange = juce::NormalisableRange<float> (-24.0f, 24.0f, 0.1f, 1.0f);
     auto thresholdRange = juce::NormalisableRange<float> (-50.0f, 0.0f, 0.1f, 1.0f);
-    auto ratioRange = juce::NormalisableRange<float> (0.5f, 10.0f, 0.01f, 1.0f);
+    auto ratioRange = juce::NormalisableRange<float> (0.5f, 10.0f, 0.01f, 0.5f);
     auto attackRange = juce::NormalisableRange<float> (1.0f, 150.0f, 1.0f, 1.0f);
     auto releaseRange = juce::NormalisableRange<float> (2.0f, 300.0f, 1.0f, 1.0f);
     auto mixRange = juce::NormalisableRange<float> (0.0, 100.0, 0.01, 1.0);

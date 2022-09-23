@@ -282,7 +282,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     outputMeterL.addMouseListener(this, false);
     outputMeterR.addMouseListener(this, false);
     band1Meter.addMouseListener(this, false);
-    band3Meter.addMouseListener(this, false);
+    band2Meter.addMouseListener(this, false);
     band3Meter.addMouseListener(this, false);
     band4Meter.addMouseListener(this, false);
     
@@ -660,7 +660,7 @@ void CURBAudioProcessorEditor::resized()
     presetPrevButton.setBounds(preset.getX() - presetPrevXGap, band4Border.getBottom() + presetYGap, presetStepWidth, presetHeight);
     presetNextButton.setBounds(preset.getRight() + presetNextXGap, band4Border.getBottom() + presetYGap, presetStepWidth, presetHeight);
     
-    toolTip.setBounds(6.5, 290, 700, 30);
+    toolTip.setBounds(6.5, 293, 800, 30);
 }
 
 void CURBAudioProcessorEditor::mouseEnter(const juce::MouseEvent &event)

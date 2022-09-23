@@ -232,7 +232,7 @@ private:
     juce::String inputMeterTip = { "Input meter displaying stereo information" };
     juce::String outputMeterTip = { "Output meter displaying stereo information" };
     
-    juce::String bandMeterTip = { "GR: displays gain reduction for this band" };
+    juce::String bandMeterTip = { "GR: displays gain reduction for this band. Each LED represent 3dB of gain reduction" };
     
     juce::String presetTip = { "Preset: various presets to get you started" };
     juce::String presetStepTip = { "Preset Step: step through the various presets" };
