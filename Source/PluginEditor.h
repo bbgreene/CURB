@@ -233,6 +233,8 @@ private:
     
     juce::String bandMeterTip = { "GR: displays gain reduction for this band" };
     
+    juce::String presetTip = { "Preset: various presets" };
+    
     juce::Label toolTip;
     
     //set of pointers in a vector that point to dials for tips
@@ -258,7 +260,7 @@ private:
     std::vector<juce::String> buttonLabel =     { soloTip, soloTip, soloTip, soloTip,
                                                 bypassTip, bypassTip, bypassTip, bypassTip };
     
-    //set of pointers in a vector that point to buttons for tips
+    //set of pointers in a vector that point to buttons for tips NOT WORKING
     std::vector<bbg_gui::bbg_SliderHorizontal*> horizontalSliderPointer =   { &lowBandSlider, &midBandSlider, &highBandSlider, &mainMix };
     
     //set of labels in a vector holding strings
@@ -270,11 +272,17 @@ private:
     //set of labels in a vector holding strings
     std::vector<juce::String> verticalMeterLabel =     { inputMeterTip, inputMeterTip, outputMeterTip, outputMeterTip };
     
-    //set of pointers in a vector that point to discrete meters for tips
+    //set of pointers in a vector that point to discrete meters for tips NOT WORKING
     std::vector<bbg_gui::VerticalDiscreteMeter*> bandMeterPointer =   { &band1Meter, &band2Meter, &band3Meter, &band4Meter };
     
     //set of labels in a vector holding strings
     std::vector<juce::String> bandMeterLabel =     { bandMeterTip, bandMeterTip, bandMeterTip, bandMeterTip };
+    
+    //set of pointers in a vector that point to preset for tips//only 1, just testing! NOT WORKING
+    std::vector<bbg_gui::bbg_Menu*> presetPointer = { &preset };
+    std::vector<juce::String> presetLabelTip = { presetTip };
+    
+    void setPreset(float newThres1);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CURBAudioProcessorEditor)
 };

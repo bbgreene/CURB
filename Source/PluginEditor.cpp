@@ -181,6 +181,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     mainMixAttachement = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, "main mix", mainMix);
     addAndMakeVisible(mainMix);
     
+    preset.addMouseListener(this, false);
     preset.setText("Default");
     preset.addItem("Default", 1);
     preset.addItem("Preset 2", 2);
@@ -314,9 +315,46 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     toolTip.setFont(juce::Font ("Avenir Next", 15, juce::Font::FontStyleFlags::plain));
     toolTip.setColour(juce::Label::ColourIds::textColourId, juce::Colours::black);
     addAndMakeVisible(toolTip);
+    
+    preset.onChange = [this]()
+    {
+       switch(preset.getSelectedItemIndex())
+       {
+           case 0:
+           {
+               setPreset(0.0f); break;
+           }
+           case 1:
+           {
+               setPreset(-1.0f); break;
+           }
+           case 2:
+           {
+               setPreset(-2.0f); break;
+           }
+           case 3:
+           {
+               setPreset(-3.0f); break;
+           }
+           case 4:
+           {
+               setPreset(-4.0f); break;
+           }
+           case 5:
+           {
+               setPreset(-5.0f); break;
+           }
+       }
+    };
+    
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (1190, 330);
+}
+
+void CURBAudioProcessorEditor::setPreset(float newThres1)
+{
+    audioProcessor.treeState.getParameterAsValue("thres 1") = newThres1;
 }
 
 CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
@@ -340,6 +378,10 @@ CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
     for(int i = 0; i < bandMeterPointer.size(); ++i)
     {
         bandMeterPointer[i]->setLookAndFeel(nullptr);
+    }
+    for(int i = 0; i < presetPointer.size(); ++i)
+    {
+        presetPointer[i]->setLookAndFeel(nullptr);
     }
 }
 
@@ -550,6 +592,13 @@ void CURBAudioProcessorEditor::mouseEnter(const juce::MouseEvent &event)
             toolTip.setText(bandMeterLabel[i], juce::dontSendNotification);
         }
     }
+    for(int i = 0; i < presetPointer.size(); ++i)
+    {
+        if(event.eventComponent == presetPointer[i])
+        {
+            toolTip.setText(presetLabelTip[i], juce::dontSendNotification);
+        }
+    }
 }
     
 
@@ -586,6 +635,13 @@ void CURBAudioProcessorEditor::mouseExit(const juce::MouseEvent &event)
     for(int i = 0; i < bandMeterPointer.size(); ++i)
     {
         if(event.eventComponent == bandMeterPointer[i])
+        {
+            toolTip.setText("", juce::dontSendNotification);
+        }
+    }
+    for(int i = 0; i < presetPointer.size(); ++i)
+    {
+        if(event.eventComponent == presetPointer[i])
         {
             toolTip.setText("", juce::dontSendNotification);
         }
