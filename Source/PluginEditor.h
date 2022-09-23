@@ -84,6 +84,8 @@ private:
     bbg_gui::bbg_Dial output;// { "", -24.0, 24.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_SliderHorizontal  mainMix;// { "", 0.0, 100.0, 0.1, 0.0, 0.0 };
     bbg_gui::bbg_Menu preset;
+    juce::TextButton presetPrevButton;
+    juce::TextButton presetNextButton;
  
     // ATTACHMENTS
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputAttachement;
@@ -196,7 +198,6 @@ private:
     
     bbg_gui::bbg_dialLabel outputLabel { "Output" };
     bbg_gui::bbg_horizontalSliderLabel mainMixLabel { "Mix" };
-    bbg_gui::bbg_menuLabel presetLabel { "Preset" };
     
     bbg_gui::bbg_dialLabel olumay { "Olumay dsp" };
     bbg_gui::bbg_dialLabel curbTitle { "C U R B" };
@@ -234,6 +235,7 @@ private:
     juce::String bandMeterTip = { "GR: displays gain reduction for this band" };
     
     juce::String presetTip = { "Preset: various presets" };
+    juce::String presetStepTip = { "Preset Step: step up and down through the various presets" };
     
     juce::Label toolTip;
     
@@ -282,8 +284,8 @@ private:
     std::vector<bbg_gui::bbg_Menu*> presetPointer = { &preset };
     std::vector<juce::String> presetLabelTip = { presetTip };
     
-    juce::TextButton presetPrevButton;
-    juce::TextButton presetNextButton;
+    std::vector<juce::TextButton*> presetStepPointer = { &presetPrevButton, &presetNextButton };
+    std::vector<juce::String> presetStepLabel = { presetStepTip, presetStepTip };
     
     void setPreset(float newThres1, float newRatio1, float newAttack1, float newRelease1, float newGain1, float newMix1, bool newSolo1, bool newBypass1,
                    float newThres2, float newRatio2, float newAttack2, float newRelease2, float newGain2, float newMix2, bool newSolo2, bool newBypass2,

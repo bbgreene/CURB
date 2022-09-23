@@ -182,8 +182,8 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     addAndMakeVisible(mainMix);
     
     preset.addMouseListener(this, false);
-    preset.setText("Default");
-    preset.addItem("Default", 1);
+    preset.setTextWhenNothingSelected("Presets");
+    preset.addItem("Initialise", 1);
     preset.addItem("Preset 2", 2);
     preset.addItem("Preset 3", 3);
     preset.addItem("Preset 4", 4);
@@ -275,7 +275,6 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     
     outputLabel.attachToComponent(&output, false);
     mainMixLabel.attachToComponent(&mainMix, false);
-    presetLabel.attachToComponent(&preset, false);
     
     // METERS
     inputMeterL.addMouseListener(this, false);
@@ -283,7 +282,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     outputMeterL.addMouseListener(this, false);
     outputMeterR.addMouseListener(this, false);
     band1Meter.addMouseListener(this, false);
-    band2Meter.addMouseListener(this, false);
+    band3Meter.addMouseListener(this, false);
     band3Meter.addMouseListener(this, false);
     band4Meter.addMouseListener(this, false);
     
@@ -316,7 +315,9 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     toolTip.setColour(juce::Label::ColourIds::textColourId, juce::Colours::black);
     addAndMakeVisible(toolTip);
     
+    presetPrevButton.addMouseListener(this, false);
     presetPrevButton.setButtonText("<");
+    presetPrevButton.setColour(juce::TextButton::buttonColourId, CustomColours::blackGrey.brighter());
     presetPrevButton.onClick = [this]()
     {
       if(preset.getSelectedItemIndex() > 0)
@@ -326,7 +327,9 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     };
     addAndMakeVisible(presetPrevButton);
     
+    presetNextButton.addMouseListener(this, false);
     presetNextButton.setButtonText(">");
+    presetNextButton.setColour(juce::TextButton::buttonColourId, CustomColours::blackGrey.brighter());
     presetNextButton.onClick = [this]()
     {
       if(preset.getSelectedItemIndex() < preset.getNumItems() - 1)
@@ -340,7 +343,7 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     {
        switch(preset.getSelectedItemIndex())
        {
-           case 0:
+           case 0: //Initialise
            {
                setPreset(0.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
                          0.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
@@ -473,6 +476,10 @@ CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
     {
         presetPointer[i]->setLookAndFeel(nullptr);
     }
+    for(int i = 0; i < presetStepPointer.size(); ++i)
+    {
+        presetStepPointer[i]->setLookAndFeel(nullptr);
+    }
     preset.setLookAndFeel(nullptr);
 }
 
@@ -538,7 +545,7 @@ void CURBAudioProcessorEditor::resized()
     olumay.setBounds(olumayX, olumayY, olumayWidth, olumayHeight);
     
     auto band1X = 80;// 80
-    auto borderY = 52;
+    auto borderY = 57;
     auto borderWidthGap = 10; //10
     auto largeBorderWidth = 250; //250
     auto largeBorderHeight = 232; // 232
@@ -553,10 +560,10 @@ void CURBAudioProcessorEditor::resized()
     band4Border.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, largeBorderHeight);
     band4TopBorder.setBounds(band3Border.getRight() + borderWidthGap, borderY, largeBorderWidth, topBorderHeight);
     
-    auto bandSliderXGap = 26;
-    auto bandSliderY = 25;
-    auto bandSliderWidth = 61;
-    auto bandSliderHeight = 24;
+    auto bandSliderXGap = 55;
+    auto bandSliderY = 24;
+    auto bandSliderWidth = 123;
+    auto bandSliderHeight = 39;
 
     lowBandSlider.setBounds(band1Border.getRight() - bandSliderXGap, bandSliderY, bandSliderWidth, bandSliderHeight);
     midBandSlider.setBounds(band2Border.getRight() - bandSliderXGap, bandSliderY, bandSliderWidth, bandSliderHeight);
@@ -635,15 +642,23 @@ void CURBAudioProcessorEditor::resized()
     outputMeterR.setBounds(outputMeterL.getRight() + inputOutputMeterXGap, band4Border.getY() + inputOutputMeterY, inputOutputMeterWidth, inputOutputMeterHeight);
     output.setBounds(band4Border.getRight() + inputOutGapX, band4Border.getY() + dialBottomRowGapY, dialSize, dialSize);
     
-    auto mainMixXGap = 3;
-    auto mainMixYGap = 93;
-    auto presetX = 883;
-    auto presetWidth = 207;
+    auto mainMixXGap = -3;
+    auto mainMixYGap = 82;
+    auto mainMixWidth = 71;
+    auto presetX = 880;
+    auto presetYGap = 9;
+    auto presetWidth = 209;
+    auto presetHeight = 23;
     
-    mainMix.setBounds(output.getX() + mainMixXGap, output.getY() + mainMixYGap, bandSliderWidth, bandSliderHeight);
-    preset.setBounds(presetX, output.getY() + mainMixYGap, presetWidth, bandSliderHeight);
-    presetPrevButton.setBounds(preset.getX() -100, output.getY() + mainMixYGap, buttonWidth, bandSliderHeight);
-    presetNextButton.setBounds(preset.getX() -60, output.getY() + mainMixYGap, buttonWidth, bandSliderHeight);
+    auto presetStepWidth = 19;
+    auto presetPrevXGap = 20;
+    auto presetNextXGap = 1;
+    
+    
+    mainMix.setBounds(output.getX() + mainMixXGap, output.getY() + mainMixYGap, mainMixWidth, bandSliderHeight);
+    preset.setBounds(presetX, band4Border.getBottom() + presetYGap, presetWidth, presetHeight);
+    presetPrevButton.setBounds(preset.getX() - presetPrevXGap, band4Border.getBottom() + presetYGap, presetStepWidth, presetHeight);
+    presetNextButton.setBounds(preset.getRight() + presetNextXGap, band4Border.getBottom() + presetYGap, presetStepWidth, presetHeight);
     
     toolTip.setBounds(6.5, 290, 700, 30);
 }
@@ -692,6 +707,13 @@ void CURBAudioProcessorEditor::mouseEnter(const juce::MouseEvent &event)
             toolTip.setText(presetLabelTip[i], juce::dontSendNotification);
         }
     }
+    for(int i = 0; i < presetStepPointer.size(); ++i)
+    {
+        if(event.eventComponent == presetStepPointer[i])
+        {
+            toolTip.setText(presetStepLabel[i], juce::dontSendNotification);
+        }
+    }
 }
     
 
@@ -732,9 +754,9 @@ void CURBAudioProcessorEditor::mouseExit(const juce::MouseEvent &event)
             toolTip.setText("", juce::dontSendNotification);
         }
     }
-    for(int i = 0; i < presetPointer.size(); ++i)
+    for(int i = 0; i < presetStepPointer.size(); ++i)
     {
-        if(event.eventComponent == presetPointer[i])
+        if(event.eventComponent == presetStepPointer[i])
         {
             toolTip.setText("", juce::dontSendNotification);
         }
