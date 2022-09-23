@@ -316,6 +316,26 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     toolTip.setColour(juce::Label::ColourIds::textColourId, juce::Colours::black);
     addAndMakeVisible(toolTip);
     
+    presetPrevButton.setButtonText("<");
+    presetPrevButton.onClick = [this]()
+    {
+      if(preset.getSelectedItemIndex() > 0)
+      {
+          preset.setSelectedItemIndex(preset.getSelectedItemIndex() -1);
+      }
+    };
+    addAndMakeVisible(presetPrevButton);
+    
+    presetNextButton.setButtonText(">");
+    presetNextButton.onClick = [this]()
+    {
+      if(preset.getSelectedItemIndex() < preset.getNumItems() - 1)
+      {
+          preset.setSelectedItemIndex(preset.getSelectedItemIndex() +1);
+      }
+    };
+    addAndMakeVisible(presetNextButton);
+    
     preset.onChange = [this]()
     {
        switch(preset.getSelectedItemIndex())
@@ -453,6 +473,7 @@ CURBAudioProcessorEditor::~CURBAudioProcessorEditor()
     {
         presetPointer[i]->setLookAndFeel(nullptr);
     }
+    preset.setLookAndFeel(nullptr);
 }
 
 //==============================================================================
@@ -621,6 +642,8 @@ void CURBAudioProcessorEditor::resized()
     
     mainMix.setBounds(output.getX() + mainMixXGap, output.getY() + mainMixYGap, bandSliderWidth, bandSliderHeight);
     preset.setBounds(presetX, output.getY() + mainMixYGap, presetWidth, bandSliderHeight);
+    presetPrevButton.setBounds(preset.getX() -100, output.getY() + mainMixYGap, buttonWidth, bandSliderHeight);
+    presetNextButton.setBounds(preset.getX() -60, output.getY() + mainMixYGap, buttonWidth, bandSliderHeight);
     
     toolTip.setBounds(6.5, 290, 700, 30);
 }

@@ -282,6 +282,9 @@ private:
     std::vector<bbg_gui::bbg_Menu*> presetPointer = { &preset };
     std::vector<juce::String> presetLabelTip = { presetTip };
     
+    juce::TextButton presetPrevButton;
+    juce::TextButton presetNextButton;
+    
     void setPreset(float newThres1, float newRatio1, float newAttack1, float newRelease1, float newGain1, float newMix1, bool newSolo1, bool newBypass1,
                    float newThres2, float newRatio2, float newAttack2, float newRelease2, float newGain2, float newMix2, bool newSolo2, bool newBypass2,
                    float newThres3, float newRatio3, float newAttack3, float newRelease3, float newGain3, float newMix3, bool newSolo3, bool newBypass3,
