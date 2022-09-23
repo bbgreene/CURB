@@ -322,27 +322,51 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
        {
            case 0:
            {
-               setPreset(0.0f); break;
+               setPreset(0.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         0.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         0.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         0.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         0.0, 100.0, 1000.0, 12000.0, 0.0, 100.0); break;
            }
            case 1:
            {
-               setPreset(-1.0f); break;
+               setPreset(-1.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -1.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -1.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -1.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         0.0, 100.0, 1000.0, 12000.0, 0.0, 100.0); break;
            }
            case 2:
            {
-               setPreset(-2.0f); break;
+               setPreset(-2.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -2.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -2.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -2.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         0.0, 100.0, 1000.0, 12000.0, 0.0, 100.0); break;
            }
            case 3:
            {
-               setPreset(-3.0f); break;
+               setPreset(-3.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -3.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -3.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -3.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         0.0, 100.0, 1000.0, 12000.0, 0.0, 100.0); break;
            }
            case 4:
            {
-               setPreset(-4.0f); break;
+               setPreset(-4.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -4.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -4.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -4.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         0.0, 100.0, 1000.0, 12000.0, 0.0, 100.0); break;
            }
            case 5:
            {
-               setPreset(-5.0f); break;
+               setPreset(-5.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -5.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -5.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         -5.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
+                         0.0, 100.0, 1000.0, 12000.0, 0.0, 100.0); break;
            }
        }
     };
@@ -352,9 +376,55 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     setSize (1190, 330);
 }
 
-void CURBAudioProcessorEditor::setPreset(float newThres1)
+void CURBAudioProcessorEditor::setPreset(float newThres1, float newRatio1, float newAttack1, float newRelease1, float newGain1, float newMix1, bool newSolo1, bool newBypass1,
+                                         float newThres2, float newRatio2, float newAttack2, float newRelease2, float newGain2, float newMix2, bool newSolo2, bool newBypass2,
+                                         float newThres3, float newRatio3, float newAttack3, float newRelease3, float newGain3, float newMix3, bool newSolo3, bool newBypass3,
+                                         float newThres4, float newRatio4, float newAttack4, float newRelease4, float newGain4, float newMix4, bool newSolo4, bool newBypass4,
+                                         float newInput, float newLowBand, float newMidBand, float newHighBand, float newOutput, float newMainMix)
 {
     audioProcessor.treeState.getParameterAsValue("thres 1") = newThres1;
+    audioProcessor.treeState.getParameterAsValue("ratio 1") = newRatio1;
+    audioProcessor.treeState.getParameterAsValue("attack 1") = newAttack1;
+    audioProcessor.treeState.getParameterAsValue("release 1") = newRelease1;
+    audioProcessor.treeState.getParameterAsValue("gain1") = newGain1;
+    audioProcessor.treeState.getParameterAsValue("fb1mix") = newMix1;
+    audioProcessor.treeState.getParameterAsValue("solo 1") = newSolo1;
+    audioProcessor.treeState.getParameterAsValue("bypass 1") = newBypass1;
+    
+    audioProcessor.treeState.getParameterAsValue("thres 2") = newThres2;
+    audioProcessor.treeState.getParameterAsValue("ratio 2") = newRatio2;
+    audioProcessor.treeState.getParameterAsValue("attack 2") = newAttack2;
+    audioProcessor.treeState.getParameterAsValue("release 2") = newRelease2;
+    audioProcessor.treeState.getParameterAsValue("gain2") = newGain2;
+    audioProcessor.treeState.getParameterAsValue("fb2mix") = newMix2;
+    audioProcessor.treeState.getParameterAsValue("solo 2") = newSolo2;
+    audioProcessor.treeState.getParameterAsValue("bypass 2") = newBypass2;
+    
+    audioProcessor.treeState.getParameterAsValue("thres 3") = newThres3;
+    audioProcessor.treeState.getParameterAsValue("ratio 3") = newRatio3;
+    audioProcessor.treeState.getParameterAsValue("attack 3") = newAttack3;
+    audioProcessor.treeState.getParameterAsValue("release 3") = newRelease3;
+    audioProcessor.treeState.getParameterAsValue("gain3") = newGain3;
+    audioProcessor.treeState.getParameterAsValue("fb3mix") = newMix3;
+    audioProcessor.treeState.getParameterAsValue("solo 3") = newSolo3;
+    audioProcessor.treeState.getParameterAsValue("bypass 3") = newBypass3;
+    
+    audioProcessor.treeState.getParameterAsValue("thres 4") = newThres4;
+    audioProcessor.treeState.getParameterAsValue("ratio 4") = newRatio4;
+    audioProcessor.treeState.getParameterAsValue("attack 4") = newAttack4;
+    audioProcessor.treeState.getParameterAsValue("release 4") = newRelease4;
+    audioProcessor.treeState.getParameterAsValue("gain4") = newGain4;
+    audioProcessor.treeState.getParameterAsValue("fb4mix") = newMix4;
+    audioProcessor.treeState.getParameterAsValue("solo 4") = newSolo4;
+    audioProcessor.treeState.getParameterAsValue("bypass 4") = newBypass4;
+    
+    audioProcessor.treeState.getParameterAsValue("input") = newInput;
+    audioProcessor.treeState.getParameterAsValue("low") = newLowBand;
+    audioProcessor.treeState.getParameterAsValue("mid") = newMidBand;
+    audioProcessor.treeState.getParameterAsValue("high") = newHighBand;
+    audioProcessor.treeState.getParameterAsValue("output") = newOutput;
+    audioProcessor.treeState.getParameterAsValue("main mix") = newMainMix;
+    
 }
 
 CURBAudioProcessorEditor::~CURBAudioProcessorEditor()

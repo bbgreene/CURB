@@ -282,7 +282,11 @@ private:
     std::vector<bbg_gui::bbg_Menu*> presetPointer = { &preset };
     std::vector<juce::String> presetLabelTip = { presetTip };
     
-    void setPreset(float newThres1);
+    void setPreset(float newThres1, float newRatio1, float newAttack1, float newRelease1, float newGain1, float newMix1, bool newSolo1, bool newBypass1,
+                   float newThres2, float newRatio2, float newAttack2, float newRelease2, float newGain2, float newMix2, bool newSolo2, bool newBypass2,
+                   float newThres3, float newRatio3, float newAttack3, float newRelease3, float newGain3, float newMix3, bool newSolo3, bool newBypass3,
+                   float newThres4, float newRatio4, float newAttack4, float newRelease4, float newGain4, float newMix4, bool newSolo4, bool newBypass4,
+                   float newInput, float newLowBand, float newMidBand, float newHighBand, float newOutput, float newMainMix);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CURBAudioProcessorEditor)
 };
