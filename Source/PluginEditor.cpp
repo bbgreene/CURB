@@ -184,11 +184,20 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
     preset.addMouseListener(this, false);
     preset.setTextWhenNothingSelected("Presets");
     preset.addItem("Initialise", 1);
-    preset.addItem("Preset 2", 2);
-    preset.addItem("Preset 3", 3);
-    preset.addItem("Preset 4", 4);
-    preset.addItem("Preset 5", 5);
-    preset.addItem("Preset 6", 6);
+    preset.addItem("Basic multi-band Comp", 2);
+    preset.addItem("Hard multi-band Comp", 3);
+    preset.addItem("Deep", 4);
+    preset.addItem("Thump", 5);
+    preset.addItem("Low level enhancer", 6);
+    preset.addItem("High freq reducer", 7);
+    preset.addItem("Rumble/Hiss reducer", 8);
+    preset.addItem("Vocal", 9);
+    preset.addItem("Vocal presence", 10);
+    preset.addItem("Bass guitar", 11);
+    preset.addItem("Guitar soften", 12);
+    preset.addItem("Drums", 13);
+    preset.addItem("Drums big", 14);
+    preset.addItem("Stereo bus", 15);
     presetAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.treeState, "preset", preset);
     addAndMakeVisible(preset);
     
@@ -351,45 +360,118 @@ outputMeterR([&](){ return audioProcessor.getRmsValue(7);})
                          0.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
                          0.0, 100.0, 1000.0, 12000.0, 0.0, 100.0); break;
            }
-           case 1:
+           case 1: // Basic multi-band Comp
            {
-               setPreset(-1.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -1.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -1.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -1.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         0.0, 100.0, 1000.0, 12000.0, 0.0, 100.0); break;
+               setPreset(-32.6f, 2.0, 33.0, 40.0, 4.0, 100.0, false, false,
+                         -20.0f, 2.0, 15.0, 26.0, 4.0, 100.0, false, false,
+                         -32.7f, 2.0, 8.0, 10.0, 4.0, 100.0, false, false,
+                         -42.0f, 2.0, 2.0, 5.0, 4.0, 100.0, false, false,
+                         0.0, 89.0, 4442.0, 11066.0, -1.5, 100.0); break;
            }
-           case 2:
+           case 2: // Hard multi-band Comp
            {
-               setPreset(-2.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -2.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -2.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -2.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         0.0, 100.0, 1000.0, 12000.0, 0.0, 100.0); break;
+               setPreset(-26.6f, 4.0, 45.0, 40.0, 4.0, 100.0, false, false,
+                         -23.7f, 3.0, 50.0, 26.0, 3.0, 100.0, false, false,
+                         -20.9f, 3.0, 30.0, 20.0, 3.0, 100.0, false, false,
+                         -27.5f, 3.0, 20.0, 5.0, 3.0, 100.0, false, false,
+                         0.0, 82.0, 587.0, 6001.0, -2.7, 100.0); break;
            }
-           case 3:
+           case 3: // Deep
            {
-               setPreset(-3.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -3.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -3.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -3.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         0.0, 100.0, 1000.0, 12000.0, 0.0, 100.0); break;
+               setPreset(-20.4f, 4.7, 45.0, 40.0, 3.0, 100.0, false, false,
+                         -23.7f, 3.0, 50.0, 26.0, 3.0, 100.0, false, false,
+                         -20.9f, 3.0, 16.0, 14.0, 3.0, 100.0, false, false,
+                         -37.0f, 8.2, 11.0, 11.0, 3.0, 100.0, false, false,
+                         0.0, 92.0, 805.0, 7596.0, -1.4, 100.0); break;
            }
-           case 4:
+           case 4: // Thump
            {
-               setPreset(-4.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -4.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -4.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -4.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         0.0, 100.0, 1000.0, 12000.0, 0.0, 100.0); break;
+               setPreset(-25.9f, 3.8, 11.0, 41.0, 8.9, 100.0, false, false,
+                         -23.1f, 3.7, 19.0, 23.0, -6.7, 100.0, false, false,
+                         -8.8f, 3.7, 7.0, 9.0, 3.8, 100.0, false, false,
+                         -20.5f, 8.2, 6.0, 8.0, 4.7, 100.0, false, false,
+                         0.0, 132.0, 752.0, 6054.0, -0.9, 100.0); break;
            }
-           case 5:
+           case 5: // Low level enhancer
            {
-               setPreset(-5.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -5.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -5.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         -5.0f, 1.0, 1.0, 2.0, 0.0, 100.0, false, false,
-                         0.0, 100.0, 1000.0, 12000.0, 0.0, 100.0); break;
+               setPreset(-34.0f, 4.2, 114.0, 49.0, 7.6, 100.0, false, false,
+                         -32.5f, 2.9, 41.0, 30.0, 1.9, 100.0, false, false,
+                         -30.3f, 1.4, 28.0, 22.0, 2.0, 100.0, false, false,
+                         -34.0f, 3.9, 14.0, 10.0, 6.0, 100.0, false, false,
+                         0.0, 114.0, 654.0, 6181.0, 0.0, 100.0); break;
+           }
+           case 6: // High freq reducer
+           {
+               setPreset(-34.0f, 4.2, 114.0, 49.0, 7.6, 100.0, false, true,
+                         -32.5f, 2.9, 41.0, 30.0, 1.9, 100.0, false, true,
+                         -36.9f, 10.0, 1.0, 130.0, -4.3, 100.0, false, false,
+                         -49.0f, 9.2, 4.0, 123.0, -6.1, 100.0, false, false,
+                         0.0, 114.0, 1062.0, 7784.0, 0.0, 100.0); break;
+
+           }
+           case 7: // Rumble/Hiss reducer
+           {
+               setPreset(-45.6f, 6.9, 8.0, 66.0, -12.3, 100.0, false, false,
+                         -32.5f, 2.9, 41.0, 30.0, 1.9, 100.0, false, true,
+                         -45.7f, 9.6, 1.0, 31.0, -15.4, 100.0, false, false,
+                         -49.0f, 9.2, 4.0, 123.0, -6.1, 100.0, false, true,
+                         0.0, 79, 2492.0, 12233.0, 0.0, 100.0); break;
+           }
+           case 8: // Vocal
+           {
+               setPreset(-43.3f, 4.4, 8.0, 34.0, 2.2, 100.0, false, false,
+                         -30.9f, 3.5, 11.0, 22.0, 3.6, 100.0, false, false,
+                         -28.5f, 0.6, 11.0, 5.0, 3.1, 100.0, false, false,
+                         -5.8f, 0.9, 2.0, 6.0, 2.8, 100.0, false, false,
+                         0.0, 81.0, 3025.0, 11610.0, 0.0, 100.0); break;
+           }
+           case 9: // Vocal presence
+           {
+               setPreset(-41.3f, 4.4, 8.0, 34.0, 2.2, 100.0, false, false,
+                         -30.9f, 4.0, 11.0, 22.0, 3.6, 100.0, false, false,
+                         -42.3f, 1.8, 11.0, 5.0, 16.5, 100.0, false, false,
+                         -6.3f, 2.3, 2.0, 5.0, 6.5, 100.0, false, false,
+                         0.0, 81.0, 3025.0, 11610.0, 0.0, 100.0); break;
+           }
+           case 10: // Bass guitar
+           {
+               setPreset(-31.0f, 6.1, 36.0, 39.0, 6.7, 100.0, false, false,
+                         -34.4f, 1.3, 14.0, 32.0, -0.3, 100.0, false, false,
+                         -40.9f, 0.8, 138.0, 15.0, 8.8, 100.0, false, false,
+                         -46.7f, 4.7, 2.0, 8.0, 0.0, 100.0, false, false,
+                         0.0, 90.0, 1440.0, 8904.0, 0.0, 100.0); break;
+           }
+           case 11: // Guitar soften
+           {
+               setPreset(-21.6f, 2.0, 14.0, 28.0, 0.0, 100.0, false, false,
+                         -20.6f, 3.3, 16.0, 17.0, -1.0, 100.0, false, false,
+                         -24.5f, 4.1, 7.0, 13.0, 1.5, 100.0, false, false,
+                         -4.4f, 3.4, 2.0, 7.0, -3.0, 100.0, false, false,
+                         0.0, 118.0, 521.0, 10401.0, 0.0, 100.0); break;
+           }
+           case 12: // Drums
+           {
+               setPreset(-33.2f, 3.0, 43.0, 14.0, 8.5, 100.0, false, false,
+                         -23.7f, 3.3, 36.0, 30.0, 0.0, 100.0, false, false,
+                         -22.2f, 2.1, 43.0, 14.0, 0.0, 100.0, false, false,
+                         -13.3f, 2.4, 21.0, 11.0, 0.0, 100.0, false, false,
+                         0.0, 62.0, 885.0, 6001.0, 0.0, 100.0); break;
+           }
+           case 13: // Drums big
+           {
+               setPreset(-33.2f, 3.0, 43.0, 14.0, 10.8, 100.0, false, false,
+                         -20.7f, 3.3, 36.0, 30.0, 1.1, 100.0, false, false,
+                         -22.2f, 2.1, 43.0, 14.0, 1.1, 100.0, false, false,
+                         -13.3f, 2.4, 21.0, 11.0, 1.6, 100.0, false, false,
+                         0.0, 62.0, 885.0, 6001.0, 0.0, 100.0); break;
+           }
+           case 14: // Stereo bus
+           {
+               setPreset(-16.7f, 3.8, 31.0, 39.0, 0.0, 100.0, false, false,
+                         -11.1f, 3.3, 134.0, 25.0, 0.0, 100.0, false, false,
+                         -10.9f, 2.3, 8.0, 8.0, 1.8, 100.0, false, false,
+                         -9.0f, 2.5, 9.0, 5.0, 1.9, 100.0, false, false,
+                         0.0, 89.0, 2203.0, 8587.0, -1.0, 100.0); break;
            }
        }
     };
