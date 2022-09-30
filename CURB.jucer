@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="frpPbr" name="CURB" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" cppLanguageStandard="17"
-              pluginManufacturer="Olumay dsp">
+              pluginManufacturer="Olumay dsp" companyName="Olumay dsp" companyWebsite="https://bbgreene.github.io/">
   <MAINGROUP id="tXrOqC" name="CURB">
     <GROUP id="{D09B18C6-1A55-A714-4482-3567FDB29E2F}" name="Source">
       <GROUP id="{2440F785-8444-1A5D-9F87-220FDBAD7836}" name="bbg_gui">
