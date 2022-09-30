@@ -727,20 +727,20 @@ void CURBAudioProcessorEditor::resized()
     auto mainMixXGap = -3;
     auto mainMixYGap = 82;
     auto mainMixWidth = 71;
-    auto presetX = 880;
-    auto presetYGap = 9;
-    auto presetWidth = 209;
-    auto presetHeight = 23;
-    
-    auto presetStepWidth = 19;
-    auto presetPrevXGap = 20;
-    auto presetNextXGap = 1;
-    
+//    auto presetX = 880;
+//    auto presetYGap = 9;
+//    auto presetWidth = 209;
+//    auto presetHeight = 23;
+//    
+//    auto presetStepWidth = 19;
+//    auto presetPrevXGap = 20;
+//    auto presetNextXGap = 1;
+//    
     
     mainMix.setBounds(output.getX() + mainMixXGap, output.getY() + mainMixYGap, mainMixWidth, bandSliderHeight);
-    preset.setBounds(presetX, band4Border.getBottom() + presetYGap, presetWidth, presetHeight);
-    presetPrevButton.setBounds(preset.getX() - presetPrevXGap, band4Border.getBottom() + presetYGap, presetStepWidth, presetHeight);
-    presetNextButton.setBounds(preset.getRight() + presetNextXGap, band4Border.getBottom() + presetYGap, presetStepWidth, presetHeight);
+//    preset.setBounds(presetX, band4Border.getBottom() + presetYGap, presetWidth, presetHeight);
+//    presetPrevButton.setBounds(preset.getX() - presetPrevXGap, band4Border.getBottom() + presetYGap, presetStepWidth, presetHeight);
+//    presetNextButton.setBounds(preset.getRight() + presetNextXGap, band4Border.getBottom() + presetYGap, presetStepWidth, presetHeight);
     
     toolTip.setBounds(6.5, 293, 800, 30);
 }
